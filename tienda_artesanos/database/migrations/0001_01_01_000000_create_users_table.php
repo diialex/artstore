@@ -17,12 +17,8 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            
-            // --- Problemas 2 y 4 ---
-            $table->boolean('is_admin')->default(false); 
-            $table->string('language')->default('es');
-            // ------------------------------------
-
+            $table->string('phone');
+            $table->string('address');
             $table->rememberToken();
             $table->timestamps();
         });
