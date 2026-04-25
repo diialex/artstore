@@ -6,5 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Order extends Model
 {
-    //
+    protected $fillable = [
+        'total_amount',
+        'status',
+        'shipping_address',
+    ];
+
+    public function payments()
+    {
+        return $this->hasOne(Payment::class);
+    }
+
+    public function items() {
+        return $this->hasMany(OrderItem::class);
+    }
 }
