@@ -8,19 +8,20 @@ class Payment extends Model
 {
     protected $fillable = [
         'order_id',
-        'amount',
         'payment_method',
         'status',
     ];
+
+    protected $appends = ['amount'];  
 
     public const PAGINATE = 10; //this shows the number of payments per page when paginating results
 
     
     public function order(){
-        return $this->hasOne(Order::class);
+        return $this->belongsTo(Order::class);
     }
 
     public function getAmountAttribute(){
-        return $this->order->total_amount;
+        return $this->order?->total_amount ?? 0;
     }
 }

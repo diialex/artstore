@@ -27,4 +27,11 @@ class OrderService
         $order->save();
         return true;
     }
+
+    public function delete(int $id): bool
+    {
+        $order = $this->find($id);
+        $order->delete();
+        return true;
+    }
 }

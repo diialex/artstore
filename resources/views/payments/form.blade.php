@@ -13,7 +13,7 @@
 
                 <div class="form-group">
                     <label>Cantidad</label>
-                    <input name="amount" class="form-control" value="{{ old('amount', $payment->amount) }}" type="number" step="0.01">
+                    <input name="amount" class="form-control" value="{{ old('amount', $payment->amount) }}" type="number" step="0.01" readonly>
                     @error('amount') <div>{{ $message }}</div> @enderror
                 </div>
 

@@ -4,6 +4,7 @@ namespace App\Http\Requests\Payment;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePaymentRequest extends FormRequest
 {
@@ -23,10 +24,9 @@ class StorePaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'order_id' => 'required|exists:orders,id',
-            'amount' => 'required|decimal:2|min:0',
+            'order_id' => ['required', Rule::unique('payments', 'order_id') ,Rule::exists('orders', 'id')->whereIn('status', ['pending', 'cancelled'])],
             'payment_method' => 'required|string',
-            'status' => 'required|in:pending,completed,failed',
+            'status' => 'required|in:completed,failed',
         ];
     }
 }

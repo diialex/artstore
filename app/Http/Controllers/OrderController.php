@@ -7,6 +7,7 @@ use App\Http\Requests\Order\StoreOrderRequest;
 use App\Http\Requests\Order\UpdateOrderRequest;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -74,8 +75,7 @@ class OrderController extends Controller
      */
     public function destroy(int $id)
     {
-        $order = $this->service->find($id);
-        $order->delete();
+        $this->service->delete($id);
         return redirect()->route('orders.index')->with('success', 'Orden eliminada exitosamente.');
     }
 }

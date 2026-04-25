@@ -6,6 +6,7 @@ use App\Http\Requests\Payment\StorePaymentRequest;
 use App\Http\Requests\Payment\UpdatePaymentRequest;
 use App\Services\PaymentService;
 use App\Models\Payment;
+use App\Models\Order;
 
 
 class PaymentController extends Controller
@@ -29,8 +30,12 @@ class PaymentController extends Controller
      */
     public function create()
     {
-       
-        return view('payments.form', [ 'payment' => new Payment() ]);
+        $payment = new Payment();
+        $lastOrder = Order::where('status', 'pending')->latest('id')->first();
+        if ($lastOrder) {
+            $payment->order_id = $lastOrder->id;
+        }
+        return view('payments.form', compact('payment'));
     }
 
     /**
@@ -38,7 +43,10 @@ class PaymentController extends Controller
      */
     public function store(StorePaymentRequest $request)
     {
-        $this->service->create($request->validated());
+        $payment = $this->service->create($request->validated());
+        
+        // Actualizar el status de la Order con el del Payment
+        $payment->order->update(['status' => $payment->status]);
 
         return redirect()->route('payments.index')->with('success', 'Payment created successfully.');
     }
@@ -68,6 +76,8 @@ class PaymentController extends Controller
         $payment = $this->service->find($id);
         $payment->update($request->validated());
         $this->service->update($payment);
+        
+        
         return redirect()->route('payments.index')->with('success', 'Payment updated successfully.');
     }
 
@@ -76,6 +86,7 @@ class PaymentController extends Controller
      */
     public function destroy(int $id)
     {
-        //
+        $this->service->delete($id);
+        return redirect()->route('payments.index')->with('success', 'Payment deleted successfully.');
     }
 }

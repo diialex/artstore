@@ -27,4 +27,11 @@ class PaymentService
         $payment->save();
         return true;
     }
+
+    public function delete(int $id): bool
+    {
+        $payment = $this->find($id);
+        $payment->delete();
+        return true;
+    }
 }
