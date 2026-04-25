@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+
+use App\Services\UsersService;
 use Exception;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -11,13 +13,16 @@ use function PHPUnit\Framework\throwException;
 
 class UsersController extends Controller
 {
+    public function __construct(protected UsersService $service){
+
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $users = User::all();
-        return view('listUsers', compact('users'));
+        $users = $this->service->getAll();
+        return view('users.listUsers', compact('users'));
     }
 
     /**
@@ -26,7 +31,7 @@ class UsersController extends Controller
     public function create()
     {
         $roles = Role::all();
-        return view('createUser', compact('roles'));
+        return view('users.createUser', compact('roles'));
     }
 
     /**
@@ -74,27 +79,27 @@ class UsersController extends Controller
     public function show(string $id)
     {
         try{
-            $users = $this->get_user($id);
+            $user = $this->service->get($id);
         }catch(Exception $e){
             $msg = $e->getMessage();
-            return view('listUsers', compact('msg'));
+            return view('users.listUsers', compact('msg'));
         }
         
-        return view('listUsers', compact('users'));
+        return view('users.listUsers', compact('users'));
     }
 
     public function show_by_username(string $username)
     {
-        $user = User::where('username', $username)->first();
+        $user = $this->service->getUserByUsername($username);
         if(!$user){
-            return view('listUsers', [
+            return view('users.listUsers', [
             'users' => [], 
             'msg' => "Usuario no encontrado"
             ]);
         }
 
         $users = [$user];
-        return view('listUsers', compact('users'));
+        return view('users.listUsers', compact('users'));
     }
 
     /**
@@ -103,11 +108,11 @@ class UsersController extends Controller
     public function edit(string $id)
     {
         try{
-            $user = $this->get_user($id);
+            $user = $this->service->get($id);
             $roles = Role::all();
-            return view('editUser', compact('user', 'roles'));
+            return view('users.editUser', compact('user', 'roles'));
         }catch(Exception $e){
-            return view('listUsers', ['users' => [], 'msg' => $e->getMessage()]);
+            return view('users.listUsers', ['users' => [], 'msg' => $e->getMessage()]);
         }
         
         
@@ -119,7 +124,7 @@ class UsersController extends Controller
     public function update(Request $request, string $id)
     {   
     try {
-        $user = $this->get_user($id);
+        $user = $this->service->get($id);
 
         $rules = [
             'username' => 'required|string|max:20',
@@ -145,14 +150,12 @@ class UsersController extends Controller
             $user->password = Hash::make($request->password);
         }
 
-        $user->save();
-
         $role = Role::find($request->role);
         if (!$role) {
             throw new Exception("El rol seleccionado no existe");
         }
 
-        $user->roles()->sync($request->role);
+        $this->service->update($user, $request->role);
 
     } catch (\Throwable $e) {
         dd([
@@ -172,8 +175,8 @@ class UsersController extends Controller
     public function destroy(string $id)
     {
         try {
-            $user = $this->get_user($id);
-            $user->delete();
+            $user = $this->service->get($id);
+            $this->service->delete($user);
             
         } catch (\Throwable $e) {
         dd([
@@ -186,12 +189,4 @@ class UsersController extends Controller
         return redirect('/users')->with('msg', 'Usuario eliminado con éxito');
     }
 
-    public function get_user(string $id)
-    {
-        $user = User::find($id);
-        if(!$user){
-            throw new Exception("Usuario no existe");
-        }
-        return $user;
-    }
 }
