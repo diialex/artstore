@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
+
+Route::resource('products', ProductController::class);
 use App\Http\Controllers\UsersController;
 
 Route::get('/', function () {
