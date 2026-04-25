@@ -3,16 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Services\RolesService;
 use Illuminate\Http\Request;
 
-class RoleController extends Controller
+class RolesController extends Controller
 {
+    public function __construct(protected RolesService $service){
+
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        
     }
 
     /**

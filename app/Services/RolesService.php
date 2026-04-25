@@ -2,29 +2,29 @@
 
 namespace App\Services;
 
-use App\Models\User;
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Collection;
 use Exception;
 
-class UsersService
+class RoleService
 {
     public function getAll(): Collection
     {
-        return User::all();
+        return Role::all();
     }
     
-    public function get(string $id) : User
+    public function get(string $id) : Role
     {
-        $user = User::find($id);
-        if(!$user){
-            throw new Exception("Usuario no existe");
+        $role = Role::find($id);
+        if(!$role){
+            throw new Exception("Role not exist");
         }
-        return $user;
+        return $role;
     }
 
-    public function getUserByUsername(string $username) : User
+    public function getUserByUsername(string $name) : Role
     {
-        return User::where('username', $username)->first();
+        return Role::where('name', $name)->first();
     }
 
     public function update($user, $role){

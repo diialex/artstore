@@ -3,17 +3,19 @@
 namespace App\Http\Controllers;
 
 
-use App\Services\UsersService;
+
+use App\Services\RolesService;
 use Exception;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
+use App\Services\UsersService;
 use Hash;
 use function PHPUnit\Framework\throwException;
 
 class UsersController extends Controller
 {
-    public function __construct(protected UsersService $service){
+    public function __construct(protected UsersService $userService, protected RolesService $rolesService){
 
     }
     /**
@@ -21,7 +23,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = $this->service->getAll();
+        $users = $this->userService->getAll();
         return view('users.listUsers', compact('users'));
     }
 
@@ -30,7 +32,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
+        $roles = $this->rolesService->getAll();
         return view('users.createUser', compact('roles'));
     }
 
@@ -50,7 +52,7 @@ class UsersController extends Controller
                 'address' => 'nullable|string|min:18'
             ]);
 
-            $role=Role::find($request->role);
+            $role=$this->rolesService->get($request->role);
             $newUser = new User;
             $newUser -> username = $request -> username;
             $newUser -> name = $request -> name;
@@ -79,7 +81,7 @@ class UsersController extends Controller
     public function show(string $id)
     {
         try{
-            $user = $this->service->get($id);
+            $user = $this->userService->get($id);
         }catch(Exception $e){
             $msg = $e->getMessage();
             return view('users.listUsers', compact('msg'));
@@ -90,7 +92,7 @@ class UsersController extends Controller
 
     public function show_by_username(string $username)
     {
-        $user = $this->service->getUserByUsername($username);
+        $user = $this->userService->getUserByUsername($username);
         if(!$user){
             return view('users.listUsers', [
             'users' => [], 
@@ -108,8 +110,8 @@ class UsersController extends Controller
     public function edit(string $id)
     {
         try{
-            $user = $this->service->get($id);
-            $roles = Role::all();
+            $user = $this->userService->get($id);
+            $roles = $this->rolesService->getAll();
             return view('users.editUser', compact('user', 'roles'));
         }catch(Exception $e){
             return view('users.listUsers', ['users' => [], 'msg' => $e->getMessage()]);
@@ -124,7 +126,7 @@ class UsersController extends Controller
     public function update(Request $request, string $id)
     {   
     try {
-        $user = $this->service->get($id);
+        $user = $this->userService->get($id);
 
         $rules = [
             'username' => 'required|string|max:20',
@@ -150,12 +152,12 @@ class UsersController extends Controller
             $user->password = Hash::make($request->password);
         }
 
-        $role = Role::find($request->role);
+        $role = $this->rolesService->get($request->role);
         if (!$role) {
             throw new Exception("El rol seleccionado no existe");
         }
 
-        $this->service->update($user, $request->role);
+        $this->userService->update($user, $request->role);
 
     } catch (\Throwable $e) {
         dd([
@@ -175,8 +177,8 @@ class UsersController extends Controller
     public function destroy(string $id)
     {
         try {
-            $user = $this->service->get($id);
-            $this->service->delete($user);
+            $user = $this->userService->get($id);
+            $this->userService->delete($user);
             
         } catch (\Throwable $e) {
         dd([
