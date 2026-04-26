@@ -4,7 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Services\Product\ProductService;
+use App\Models\Category;
+use App\Services\ProductService;
 use App\Http\Requests\Product\CreateProductRequest; 
 use App\Http\Requests\Product\UpdateProductRequest; 
 
@@ -18,12 +19,21 @@ class ProductController extends Controller
     {
         $this->productService = $productService;
     }
-    
-    public function index()
-    {
-        $products = $this->productService->getAll();
 
-        return view('products.index', compact('products'));
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class);
+
+    }
+    
+    public function index(Request $request)
+    {
+        $categoryId=$request->input('category'); // Obtener el ID de la categoría desde la query string
+
+        $products = $this->productService->getAll($categoryId);
+
+        $categories = Category::all(); // Obtener todas las categorías para el filtro   
+        return view('products.index', compact('products', 'categories', 'categoryId')); // Pasamos también el categoryId para mantener el filtro seleccionado
     }
 
     /**
@@ -31,7 +41,10 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view('products.form', ['product' => new Product()]);
+        $categories = Category::all(); // Obtener todas las categorías para el select
+        $product = new \App\Models\Product(); // Creamos un producto vacío para reutilizar el formulario de edición
+
+        return view('products.form', compact('product', 'categories')); // ✅ CORRECTO
     }
 
     /**
@@ -56,11 +69,11 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(int $id)
+    public function edit(Product $product)
     {
-        $product = $this->productService->getById($id);
+         $categories = Category::all(); // Obtener todas las categorías para el select
 
-        return view('products.form', compact('product'));
+        return view('products.form', compact('product', 'categories'));
     }
 
     /**

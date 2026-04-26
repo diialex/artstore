@@ -28,6 +28,8 @@ class CreateProductRequest extends FormRequest
             'price' => 'required|numeric',
             'stock' => 'required|integer',
             'image_url' => 'nullable|url',
+            'categories' => 'nullable|array',
+            'category.*' => 'EXISTS:categories,id',
         ];
     }
 }
