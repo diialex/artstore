@@ -1,16 +1,25 @@
 <?php
 
+use App\Http\Controllers\RolesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+
+
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrderItemController;
+
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\CategoryController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::resource('products', ProductController::class);
+Route::resource('payments', PaymentController::class);
+Route::resource('orders', OrderController::class);
+Route::resource('orderitems', OrderItemController::class);
 
-// TEMPORAL QUITAR ESTA RUTA
-Route::redirect('/', '/categories');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 # CATEGORIES CRUD
 Route::resource('categories', CategoryController::class);
@@ -19,6 +28,7 @@ Route::resource('categories', CategoryController::class);
 Route::resource('products', ProductController::class);
 
 #USER CRUD
+#USER
 
 Route::get('/users', [UsersController::class, 'index']);
 
@@ -35,3 +45,21 @@ Route::get('/editUsers/{id}', [UsersController::class, 'edit'])->name('users.edi
 Route::put('/updateUsers/{id}', [UsersController::class, 'update'])->name('users.update');
 
 Route::delete('/deleteUsers/{id}', [UsersController::class, 'destroy'])->name('users.delete');
+
+#ROLE
+
+Route::get('/roles', [RolesController::class, 'index'])->name('roles.index');
+
+Route::get('/createRoles', [RolesController::class, 'create'])->name('roles.create');
+
+Route::post('/createRoles', [RolesController::class, 'store'])->name('roles.store');
+
+Route::get("/roles/{id}", [RolesController::class, 'show'])->name('roles.show')->where('id', '[0-9]+');
+
+Route::get("/roles/{username}", [RolesController::class, 'show_by_name'])->name('roles.show_by_name');
+
+Route::get('/editRoles/{id}', [RolesController::class, 'edit'])->name('roles.edit');
+
+Route::put('/updateRoles/{id}', [RolesController::class, 'update'])->name('roles.update');
+
+Route::delete('/deleteRoles/{id}', [RolesController::class, 'destroy'])->name('roles.delete');
