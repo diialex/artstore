@@ -3,16 +3,15 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OrderController;
-
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UsersController;
 
 
 Route::resource('payments', PaymentController::class);
 Route::resource('orders', OrderController::class);
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
 
 #USER CRUD
 
