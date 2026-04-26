@@ -3,12 +3,15 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\OrderItemController;
 
 use App\Http\Controllers\UsersController;
 
 
 Route::resource('payments', PaymentController::class);
 Route::resource('orders', OrderController::class);
+Route::resource('orderitems', OrderItemController::class);
 
 Route::get('/', function () {
     return view('welcome');
