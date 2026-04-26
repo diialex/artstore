@@ -3,17 +3,22 @@
 namespace App\Http\Controllers;
 
 
-use App\Services\UsersService;
+
+use App\Http\Requests\Roles\StoreRolesRequest;
+use App\Http\Requests\Users\StoreUsersRequest;
+use App\Http\Requests\Users\UpdateUsersRequest;
+use App\Services\RolesService;
 use Exception;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Role;
+use App\Services\UsersService;
 use Hash;
 use function PHPUnit\Framework\throwException;
 
 class UsersController extends Controller
 {
-    public function __construct(protected UsersService $service){
+    public function __construct(protected UsersService $userService, protected RolesService $rolesService){
 
     }
     /**
@@ -21,7 +26,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $users = $this->service->getAll();
+        $users = $this->userService->getAll();
         return view('users.listUsers', compact('users'));
     }
 
@@ -30,27 +35,16 @@ class UsersController extends Controller
      */
     public function create()
     {
-        $roles = Role::all();
+        $roles = $this->rolesService->getAll();
         return view('users.createUser', compact('roles'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUsersRequest $request)
     {
-
         try{
-            $request->validate([
-                'username' => 'required|string|max:20',
-                'name' => 'required|string|max:20',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required|min:8|confirmed',
-                'phone'      => 'nullable|string|min:9',
-                'address' => 'nullable|string|min:18'
-            ]);
-
-            $role=Role::find($request->role);
             $newUser = new User;
             $newUser -> username = $request -> username;
             $newUser -> name = $request -> name;
@@ -58,12 +52,7 @@ class UsersController extends Controller
             $newUser -> password = Hash::make($request->password);
             $newUser -> phone = $request -> phone;
             $newUser -> address = $request -> address;
-            $newUser->saveOrFail();
-
-            if(!$role){
-                $newException = new Exception("rol no existe");
-                throwException($newException);
-            }
+            $this->userService->store($newUser);
 
             $newUser->roles()->attach($request->role);
             } catch (\Throwable $e) {
@@ -79,18 +68,18 @@ class UsersController extends Controller
     public function show(string $id)
     {
         try{
-            $user = $this->service->get($id);
+            $user = $this->userService->get($id);
+            $users = [$user];
+            return view('users.listUsers', compact('users'));
         }catch(Exception $e){
             $msg = $e->getMessage();
             return view('users.listUsers', compact('msg'));
         }
-        
-        return view('users.listUsers', compact('users'));
     }
 
     public function show_by_username(string $username)
     {
-        $user = $this->service->getUserByUsername($username);
+        $user = $this->userService->getUserByUsername($username);
         if(!$user){
             return view('users.listUsers', [
             'users' => [], 
@@ -108,8 +97,8 @@ class UsersController extends Controller
     public function edit(string $id)
     {
         try{
-            $user = $this->service->get($id);
-            $roles = Role::all();
+            $user = $this->userService->get($id);
+            $roles = $this->rolesService->getAll();
             return view('users.editUser', compact('user', 'roles'));
         }catch(Exception $e){
             return view('users.listUsers', ['users' => [], 'msg' => $e->getMessage()]);
@@ -121,24 +110,10 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUsersRequest $request, string $id)
     {   
     try {
-        $user = $this->service->get($id);
-
-        $rules = [
-            'username' => 'required|string|max:20',
-            'name'     => 'required|string|max:20',
-            'email'    => 'required|email|unique:users,email,' . $id, 
-            'phone'    => 'nullable|string|min:9',
-            'address'  => 'nullable|string|min:18'
-        ];
-
-        if ($request->filled('password')) {
-            $rules['password'] = 'required|min:8|confirmed';
-        }
-
-        $request->validate($rules);
+        $user = $this->userService->get($id);
 
         $user->username = $request->username;
         $user->name     = $request->name;
@@ -150,12 +125,12 @@ class UsersController extends Controller
             $user->password = Hash::make($request->password);
         }
 
-        $role = Role::find($request->role);
+        $role = $this->rolesService->get($request->role);
         if (!$role) {
             throw new Exception("El rol seleccionado no existe");
         }
 
-        $this->service->update($user, $request->role);
+        $this->userService->update($user, $request->role);
 
     } catch (\Throwable $e) {
         dd([
@@ -175,8 +150,8 @@ class UsersController extends Controller
     public function destroy(string $id)
     {
         try {
-            $user = $this->service->get($id);
-            $this->service->delete($user);
+            $user = $this->userService->get($id);
+            $this->userService->delete($user);
             
         } catch (\Throwable $e) {
         dd([
