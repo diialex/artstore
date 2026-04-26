@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\RolesController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OrderController;
@@ -17,7 +18,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-#USER CRUD
+#USER
 
 Route::get('/users', [UsersController::class, 'index']);
 
@@ -34,3 +35,21 @@ Route::get('/editUsers/{id}', [UsersController::class, 'edit'])->name('users.edi
 Route::put('/updateUsers/{id}', [UsersController::class, 'update'])->name('users.update');
 
 Route::delete('/deleteUsers/{id}', [UsersController::class, 'destroy'])->name('users.delete');
+
+#ROLE
+
+Route::get('/roles', [RolesController::class, 'index'])->name('roles.index');
+
+Route::get('/createRoles', [RolesController::class, 'create'])->name('roles.create');
+
+Route::post('/createRoles', [RolesController::class, 'store'])->name('roles.store');
+
+Route::get("/roles/{id}", [RolesController::class, 'show'])->name('roles.show')->where('id', '[0-9]+');
+
+Route::get("/roles/{username}", [RolesController::class, 'show_by_name'])->name('roles.show_by_name');
+
+Route::get('/editRoles/{id}', [RolesController::class, 'edit'])->name('roles.edit');
+
+Route::put('/updateRoles/{id}', [RolesController::class, 'update'])->name('roles.update');
+
+Route::delete('/deleteRoles/{id}', [RolesController::class, 'destroy'])->name('roles.delete');

@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\User;
-use App\Models\Role;
 use Illuminate\Database\Eloquent\Collection;
 use Exception;
 
@@ -21,6 +20,10 @@ class UsersService
             throw new Exception("Usuario no existe");
         }
         return $user;
+    }
+
+    public function store($user){
+        $user->saveOrFail();
     }
 
     public function getUserByUsername(string $username) : User
