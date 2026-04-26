@@ -14,7 +14,7 @@ class ProductService
         // Aquí puedes implementar la lógica para obtener todos los productos
         // Por ejemplo, podrías usar un modelo de Eloquent para recuperar los productos de la base de datos
      
-        return Product::latest()->get(); // get() devuelve una Collection
+        return Product::all(); // get() devuelve una Collection
     }
 
     public function getById(int $id): ?Product

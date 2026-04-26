@@ -2,13 +2,21 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
-
-Route::resource('products', ProductController::class);
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\CategoryController;
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+// TEMPORAL QUITAR ESTA RUTA
+Route::redirect('/', '/categories');
+
+# CATEGORIES CRUD
+Route::resource('categories', CategoryController::class);
+
+# PRODUCTS CRUD
+Route::resource('products', ProductController::class);
 
 #USER CRUD
 
