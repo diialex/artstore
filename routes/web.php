@@ -12,6 +12,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderItemController;
 
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\CategoryController;
 
 Route::resource('products', ProductController::class);
 Route::resource('payments', PaymentController::class);
@@ -20,7 +21,13 @@ Route::resource('orderitems', OrderItemController::class);
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+# CATEGORIES CRUD
+Route::resource('categories', CategoryController::class);
 
+# PRODUCTS CRUD
+Route::resource('products', ProductController::class);
+
+#USER CRUD
 #USER
 
 Route::get('/users', [UsersController::class, 'index']);

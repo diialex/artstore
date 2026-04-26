@@ -28,6 +28,8 @@ class UpdateProductRequest extends FormRequest
             'description' => 'nullable|string',
             'price' => 'required|numeric',
             'stock' => 'required|integer',
+            'categories' => 'nullable|array',
+            'category.*' => 'EXISTS:categories,id',
             // 'status' => 'required|in:draft,published', // posibilidad de campo
         ];
     }

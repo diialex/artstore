@@ -17,5 +17,4 @@ class Product extends Model
         return $this->belongsToMany(Category::class);
     }
 
-    public const PAGINATE = 10;
 }
