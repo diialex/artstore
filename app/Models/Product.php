@@ -17,4 +17,9 @@ class Product extends Model
         return $this->belongsToMany(Category::class);
     }
 
+    // Relación 1:N con Tallas
+    public function sizes()
+    {
+        return $this->hasMany(Size::class);
+    }
 }
