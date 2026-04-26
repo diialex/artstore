@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 
 
+use App\Http\Requests\Roles\StoreRolesRequest;
+use App\Http\Requests\Users\StoreUsersRequest;
+use App\Http\Requests\Users\UpdateUsersRequest;
 use App\Services\RolesService;
 use Exception;
 use Illuminate\Http\Request;
@@ -39,20 +42,9 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreUsersRequest $request)
     {
-
         try{
-            $request->validate([
-                'username' => 'required|string|max:20',
-                'name' => 'required|string|max:20',
-                'email' => 'required|email|unique:users,email',
-                'password' => 'required|min:8|confirmed',
-                'phone'      => 'nullable|string|min:9',
-                'address' => 'nullable|string|min:18'
-            ]);
-
-            $role=$this->rolesService->get($request->role);
             $newUser = new User;
             $newUser -> username = $request -> username;
             $newUser -> name = $request -> name;
@@ -60,12 +52,7 @@ class UsersController extends Controller
             $newUser -> password = Hash::make($request->password);
             $newUser -> phone = $request -> phone;
             $newUser -> address = $request -> address;
-            $newUser->saveOrFail();
-
-            if(!$role){
-                $newException = new Exception("rol no existe");
-                throwException($newException);
-            }
+            $this->userService->store($newUser);
 
             $newUser->roles()->attach($request->role);
             } catch (\Throwable $e) {
@@ -82,12 +69,12 @@ class UsersController extends Controller
     {
         try{
             $user = $this->userService->get($id);
+            $users = [$user];
+            return view('users.listUsers', compact('users'));
         }catch(Exception $e){
             $msg = $e->getMessage();
             return view('users.listUsers', compact('msg'));
         }
-        
-        return view('users.listUsers', compact('users'));
     }
 
     public function show_by_username(string $username)
@@ -123,24 +110,10 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateUsersRequest $request, string $id)
     {   
     try {
         $user = $this->userService->get($id);
-
-        $rules = [
-            'username' => 'required|string|max:20',
-            'name'     => 'required|string|max:20',
-            'email'    => 'required|email|unique:users,email,' . $id, 
-            'phone'    => 'nullable|string|min:9',
-            'address'  => 'nullable|string|min:18'
-        ];
-
-        if ($request->filled('password')) {
-            $rules['password'] = 'required|min:8|confirmed';
-        }
-
-        $request->validate($rules);
 
         $user->username = $request->username;
         $user->name     = $request->name;

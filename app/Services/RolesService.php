@@ -6,7 +6,7 @@ use App\Models\Role;
 use Illuminate\Database\Eloquent\Collection;
 use Exception;
 
-class RoleService
+class RolesService
 {
     public function getAll(): Collection
     {
@@ -22,18 +22,20 @@ class RoleService
         return $role;
     }
 
-    public function getUserByUsername(string $name) : Role
+    public function store(Role $role){
+        $role->saveOrFail();
+    }
+
+    public function getUserByName(string $name) : Role
     {
         return Role::where('name', $name)->first();
     }
 
-    public function update($user, $role){
-        $user->save();
-
-        $user->roles()->sync($role);
+    public function update(Role $role){
+        $role->save();
     }
 
-    public function delete($user){
-        $user->delete();
+    public function delete(Role $role){
+        $role->delete();
     }
 }

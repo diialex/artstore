@@ -22,6 +22,10 @@ class UsersService
         return $user;
     }
 
+    public function store($user){
+        $user->saveOrFail();
+    }
+
     public function getUserByUsername(string $username) : User
     {
         return User::where('username', $username)->first();
