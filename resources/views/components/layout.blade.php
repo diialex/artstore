@@ -31,7 +31,9 @@
                 <div class="col-4 d-flex justify-content-end gap-2 gap-md-3 align-items-center">
                     <i id="perfil" class="bi bi-person fs-2 clicable mb-0" data-bs-toggle="offcanvas"
                         data-bs-target="#iniciarSesion"></i>
-                    <i class="bi bi-bag fs-2 clicable mb-0"></i>
+                    <a href="{{ route('orders.index') }}" class="text-dark text-decoration-none">
+                        <i class="bi bi-bag fs-2 clicable mb-0"></i>
+                    </a>
                 </div>
             </div>
         </nav>
@@ -39,7 +41,7 @@
     <div class="container-fluid py-3">
         {{ $slot }}
     </div>
-      <footer class="border-top border-black border-opacity-25 border-2 bg-body-secondary">
+    <footer class="border-top border-black border-opacity-25 border-2 bg-body-secondary">
         <div class="row mx-0 mt-3 d-flex d-md-none small bg-body-secondary">
             <div class="col-9 d-flex flex-column justify-content-start gap-2">
 
