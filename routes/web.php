@@ -2,7 +2,14 @@
 
 use App\Http\Controllers\RolesController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\OrderController;
+
 use App\Http\Controllers\UsersController;
+
+
+Route::resource('payments', PaymentController::class);
+Route::resource('orders', OrderController::class);
 
 Route::get('/', function () {
     return view('welcome');
