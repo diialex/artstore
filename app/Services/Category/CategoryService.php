@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Services\Category;
+namespace App\Services\Category;
 
 use App\Models\Category;
 use Illuminate\Database\Eloquent\Collection;
@@ -15,7 +15,7 @@ class CategoryService
     public function getAll(): Collection 
     {
         // Ordenamos por las más recientes y paginamos
-        return Category::latest()->get();
+        return Category::all();
     }
 
     public function update(Category $category, array $data)

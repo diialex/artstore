@@ -9,7 +9,7 @@ use App\Models\Category;
 use App\Http\Requests\Category\CreateCategoryRequest;
 use App\Http\Requests\Category\UpdateCategoryRequest;
 
-use App\Http\Services\Category\CategoryService;
+use App\Services\Category\CategoryService;
 
 
 class CategoryController extends Controller
