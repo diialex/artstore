@@ -1,38 +1,35 @@
-
-<body class="bg-light">
-    <div class="container-fluid  py-3">
-       
-        <main>
-            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000"
-                data-bs-pause="false">
-                <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0"
-                        class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
-                        aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
-                        aria-label="Slide 3"></button>
+<x-layout>
+    <main>
+        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000"
+            data-bs-pause="false">
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active"
+                    aria-current="true" aria-label="Slide 1"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1"
+                    aria-label="Slide 2"></button>
+                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2"
+                    aria-label="Slide 3"></button>
+            </div>
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="media/images/banner-example1.jpg" class="d-block w-100 h-25 banner-img" alt="..." />
                 </div>
-                <div class="carousel-inner">
-                    <div class="carousel-item active">
-                        <img src="media/images/banner-example1.jpg" class="d-block w-100 h-25 banner-img" alt="..." />
-                    </div>
-                    <div class="carousel-item">
-                        <img src="media/images/banner-example2.jpg" class="d-block w-100 h-25 banner-img" alt="..." />
-                    </div>
-                    <div class="carousel-item">
-                        <img src="media/images/banner-example3.jpg" class="d-block w-100 h-25 banner-img" alt="..." />
-                    </div>
+                <div class="carousel-item">
+                    <img src="media/images/banner-example2.jpg" class="d-block w-100 h-25 banner-img" alt="..." />
+                </div>
+                <div class="carousel-item">
+                    <img src="media/images/banner-example3.jpg" class="d-block w-100 h-25 banner-img" alt="..." />
                 </div>
             </div>
-            <div class="row g-4 m-0 px-2 px-md-5 mt-4">
-                <div class="col-12">
-                    <p class="d-block d-md-none display-6 mb-0">Categorías</p>
-                    <p class="d-none d-md-block display-5 mb-0">Categorías</p>
-                    <hr class="border-secondary border-3">
-                </div>
+        </div>
+        <div class="row g-4 m-0 px-2 px-md-5 mt-4">
+            <div class="col-12">
+                <p class="d-block d-md-none display-6 mb-0">Categorías</p>
+                <p class="d-none d-md-block display-5 mb-0">Categorías</p>
+                <hr class="border-secondary border-3">
+            </div>
 
-                @foreach($categories as $category)
+            @foreach($categories as $category)
                 <div class="col-6 col-sm-6 col-lg-3">
                     <div class="ratio ratio-1x1 index-video-container clicable">
                         <video muted loop playsinline class="object-fit-cover w-100 h-100 clicable">
@@ -46,53 +43,10 @@
                         </div>
                     </div>
                 </div>
-                @endforeach
-            </div>
-        </main>
-    </div>
-    <footer class="border-top border-black border-opacity-25 border-2 bg-body-secondary">
-        <div class="row mx-0 mt-3 d-flex d-md-none small bg-body-secondary">
-            <div class="col-9 d-flex flex-column justify-content-start gap-2">
-
-                <ul class="list-unstyled d-flex flex-wrap gap-3 mb-0">
-                    <li>Términos y condiciones de compra</li>
-                    <li>Términos y condiciones de hanger</li>
-                    <li>Política de privacidad</li>
-                    <li>Política de cookies</li>
-                </ul>
-
-                <ul class="list-unstyled d-flex flex-wrap gap-3 mb-0">
-                    <li>Gestión de privacidad</li>
-                    <li>Configurar cookies</li>
-                </ul>
-
-            </div>
-            <div class="col-3 d-flex justify-content-end">
-                <p>© 2026 HANGER</p>
-            </div>
+            @endforeach
         </div>
+    </main>
 
-        <div class="row mx-0 mt-3 d-none d-md-flex fs-6 bg-body-secondary">
-            <div class="col-9 d-flex flex-column justify-content-start gap-2">
-
-                <ul class="list-unstyled d-flex flex-wrap gap-3 mb-0">
-                    <li>Términos y condiciones de compra</li>
-                    <li>Términos y condiciones de hanger</li>
-                    <li>Política de privacidad</li>
-                    <li>Política de cookies</li>
-                </ul>
-
-                <ul class="list-unstyled d-flex flex-wrap gap-3 mb-0">
-                    <li>Gestión de privacidad</li>
-                    <li>Configurar cookies</li>
-                </ul>
-
-            </div>
-            <div class="col-3 d-flex justify-content-end">
-                <p>© 2026 HANGER</p>
-            </div>
-        </div>
-    </footer>
     <div class="offcanvas offcanvas-start bg-light text-black" tabindex="-1" id="menuLateral">
         <div class="offcanvas-header">
             <i class="bi bi-x-lg fs-2 clicable" data-bs-dismiss="offcanvas"></i>
@@ -125,6 +79,5 @@
     </div>
 
     <script src="lib/own/videoHover.js"></script>
-</body>
-
-</html>
+    </body>
+</x-layout>
