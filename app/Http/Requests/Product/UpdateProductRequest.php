@@ -27,9 +27,11 @@ class UpdateProductRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric',
-            'stock' => 'required|integer',
             'categories' => 'nullable|array',
             'category.*' => 'EXISTS:categories,id',
+            'sizes' => 'nullable|array', // Las tallas vienen en formato array
+            'sizes.*.name' => 'required_with:sizes|string|max:50', // Valida el nombre dentro del array
+            'sizes.*.stock' => 'required_with:sizes|integer|min:0', // Valida el stock dentro del array'
             // 'status' => 'required|in:draft,published', // posibilidad de campo
         ];
     }

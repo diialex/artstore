@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use App\Services\ProductService;
-use App\Services\Product\ProductService;
 use App\Http\Requests\Product\CreateProductRequest; 
 use App\Http\Requests\Product\UpdateProductRequest; 
 
@@ -54,6 +53,7 @@ class ProductController extends Controller
     public function store(CreateProductRequest $request)
     {
     
+
         $this->productService->create($request->validated());
 
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
