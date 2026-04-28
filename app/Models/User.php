@@ -5,9 +5,11 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Role;
+use App\Models\Address;
 
 class User extends Authenticatable
 {
@@ -25,7 +27,6 @@ class User extends Authenticatable
         'email',
         'password',
         'phone',
-        'address',
     ];
 
     /**
@@ -34,6 +35,7 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
+        'id',
         'remember_token',
     ];
 
@@ -54,9 +56,16 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Role::class, 'role_user', 'user_id', 'role_id');
     }
+    
+    public function addresses(): HasMany
+    {
+        return $this->hasMany(Address::class);
+    }
 
     public function hasRol(string $role): bool
     {
         return $this->roles()->where('name', $role)->exists();
     }
+
+
 }

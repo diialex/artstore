@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
-
 use App\Http\Requests\Roles\StoreRolesRequest;
 use App\Http\Requests\Users\StoreUsersRequest;
 use App\Http\Requests\Users\UpdateUsersRequest;
@@ -14,7 +12,6 @@ use App\Models\User;
 use App\Models\Role;
 use App\Services\UsersService;
 use Hash;
-use function PHPUnit\Framework\throwException;
 
 class UsersController extends Controller
 {
@@ -44,20 +41,21 @@ class UsersController extends Controller
      */
     public function store(StoreUsersRequest $request)
     {
-        try{
+        try {
             $newUser = new User;
-            $newUser -> username = $request -> username;
-            $newUser -> name = $request -> name;
-            $newUser -> email = $request -> email;
-            $newUser -> password = Hash::make($request->password);
-            $newUser -> phone = $request -> phone;
-            $newUser -> address = $request -> address;
+            $newUser->username = $request->username;
+            $newUser->name = $request->name;
+            $newUser->email = $request->email;
+            $newUser->password = Hash::make($request->password);
+            $newUser->phone = $request->phone;
+            $newUser->address = ''; // Valor temporal hasta ejecutar la migración que elimina el campo
+            
             $this->userService->store($newUser);
 
             $newUser->roles()->attach($request->role);
-            } catch (\Throwable $e) {
-                dd($e->getMessage());
-            }
+        } catch (\Throwable $e) {
+            dd($e->getMessage());
+        }
 
         return redirect('/users');
     }
@@ -67,11 +65,11 @@ class UsersController extends Controller
      */
     public function show(string $id)
     {
-        try{
+        try {
             $user = $this->userService->get($id);
             $users = [$user];
             return view('users.listUsers', compact('users'));
-        }catch(Exception $e){
+        } catch (Exception $e) {
             $msg = $e->getMessage();
             return view('users.listUsers', compact('msg'));
         }
@@ -80,10 +78,10 @@ class UsersController extends Controller
     public function show_by_username(string $username)
     {
         $user = $this->userService->getUserByUsername($username);
-        if(!$user){
+        if (!$user) {
             return view('users.listUsers', [
-            'users' => [], 
-            'msg' => "Usuario no encontrado"
+                'users' => [], 
+                'msg' => "Usuario no encontrado"
             ]);
         }
 
@@ -96,53 +94,45 @@ class UsersController extends Controller
      */
     public function edit(string $id)
     {
-        try{
+        try {
             $user = $this->userService->get($id);
             $roles = $this->rolesService->getAll();
             return view('users.editUser', compact('user', 'roles'));
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return view('users.listUsers', ['users' => [], 'msg' => $e->getMessage()]);
         }
-        
-        
     }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(UpdateUsersRequest $request, string $id)
-    {   
-    try {
-        $user = $this->userService->get($id);
+    {
+        try {
+            $user = $this->userService->get($id);
 
-        $user->username = $request->username;
-        $user->name     = $request->name;
-        $user->email    = $request->email;
-        $user->phone    = $request->phone;
-        $user->address  = $request->address;
+            $user->username = $request->username;
+            $user->name     = $request->name;
+            $user->email    = $request->email;
+            $user->phone    = $request->phone;
 
-        if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+            if ($request->filled('password')) {
+                $user->password = Hash::make($request->password);
+            }
+
+            $this->userService->update($user, $request->role);
+
+        } catch (\Throwable $e) {
+            dd([
+                'Mensaje' => $e->getMessage(),
+                'Archivo' => $e->getFile(),
+                'Linea'   => $e->getLine(),
+                'Datos_Enviados' => $request->all()
+            ]);
         }
 
-        $role = $this->rolesService->get($request->role);
-        if (!$role) {
-            throw new Exception("El rol seleccionado no existe");
-        }
-
-        $this->userService->update($user, $request->role);
-
-    } catch (\Throwable $e) {
-        dd([
-        'Mensaje' => $e->getMessage(),
-        'Archivo' => $e->getFile(),
-        'Linea'   => $e->getLine(),
-        'Datos_Enviados' => $request->all()
-    ]);
+        return redirect('/users')->with('msg', 'Usuario actualizado con éxito');
     }
-
-    return redirect('/users')->with('msg', 'Usuario actualizado con éxito');
-}
 
     /**
      * Remove the specified resource from storage.
@@ -152,16 +142,14 @@ class UsersController extends Controller
         try {
             $user = $this->userService->get($id);
             $this->userService->delete($user);
-            
         } catch (\Throwable $e) {
-        dd([
-        'Mensaje' => $e->getMessage(),
-        'Archivo' => $e->getFile(),
-        'Linea'   => $e->getLine(),
-        ]);
+            dd([
+                'Mensaje' => $e->getMessage(),
+                'Archivo' => $e->getFile(),
+                'Linea'   => $e->getLine(),
+            ]);
         }
 
         return redirect('/users')->with('msg', 'Usuario eliminado con éxito');
     }
-
 }
