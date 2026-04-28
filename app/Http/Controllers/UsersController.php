@@ -59,7 +59,7 @@ class UsersController extends Controller
                 dd($e->getMessage());
             }
 
-        return redirect('/users');
+        return redirect()->route('home');
     }
 
     /**

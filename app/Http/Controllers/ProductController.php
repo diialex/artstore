@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use App\Services\ProductService;
-use App\Services\Product\ProductService;
 use App\Http\Requests\Product\CreateProductRequest; 
 use App\Http\Requests\Product\UpdateProductRequest; 
 
