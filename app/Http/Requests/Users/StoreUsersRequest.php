@@ -28,7 +28,7 @@ class StoreUsersRequest extends FormRequest
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8|confirmed',
             'phone'      => 'nullable|string|min:9',
-            'address' => 'nullable|string|min:18'
+            'role' => 'required|exists:roles,id'
         ];
     }
 }

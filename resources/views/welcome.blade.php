@@ -73,7 +73,9 @@
                 <input id="username-input" type="email" class="form-control" placeholder="name@example.com" />
                 <label class="form-label mt-3" for="password-input">Password:</label>
                 <input id="password-input" type="password" class="form-control" placeholder="*****" />
-                <a href="profile.html" type="button" class="btn btn-primary mt-3">Login</a>
+                <a href="profile.html" type="button" class="btn btn-primary mt-3 w-100">Login</a>
+                <p class="mt-3 mb-2">¿No tienes una cuenta?</p>
+                <a href="{{ route('users.create') }}" type="button" class="btn btn-secondary w-100">Register</a>
             </form>
         </div>
     </div>

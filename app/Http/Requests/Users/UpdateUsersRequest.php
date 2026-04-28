@@ -23,18 +23,18 @@ class UpdateUsersRequest extends FormRequest
      */
     public function rules(): array
     {
-        $password = $this->route('password');
         $id = $this->route('id');
-        $rules=[];
-        if (trim($password) !== "") {
+        $rules = [];
+
+        if ($this->filled('password')) {
             $rules['password'] = 'required|min:8|confirmed';
         }
 
         $rules['username'] = 'required|string|max:20';
         $rules['name'] = 'required|string|max:20';
-        $rules['email'] = ['required','email', Rule::unique('users')->ignore($id)];
+        $rules['email'] = ['required', 'email', Rule::unique('users')->ignore($id)];
         $rules['phone'] = 'nullable|string|min:9';
-        $rules['address'] = 'nullable|string|min:18';
+        $rules['role'] = 'required|exists:roles,id';
         
         return $rules;
     }
