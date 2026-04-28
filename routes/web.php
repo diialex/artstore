@@ -10,8 +10,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderItemController;
-
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CategoryController;
 
 Route::resource('products', ProductController::class);
@@ -30,7 +30,7 @@ Route::resource('products', ProductController::class);
 #USER CRUD
 #USER
 
-Route::get('/users', [UsersController::class, 'index']);
+Route::get('/users', [UsersController::class, 'index'])->name('users.index');
 
 Route::get('/createUsers', [UsersController::class, 'create'])->name('users.create');
 
@@ -63,3 +63,19 @@ Route::get('/editRoles/{id}', [RolesController::class, 'edit'])->name('roles.edi
 Route::put('/updateRoles/{id}', [RolesController::class, 'update'])->name('roles.update');
 
 Route::delete('/deleteRoles/{id}', [RolesController::class, 'destroy'])->name('roles.delete');
+
+#ADDRESS
+
+Route::get('/addresses', [AddressController::class, 'index'])->name('addresses.index');
+
+Route::get('/createAddress', [AddressController::class, 'create'])->name('addresses.create');
+
+Route::post('/createAddress', [AddressController::class, 'store'])->name('addresses.store');
+
+Route::post("/addresses/{id}}", [AddressController::class, 'show'])->name('addresses.show');
+
+Route::get('/editAddress/{id}', [AddressController::class, 'edit'])->name('addresses.edit');
+
+Route::put('/updateAddress/{id}', [AddressController::class, 'update'])->name('addresses.update');
+
+Route::delete('/deleteAddress/{id}', [AddressController::class, 'destroy'])->name('addresses.delete');
