@@ -2,22 +2,32 @@
 
 use App\Http\Controllers\RolesController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
+
+
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\UsersController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\CategoryController;
 
-
+Route::resource('products', ProductController::class);
 Route::resource('payments', PaymentController::class);
 Route::resource('orders', OrderController::class);
 Route::resource('orderitems', OrderItemController::class);
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
+# CATEGORIES CRUD
+Route::resource('categories', CategoryController::class);
+
+# PRODUCTS CRUD
+Route::resource('products', ProductController::class);
+
+#USER CRUD
 #USER
 
 Route::get('/users', [UsersController::class, 'index'])->name('users.index');
