@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Models\Role;
+use Hash;
 
 class User extends Authenticatable
 {
@@ -58,5 +59,13 @@ class User extends Authenticatable
     public function hasRol(string $role): bool
     {
         return $this->roles()->where('name', $role)->exists();
+    }
+
+    public static function encryptPassword(string $password): string{
+        return Hash::make($password);
+    }
+
+    public function decryptPassword(string $password): bool{
+        return Hash::check($password, $this->password);
     }
 }

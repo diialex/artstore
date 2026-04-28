@@ -49,9 +49,8 @@ class UsersController extends Controller
             $newUser -> username = $request -> username;
             $newUser -> name = $request -> name;
             $newUser -> email = $request -> email;
-            $newUser -> password = Hash::make($request->password);
+            $newUser -> password = User::encryptPassword($request -> password);
             $newUser -> phone = $request -> phone;
-            $newUser -> address = $request -> address;
             $this->userService->store($newUser);
 
             $newUser->roles()->attach($request->role);
@@ -119,10 +118,9 @@ class UsersController extends Controller
         $user->name     = $request->name;
         $user->email    = $request->email;
         $user->phone    = $request->phone;
-        $user->address  = $request->address;
 
         if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+            $user->password = User::encryptPassword($request->password);
         }
 
         $role = $this->rolesService->get($request->role);
