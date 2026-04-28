@@ -30,8 +30,8 @@ class CreateProductRequest extends FormRequest
             'categories' => 'nullable|array',
             'category.*' => 'exists:categories,id',
             'sizes' => 'nullable|array',
-            'sizes.*.name' => 'required_with:sizes|string|max:50',
-            'sizes.*.stock' => 'required_with:sizes|integer|min:0',
+            'sizes.*.name' => 'nullable|string|max:50', // Cambiamos required_with por nullable
+            'sizes.*.stock' => 'nullable|integer|min:0', // Cambiamos required_with por nullable
         ];
     }
 }

@@ -47,63 +47,44 @@
                     @error('categories') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                 </div>
                 <div class="form-group mb-4">
-        <div class="d-flex justify-content-between align-items-center mb-2">
-            <label class="fw-bold m-0">Tallas y Stock</label>
-            <button type="button" class="btn btn-sm btn-outline-success" onclick="addSizeRow()">➕ Añadir Talla</button>
-        </div>
-    
-        <div id="sizes-container">
-            @if($product->exists)
-                @foreach($product->sizes as $index => $size)
-                    <div class="row g-2 mb-2 size-row">
-                        <div class="col-5">
-                            <input type="text" name="sizes[{{ $index }}][name]" class="form-control form-control-sm" value="{{ $size->size }}" placeholder="Ej: 50x70, L, Única" required>
-                        </div>
-                        <div class="col-5">
-                            <input type="number" name="sizes[{{ $index }}][stock]" class="form-control form-control-sm" value="{{ $size->stock }}" placeholder="Stock" min="0" required>
-                        </div>
-                        <div class="col-2 text-end">
-                            <button type="button" class="btn btn-sm btn-danger w-100" onclick="this.closest('.size-row').remove()">❌</button>
-                        </div>
+                <div class="form-group mb-4">
+                    <label class="fw-bold m-0 mb-2">Tallas y Stock</label>
+                    <div class="form-text text-muted mb-3">
+                        Rellena el nombre y el stock. Deja en blanco las filas que no necesites. Para borrar una talla existente, simplemente borra su nombre.
                     </div>
-                @endforeach
-            @endif
-        </div>
-    </div>
+                    
+                    <div id="sizes-container">
+                        @php 
+                            $index = 0; 
+                        @endphp
 
-    @if ($errors->any())
-        <div class="alert alert-danger">
-            <strong>¡Uy! Hay un problema con los datos:</strong>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+                        @if($product->exists)
+                            @foreach($product->sizes as $size)
+                                <div class="row g-2 mb-2">
+                                    <div class="col-6">
+                                        <input type="text" name="sizes[{{ $index }}][name]" class="form-control form-control-sm" value="{{ $size->size }}" placeholder="Ej: 50x70, L, Única">
+                                    </div>
+                                    <div class="col-6">
+                                        <input type="number" name="sizes[{{ $index }}][stock]" class="form-control form-control-sm" value="{{ $size->stock }}" placeholder="Stock" min="0">
+                                    </div>
+                                </div>
+                                @php $index++; @endphp
+                            @endforeach
+                        @endif
 
-    <script>
-        let sizeIndex = {{ $product->exists ? $product->sizes->count() : 0 }};
-        
-        function addSizeRow() {
-            const container = document.getElementById('sizes-container');
-            const row = document.createElement('div');
-            row.className = 'row g-2 mb-2 size-row';
-            row.innerHTML = `
-                <div class="col-5">
-                    <input type="text" name="sizes[${sizeIndex}][name]" class="form-control form-control-sm" placeholder="Ej: 50x70, L, Única" required>
+                        @for($i = 0; $i < 3; $i++)
+                            <div class="row g-2 mb-2">
+                                <div class="col-6">
+                                    <input type="text" name="sizes[{{ $index }}][name]" class="form-control form-control-sm" value="" placeholder="Nueva talla (opcional)">
+                                </div>
+                                <div class="col-6">
+                                    <input type="number" name="sizes[{{ $index }}][stock]" class="form-control form-control-sm" value="0" placeholder="Stock" min="0">
+                                </div>
+                            </div>
+                            @php $index++; @endphp
+                        @endfor
+                    </div>
                 </div>
-                <div class="col-5">
-                    <input type="number" name="sizes[${sizeIndex}][stock]" class="form-control form-control-sm" placeholder="Stock" min="0" value="0" required>
-                </div>
-                <div class="col-2 text-end">
-                    <button type="button" class="btn btn-sm btn-danger w-100" onclick="this.closest('.size-row').remove()">❌</button>
-                </div>
-            `;
-            container.appendChild(row);
-            sizeIndex++;
-        }
-    </script>
 
                 <button class="btn btn-primary mt-2">{{ $product->exists ? 'Actualizar' : 'Crear Producto' }}</button>
             </form>
