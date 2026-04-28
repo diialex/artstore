@@ -8,23 +8,24 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Database\Seeder;
 
-class ProductSeeder extends Seeder
+class ProductsSeeder extends Seeder
 {
     public function run(): void
     {
-        // 1. Creamos 5 categorías
-        $categories = Category::factory(5)->create();
 
-        // 2. Creamos 20 productos
-        Product::factory(20)->create()->each(function ($product) use ($categories) {
-            // A cada producto le asignamos entre 1 y 2 categorías al azar
-            $product->categories()->attach(
-                $categories->random(rand(1, 2))->pluck('id')->toArray()
-            );
+        Product::create([
+            'name' => 'Cuadro "El Grito" de Edvard Munch',
+            'description' => 'Una reproducción del famoso cuadro "El Grito" de Edvard Munch, que captura la angustia y la desesperación humana.',
+            'price' => 150.00,
+            'image' => 'https://example.com/images/el-grito.jpg'
+        ]);
 
-            // De paso, le creamos un par de tallas falsas para que no den error tus vistas
-            $product->sizes()->create(['size' => 'Única', 'stock' => rand(5, 50)]);
-        });
+        Product::create([
+            'name' => 'Cuadro "La Noche Estrellada" de Vincent van Gogh',
+            'description' => 'Una reproducción del icónico cuadro "La Noche Estrellada" de Vincent van Gogh, que muestra un cielo nocturno lleno de estrellas y un pueblo tranquilo.',
+            'price' => 200.00,
+            'image' => 'https://example.com/images/la-noche-estrellada.jpg'
+        ]);
 
         
     }
