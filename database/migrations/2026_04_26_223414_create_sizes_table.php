@@ -13,13 +13,8 @@ return new class extends Migration
     {
         Schema::create('product_sizes', function (Blueprint $table) {
             $table->id();
-            // Relación con el producto principal
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            
-            // La talla (ej: S, M, L, XL, o números si son zapatos 38, 39, 40)
             $table->string('size');
-            
-            // El stock disponible para ESTA talla en concreto
             $table->integer('stock')->default(0);
             $table->timestamps();
         });
