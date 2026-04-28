@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Http\Requests\Order\StoreOrderRequest;
 use App\Http\Requests\Order\UpdateOrderRequest;
+use App\Models\Product;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
-    public function __construct(protected OrderService $service){
+    public function __construct(protected OrderService $orderService){
         
     }
 
@@ -20,7 +21,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = $this->service->getAll();
+        $orders = $this->orderService->getAll();
         return view('orders.index', compact('orders'));
     }
 
@@ -32,12 +33,41 @@ class OrderController extends Controller
         return view('orders.form', [ 'order' => new Order() ]);
     }
 
+    public function addProducttoOrder(Product $product)
+    {
+        $order= Order::firstOrCreate([
+            'user_id' => auth()->id(),
+            'status' => 'pending'
+        ]);
+
+        $item= $order->items()->where('product_id', $product->id)->first();
+        if ($item){
+            $item->quantity = $item->quantity + 1;
+            $item->price = $product->price;
+            $item->save();
+        }else{
+            $order->items()->create([
+                'order_id' => $order->id,
+                'product_id' => $product->id,
+                'quantity' => 1,
+                'price' => $product->price
+            ]);
+        }
+
+        
+        return redirect()->route('orders.carrito')->with('success', 'Producto agregado a la orden exitosamente.');
+    }
+
+    public function carrito(){
+        return view('orders.carrito');
+    }
+
     /**
      * Store a newly created resource in storage.
      */
     public function store(StoreOrderRequest $request)
     {
-        $this->service->create($request->validated());
+        $this->orderService->create($request->validated());
 
         return redirect()->route('orders.index')->with('success', 'Orden creada exitosamente.');
     }
@@ -55,7 +85,7 @@ class OrderController extends Controller
      */
     public function edit(int $id)
     {
-        $order = $this->service->find($id);
+        $order = $this->orderService->find($id);
         return view('orders.form', compact('order'));
     }
 
@@ -64,9 +94,9 @@ class OrderController extends Controller
      */
     public function update(UpdateOrderRequest $request, int $id)
     {
-        $order = $this->service->find($id);
+        $order = $this->orderService->find($id);
         $order->update($request->validated());
-        $this->service->update($order);
+        $this->orderService->update($order);
         return redirect()->route('orders.index')->with('success', 'Orden actualizada exitosamente.');
     }
 
@@ -75,7 +105,7 @@ class OrderController extends Controller
      */
     public function destroy(int $id)
     {
-        $this->service->delete($id);
+        $this->orderService->delete($id);
         return redirect()->route('orders.index')->with('success', 'Orden eliminada exitosamente.');
     }
 }

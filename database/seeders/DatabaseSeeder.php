@@ -12,30 +12,23 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // 1. Creamos tu cuenta de Administrador (Problema 2)
-        User::factory()->create([
+        User::create([
+            'username' => 'admin',
             'name' => 'Admin',
             'email' => 'admin@artesanos.com',
             'password' => bcrypt('123456'), // Contraseña fácil para pruebas
-            'is_admin' => true,
+            'phone' => '1234567890',
         ]);
 
         // 2. Creamos un Usuario normal para probar compras
-        User::factory()->create([
+        User::create([
+            'username'=> 'client',
             'name' => 'Cliente',
             'email' => 'cliente@artesanos.com',
             'password' => bcrypt('123456'),
-            'is_admin' => false,
+            'phone' => '0987654321',
         ]);
 
-        // 3. Fabricamos 5 categorías distintas
-        $categories = Category::factory(5)->create();
-
-        // 4. Fabricamos 30 productos y les asignamos categorías al azar
-        Product::factory(30)->create()->each(function ($product) use ($categories) {
-            // A cada producto le ponemos entre 1 y 2 categorías aleatorias
-            $product->categories()->attach(
-                $categories->random(rand(1, 2))->pluck('id')->toArray()
-            );
-        });
+        $this->call(ProductSeeder::class);
     }
 }

@@ -21,6 +21,10 @@ Route::resource('orderitems', OrderItemController::class);
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
+Route::get('/addProduct/{product}', [OrderController::class, 'addProducttoOrder'])->name('orders.addProduct');
+
+Route::get('/carrito', [OrderController::class, 'carrito'])->name('orders.carrito');
+
 # CATEGORIES CRUD
 Route::resource('categories', CategoryController::class);
 

@@ -9,7 +9,7 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'description', 'price', 'image', 'is_approved'];
+    protected $fillable = ['id', 'title', 'description', 'price', 'stock', 'image_url'];
 
     // Relación N:M con Categorías
     public function categories()
