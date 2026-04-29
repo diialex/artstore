@@ -38,7 +38,7 @@
             </table>
             <div class="mt-3">
                 <h4>Total: ${{ number_format($order->total_amount, 2) }}</h4>
-                <a href="{{ route('orders.edit', $order) }}" class="btn btn-primary">Proceder al Checkout</a>
+                <a href="{{ route('payment.pay', $order) }}" class="btn btn-primary">Pagar</a>
             </div>
         @endif
     </div>

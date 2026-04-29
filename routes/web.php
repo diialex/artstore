@@ -16,6 +16,9 @@ use App\Http\Controllers\CategoryController;
 
 Route::resource('products', ProductController::class);
 Route::resource('payments', PaymentController::class);
+
+Route::post('/payment/pay/{order}', [PaymentController::class, 'pay'])->name('payment.pay');
+
 Route::resource('orders', OrderController::class);
 Route::resource('orderitems', OrderItemController::class);
 

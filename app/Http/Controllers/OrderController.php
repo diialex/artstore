@@ -35,27 +35,21 @@ class OrderController extends Controller
 
     public function addProducttoOrder(Product $product)
     {
-        $order= Order::firstOrCreate([
-            'user_id' => 1,
-            'status' => 'pending',
-            'total_amount' => $product->price
-        ]);
+        $order = Order::firstOrCreate(
+            [
+                'user_id' => 1,
+                'status' => 'pending'
+            ],
+            [
+                'total_amount' => $product->price
+            ]
+        );
 
         $item= $order->items()->where('product_id', $product->id)->first();
         if ($item){
             $item->quantity = $item->quantity + 1;
             $item->price = $product->price;
             $item->save();
-            
-            $total = 0;
-            foreach ($order->items as $item) {
-                $total += $item->price * $item->quantity;
-            }
-
-            $order->update(['total_amount' => $total]);
-
-
-            $this->orderService->update($order);
         }else{
             $order->items()->create([
                 'order_id' => $order->id,
@@ -65,13 +59,31 @@ class OrderController extends Controller
             ]);
         }
 
-        
+        // Actualizar total_amount después de agregar/actualizar el item
+        $total = 0;
+        foreach ($order->items as $item) {
+            $total += $item->price * $item->quantity;
+        }
+        $order->update(['total_amount' => $total]);
+        $this->orderService->update($order);
+
         return redirect()->route('orders.carrito')->with('success', 'Producto agregado a la orden exitosamente.');
     }
 
     public function carrito(){
         $order = Order::where('user_id',1)->where('status', 'pending')->first();
+        $order=$this->updateOrder($order);
         return view('orders.carrito', compact('order'));
+    }
+
+    public function updateOrder(Order $order){
+        $total = 0;
+        foreach ($order->items as $item) {
+            $total += $item->price * $item->quantity;
+        }
+        $order->update(['total_amount' => $total]);
+        $this->orderService->update($order);
+        return $order;
     }
 
     /**
