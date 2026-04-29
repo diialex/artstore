@@ -13,13 +13,8 @@ return new class extends Migration
     {
         Schema::create('category_product', function (Blueprint $table) {
             $table->id();
-            
-            // Clave foránea hacia la tabla categories
             $table->foreignId('category_id')->constrained()->onDelete('cascade');
-            
-            // Clave foránea hacia la tabla products
             $table->foreignId('product_id')->constrained()->onDelete('cascade');
-            
             $table->timestamps();
         });
     }

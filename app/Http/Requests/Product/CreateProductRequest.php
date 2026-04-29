@@ -26,10 +26,12 @@ class CreateProductRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric',
-            'stock' => 'required|integer',
             'image_url' => 'nullable|url',
             'categories' => 'nullable|array',
-            'category.*' => 'EXISTS:categories,id',
+            'category.*' => 'exists:categories,id',
+            'sizes' => 'nullable|array',
+            'sizes.*.name' => 'nullable|string|max:50', // Cambiamos required_with por nullable
+            'sizes.*.stock' => 'nullable|integer|min:0', // Cambiamos required_with por nullable
         ];
     }
 }

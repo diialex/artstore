@@ -31,17 +31,17 @@
 
             @foreach($categories as $category)
                 <div class="col-6 col-sm-6 col-lg-3">
-                    <div class="ratio ratio-1x1 index-video-container clicable">
-                        <video muted loop playsinline class="object-fit-cover w-100 h-100 clicable">
-                            <source src="{{ $category['video'] }}" type="video/mp4">
-                        </video>
-                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-25"></div>
-                        <div
-                            class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white">
-                            <h1 class="d-none d-sm-block fs-2 fw-bold m-0 p-2 text-center">{{ $category['name'] }}</h1>
-                            <h1 class="d-block d-sm-none fs-4 fw-bold m-0 p-2 text-center">{{ $category['name'] }}</h1>
+                    <a href="{{ route('products.index', ['category' => $category->id]) }}" class="text-decoration-none">
+                        <div class="ratio ratio-1x1 index-video-container clicable">
+                            <video muted loop playsinline class="object-fit-cover w-100 h-100 clicable">
+                                <source src="{{ asset($category->video ?? 'media/video/default.mp4') }}" type="video/mp4">
+                            </video>
+                            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-25"></div>
+                            <div class="position-absolute d-flex align-items-center justify-content-center text-white w-100 h-100">
+                                <h1 class="fs-2 fw-bold m-0 p-2 text-center text-uppercase">{{ $category->name }}</h1>
+                            </div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             @endforeach
         </div>

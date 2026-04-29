@@ -3,29 +3,15 @@
 namespace App\Http\Controllers;
 
 use Illuminate\View\View;
+use App\Models\Category;
 
 class HomeController extends Controller
 {
     public function index(): View
     {
-        $categories = [
-            [
-                'name' => 'Mujeres',
-                'video' => 'media/video/mujeresMain.mp4'
-            ],
-            [
-                'name' => 'Hombres',
-                'video' => 'media/video/hombresMain.mp4'
-            ],
-            [
-                'name' => 'Colecciones',
-                'video' => 'media/video/colecciones.mp4'
-            ],
-            [
-                'name' => 'Accesorios',
-                'video' => 'media/video/accesorios.mp4'
-            ]
-        ];
+        
+
+        $categories = Category::all(); // Obtener todas las categorías para mostrar en la vista
 
         return view('welcome', ['categories' => $categories]);
     }
