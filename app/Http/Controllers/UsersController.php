@@ -43,13 +43,11 @@ class UsersController extends Controller
     {
         try {
             $newUser = new User;
-            $newUser->username = $request->username;
-            $newUser->name = $request->name;
-            $newUser->email = $request->email;
-            $newUser->password = Hash::make($request->password);
-            $newUser->phone = $request->phone;
-            $newUser->address = ''; // Valor temporal hasta ejecutar la migración que elimina el campo
-            
+            $newUser -> username = $request -> username;
+            $newUser -> name = $request -> name;
+            $newUser -> email = $request -> email;
+            $newUser -> password = User::encryptPassword($request -> password);
+            $newUser -> phone = $request -> phone;
             $this->userService->store($newUser);
 
             $newUser->roles()->attach($request->role);
@@ -107,9 +105,18 @@ class UsersController extends Controller
      * Update the specified resource in storage.
      */
     public function update(UpdateUsersRequest $request, string $id)
-    {
-        try {
-            $user = $this->userService->get($id);
+    {   
+    try {
+        $user = $this->userService->get($id);
+
+        $user->username = $request->username;
+        $user->name     = $request->name;
+        $user->email    = $request->email;
+        $user->phone    = $request->phone;
+
+        if ($request->filled('password')) {
+            $user->password = User::encryptPassword($request->password);
+        }
 
             $user->username = $request->username;
             $user->name     = $request->name;

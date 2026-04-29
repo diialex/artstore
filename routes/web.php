@@ -22,6 +22,12 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/paymentSuccess', [StripeController::class, ])->name('payments.success');
 Route::get('/paymentError', [StripeController::class, ])->name('payments.cancel');
 
+Route::get('/', [HomeController::class, 'index'])->name('index');
+
+Route::get('home', function(){
+    return view('auth.dashboard');
+})->middleware(['auth','verified'])->name('home'); //Es necesario verificar el email para acceder al dashboard (Protegido por el middleware 'verified')
+
 #USER CRUD
 
 Route::get('/users', [UsersController::class, 'index'])

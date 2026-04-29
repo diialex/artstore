@@ -2,15 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-use App\Models\Category;
-use App\Models\Product;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
+<<<<<<< HEAD
         // 1. Creamos tu cuenta de Administrador (Problema 2)
         User::create([
             'username' => 'admin',
@@ -30,5 +32,11 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call(ProductSeeder::class);
+=======
+        $this->call([
+            RolesSeeder::class,
+            UsersSeeder::class,
+        ]);
+>>>>>>> main
     }
 }
