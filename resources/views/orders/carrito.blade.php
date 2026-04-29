@@ -24,7 +24,7 @@
                             <td>{{ $item->quantity }}</td>
                             <td>${{ number_format($item->price * $item->quantity, 2) }}</td>
                             <td>
-                                <form action="{{ route('orderitems.destroy', $item->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este item?');">
+                                <form action="{{ route('orderitems.delete', $item->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este item?');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-outline-danger btn-sm">
@@ -38,7 +38,17 @@
             </table>
             <div class="mt-3">
                 <h4>Total: ${{ number_format($order->total_amount, 2) }}</h4>
-                <a href="{{ route('payment.pay', $order) }}" class="btn btn-primary">Pagar</a>
+                <form method="post" action="{{ route('payments.pay', $order) }}">
+                    @csrf
+                    <select>
+                    @foreach ($order->user->addresses as $address)
+                        <option name="address_id" value="{{ $address->$id }}" {{ $loop->first ? 'selected' : '' }}>
+                            <b>{{ $address->street }}</b>, {{ $address->city }}, {{ $address->zip_code }}
+                        </option>
+                    @endforeach
+                    </select>
+                    <button type="submit" class="btn btn-primary">Pagar</button>
+                </form>
             </div>
         @endif
     </div>

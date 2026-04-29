@@ -67,7 +67,7 @@
                                 Añadir al carrito
                             </a>
 
-                            <form action="{{ route('products.destroy', $product) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres aniquilar este producto?');">
+                            <form action="{{ route('products.delete', $product) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres aniquilar este producto?');">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-outline-danger btn-sm">
