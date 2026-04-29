@@ -24,11 +24,7 @@ class StripeController extends Controller{
         $stripe = new StripeClient(config('services.stripe.secret'));
         $order = $orderService->find($orderId);
         $items = $orderItemService->getAllByOrder($order); 
-
-        if (! $request->address_id) { 
-            return redirect()->back()->withErrors(['address' => 'Por favor, selecciona o crea una dirección de envío antes de proceder al pago.']);
-        }
-        $address = $addressService->get($request->address_id);
+        $address = $addressesService->get($request->address_id);
         $lineItems = [];
         foreach ($items as $item) {
             $lineItems[] = [
