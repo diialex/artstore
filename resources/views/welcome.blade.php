@@ -68,16 +68,26 @@
             <i class="bi bi-x-lg fs-2 clicable" data-bs-dismiss="offcanvas"></i>
         </div>
         <div class="offcanvas-body">
-            <form class="me-4 pe-3">
-                <label class="form-label" for="username-input">Username:</label>
-                <input id="username-input" type="email" class="form-control" placeholder="name@example.com" />
-                <label class="form-label mt-3" for="password-input">Password:</label>
-                <input id="password-input" type="password" class="form-control" placeholder="*****" />
-                <a href="profile.html" type="button" class="btn btn-primary mt-3 w-100">Login</a>
+            
+            @if ($errors->any())
+                <div class="alert alert-danger mt-3 mb-0 p-2">
+                    Credenciales incorrectas.
+                </div>
+            @endif
+
+            <form method="POST" action="{{ route('login') }}" class="me-4 pe-3">
+                @csrf <label class="form-label" for="email">Email:</label>
+                <input id="email" type="email" name="email" class="form-control" placeholder="name@example.com" required autofocus />
+                
+                <label class="form-label mt-3" for="password">Password:</label>
+                <input id="password" type="password" name="password" class="form-control" placeholder="*****" required />
+                
+                <button type="submit" class="btn btn-primary mt-3 w-100">Login</button>
+                
                 <p class="mt-3 mb-2">¿No tienes una cuenta?</p>
-                <a href="{{ route('users.create') }}" type="button" class="btn btn-secondary w-100">Register</a>
+                <a href="{{ route('register') }}" class="btn btn-secondary w-100">Register</a>
             </form>
-        </div>
+            </div>
     </div>
 
     <script src="lib/own/videoHover.js"></script>
