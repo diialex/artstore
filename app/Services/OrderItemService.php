@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Services;
+use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -33,5 +34,9 @@ class OrderItemService{
         $orderItem = $this->find($id);
         $orderItem->delete();
         return true;
+    }
+
+    public function getAllByOrder(Order $order){
+        return $order->items->toArray();
     }
 }

@@ -37,15 +37,13 @@
 
                         <td>
                             <div class="btn-group" role="group">
-                                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-primary">Editar</a>
+                                <a href="{{ route('users.edit', auth()->user()->username) }}" class="btn btn-sm btn-primary">Editar</a>
 
-                                <form action="{{ route('addresses.show', $user->id) }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <input type="hidden" name="user_id" value="{{ $user->id }}">
-                                    <button type="submit" class="btn btn-sm btn-info text-white">Direcciones</button>
-                                </form>
+                                <a href="{{ route('addresses.show', auth()->user()->username) }}" class="btn btn-sm btn-info text-white">
+                                    Direcciones
+                                </a>
 
-                                <form action="{{ route('users.delete', $user->id) }}" method="POST" class="d-inline"
+                                <form action="{{ route('users.delete', auth()->user()->username) }}" method="POST" class="d-inline"
                                     onsubmit="return confirm('¿Estás seguro de borrar a {{ $user->username }}?')">
                                     @csrf
                                     @method('DELETE')

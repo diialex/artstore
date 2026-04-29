@@ -41,7 +41,8 @@ class AddressController extends Controller
     public function store(StoreAddressRequest $request)
     {
         try {
-            $user = $this->usersService->get($request->user_id);
+            
+            $user = $this->usersService->get(auth()->id());
             $this->service->create($user, $request->validated());
 
             return redirect('/users')->with('msg', 'Dirección creada con éxito');
@@ -57,7 +58,7 @@ class AddressController extends Controller
     public function show(Request $request)
     {
         try {
-            $userId = $request->input('user_id');
+            $userId = auth()->id();
             if (!$userId) {
                 return redirect('/addresses');
             }

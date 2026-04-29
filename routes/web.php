@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RolesController;
+use App\Http\Controllers\StripeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 
@@ -18,32 +19,36 @@ use App\Models\Address;
 
 #VISTAS
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/paymentSuccess', [StripeController::class, ])->name('payments.success');
+Route::get('/paymentError', [StripeController::class, ])->name('payments.cancel');
+
+Route::get('/', [HomeController::class, 'index'])->name('index');
+
+Route::get('home', function(){
+    return view('auth.dashboard');
+})->middleware(['auth','verified'])->name('home'); //Es necesario verificar el email para acceder al dashboard (Protegido por el middleware 'verified')
 
 #USER CRUD
 
 Route::get('/users', [UsersController::class, 'index'])
     ->name('users.index');
 
-Route::get('/createUsers', [UsersController::class, 'create'])
+Route::get('/users/create', [UsersController::class, 'create'])
     ->name('users.create');
 
-Route::post('/createUsers', [UsersController::class, 'store'])
+Route::post('/users', [UsersController::class, 'store'])
     ->name('users.store');
 
-Route::get("/users/{id}", [UsersController::class, 'show'])
-    ->name('users.show')
-    ->where('id', '[0-9]+');
+Route::get("/users/{username}", [UsersController::class, 'show'])
+    ->name('users.show');
 
-Route::get("/users/{username}", [UsersController::class, 'show_by_username'])
-    ->name('users.show_by_name');
-
-Route::get('/editUsers/{id}', [UsersController::class, 'edit'])
+Route::get('/users/{username}/edit', [UsersController::class, 'edit'])
     ->name('users.edit');
 
-Route::put('/updateUsers/{id}', [UsersController::class, 'update'])
+Route::put('/users/{id}', [UsersController::class, 'update'])
     ->name('users.update');
 
-Route::delete('/deleteUsers/{id}', [UsersController::class, 'destroy'])
+Route::delete('/users/{id}', [UsersController::class, 'destroy'])
     ->name('users.delete');
 
 #ROLE
@@ -84,9 +89,8 @@ Route::post('/addresses', [AddressController::class, 'store'])
     ->name('addresses.store')
     /*->can('create', Address::class)*/;
 
-Route::get("/addresses/{address}", [AddressController::class, 'show'])
-    ->name('addresses.show')
-    /*->can('view', 'address')*/;
+Route::get("/addresses/user/{username}", [UsersController::class, 'showAddresses'])
+    ->name('addresses.show');
 
 Route::get('/editAddress/{address}', [AddressController::class, 'edit'])
     ->name('addresses.edit')
@@ -99,6 +103,9 @@ Route::put('/updateAddress/{address}', [AddressController::class, 'update'])
 Route::delete('/deleteAddress/{address}', [AddressController::class, 'destroy'])
     ->name('addresses.delete')
     /*->can('delete', 'address')*/;
+
+Route::get('/addProduct/{product}', [OrderController::class, 'addProducttoOrder'])
+    ->name('orders.addProduct');
 
 #CATEGORIES
 Route::get('/categories', [CategoryController::class, 'index'])
@@ -187,6 +194,9 @@ Route::delete('/deletePayment/{payment}', [PaymentController::class, 'destroy'])
     ->name('payments.delete')
     /*->can('delete', 'payment')*/;
 
+Route::post('/payments/pay/{order}', [StripeController::class, 'createCheckout'])
+    ->name('payments.pay');
+
 #ORDERS
 Route::get('/orders', [OrderController::class, 'index'])
     ->name('orders.index')
@@ -244,6 +254,9 @@ Route::put('/updateOrderitem/{orderitem}', [OrderItemController::class, 'update'
 Route::delete('/deleteOrderitem/{orderitem}', [OrderItemController::class, 'destroy'])
     ->name('orderitems.delete')
     /*->can('delete', 'orderitem')*/;
+
+Route::get('/carrito', [OrderController::class, 'carrito'])
+    ->name('orders.carrito');
 
 //borrar cuando se implemente el login
 use App\Services\UsersService;
