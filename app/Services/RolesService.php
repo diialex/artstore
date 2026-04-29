@@ -13,9 +13,9 @@ class RolesService
         return Role::all();
     }
     
-    public function get(string $id) : Role
+    public function get(string $colum) : Role
     {
-        $role = Role::find($id);
+        $role = Role::find($colum);
         if(!$role){
             throw new Exception("Role not exist");
         }
@@ -24,11 +24,6 @@ class RolesService
 
     public function store(Role $role){
         $role->saveOrFail();
-    }
-
-    public function getUserByName(string $name) : Role
-    {
-        return Role::where('name', $name)->first();
     }
 
     public function update(Role $role){
