@@ -29,8 +29,12 @@
                 </div>
 
                 <div class="col-4 d-flex justify-content-end gap-2 gap-md-3 align-items-center">
-                    <i id="perfil" class="bi bi-person fs-2 clicable mb-0" data-bs-toggle="offcanvas"
-                        data-bs-target="#iniciarSesion"></i>
+                    @auth
+                        <span class="text-dark">{{ Auth::user()->username }}</span>
+                    @else
+                        <i id="perfil" class="bi bi-person fs-2 clicable mb-0" data-bs-toggle="offcanvas"
+                            data-bs-target="#iniciarSesion"></i>
+                    @endauth
                     <a href="{{ route('orders.index') }}" class="text-dark text-decoration-none">
                         <i class="bi bi-bag fs-2 clicable mb-0"></i>
                     </a>

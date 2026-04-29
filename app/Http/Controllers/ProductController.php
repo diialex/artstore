@@ -42,9 +42,9 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all(); // Obtener todas las categorías para el select
-        $product = new \App\Models\Product(); // Creamos un producto vacío para reutilizar el formulario de edición
+        $product = new Product(); // Creamos un producto vacío para reutilizar el formulario de edición
 
-        return view('products.form', compact('product', 'categories')); // ✅ CORRECTO
+        return view('products.form', compact('product', 'categories')); 
     }
 
     /**

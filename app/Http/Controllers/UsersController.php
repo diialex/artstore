@@ -61,10 +61,10 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $username)
     {
         try {
-            $user = $this->userService->get($id);
+            $user = $this->userService->getUserByUsername($username);
             $users = [$user];
             return view('users.listUsers', compact('users'));
         } catch (Exception $e) {
@@ -90,10 +90,10 @@ class UsersController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $username)
     {
         try {
-            $user = $this->userService->get($id);
+            $user = $this->userService->getUserByUsername($username);
             $roles = $this->rolesService->getAll();
             return view('users.editUser', compact('user', 'roles'));
         } catch (Exception $e) {
@@ -158,5 +158,11 @@ class UsersController extends Controller
         }
 
         return redirect('/users')->with('msg', 'Usuario eliminado con éxito');
+    }
+
+    public function showAddresses(string $username){
+        $user = $this->userService->getUserByUsername($username);
+        $addresses = $user->addresses;
+        return view('addresses.listAddresses', compact('addresses'));
     }
 }
