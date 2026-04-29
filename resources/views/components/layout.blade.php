@@ -4,12 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio</title>
+    <title>E-Commerce Artesanos</title>
     <link rel="icon" type="image/x-icon" href="media/images/logo.ico">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="styles.css">
+
+    @vite(['resources/css/app.scss', 'resources/js/app.js'])
+
 </head>
 
 <body class="bg-light">
@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="col-4 d-flex justify-content-center">
-                    <img src="media/images/logo.jpg" class="img-fluid logo">
+                    <img src="media/images/logo.png" class="img-fluid logo">
                 </div>
 
                 <div class="col-4 d-flex justify-content-end gap-2 gap-md-3 align-items-center">
@@ -45,7 +45,7 @@
     <div class="container-fluid py-3">
         {{ $slot }}
     </div>
-    <footer class="border-top border-black border-opacity-25 border-2 bg-body-secondary">
+    <footer class="border-top border-secondary border-opacity-25 border-2 bg-dark text-white">
         <div class="row mx-0 mt-3 d-flex d-md-none small bg-body-secondary">
             <div class="col-9 d-flex flex-column justify-content-start gap-2">
 
