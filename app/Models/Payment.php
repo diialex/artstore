@@ -15,7 +15,7 @@ class Payment extends Model
 
     protected $appends = ['amount'];  
 
-    public const PAGINATE = 10; //this shows the number of payments per page when paginating results
+    public const PAGINATE = 10; 
 
     
     public function order(){
@@ -24,5 +24,13 @@ class Payment extends Model
 
     public function getAmountAttribute(){
         return $this->order?->total_amount ?? 0;
+    }
+
+    public function changeCompleted(){
+        $this->status = 'completed';
+    }
+
+    public function changePending(){
+        $this->status = 'pending';
     }
 }

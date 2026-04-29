@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\OrderItem;
 use App\Models\Payment;
+use App\Services\AddressService;
 use App\Services\OrderItemService;
 use App\Services\OrderService;
 use App\Services\PaymentService;
@@ -16,13 +17,14 @@ class StripeController extends Controller{
 
     }
     public function createCheckout(Request $request, $orderId) {
+        $addressesService = new AddressService();
         $orderItemService = new OrderItemService;
         $orderService = new OrderService();
+        $paymentService = new PaymentService();
         $stripe = new StripeClient(config('services.stripe.secret'));
         $order = $orderService->find($orderId);
-
         $items = $orderItemService->getAllByOrder($order); 
-
+        $address = $addressesService->get($request->address_id);
         $lineItems = [];
         foreach ($items as $item) {
             $lineItems[] = [
@@ -48,6 +50,14 @@ class StripeController extends Controller{
             'cancel_url' => route('payments.cancel'),
         ]);
 
+        
+        $paymentService->create([
+            'order_id'       => $order->id,
+            'stripe_id'      => $checkout->id,
+            'payment_method' => $checkout->payment_method_types[0],
+            'status'         => 'pending',
+            'shipping_address' => $request->input('address_id')
+        ]);
 
         
         return redirect($checkout->url);
@@ -62,12 +72,7 @@ class StripeController extends Controller{
             $order = $orderService->find($session->metadata->order_id);
             if ($session->payment_status === 'paid') {
                 
-                $paymentService->create([
-                    'order_id' => $session->metadata->order_id,
-                    'payment_method' => $session->payment_method_types,
-                    'status',
-                    'shipping_address',
-                ])
+                $payment=$order->payments()->changeCompleted();
                 
 
                 return view('payments.success', [
