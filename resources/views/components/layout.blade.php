@@ -19,13 +19,13 @@
                 <div class="col-4 d-flex justify-content-start gap-2 gap-md-3 align-items-center">
                     <i id="burger-menu" class="bi bi-list fs-2 clicable mb-0" data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral"></i>
-                    <a href="shop.html" class="text-dark text-decoration-none d-flex align-items-center">
+                    <a href="{{ route('home') }}" class="text-dark text-decoration-none d-flex align-items-center">
                         <i class="bi bi-shop fs-2 clicable mb-0"></i>
                     </a>
                 </div>
 
                 <div class="col-4 d-flex justify-content-center">
-                    <img src="media/images/logo.png" class="img-fluid logo">
+                    <img src="{{ asset('media/images/logo.png') }}" alt="Logo Hanger" style="height: 70px; width: auto; object-fit: contain;">
                 </div>
 
                 <div class="col-4 d-flex justify-content-end gap-2 gap-md-3 align-items-center">
@@ -45,46 +45,19 @@
     <div class="container-fluid py-3">
         {{ $slot }}
     </div>
-    <footer class="border-top border-secondary border-opacity-25 border-2 bg-dark text-white">
-        <div class="row mx-0 mt-3 d-flex d-md-none small bg-body-secondary">
-            <div class="col-9 d-flex flex-column justify-content-start gap-2">
-
-                <ul class="list-unstyled d-flex flex-wrap gap-3 mb-0">
-                    <li>Términos y condiciones de compra</li>
-                    <li>Términos y condiciones de hanger</li>
-                    <li>Política de privacidad</li>
-                    <li>Política de cookies</li>
-                </ul>
-
-                <ul class="list-unstyled d-flex flex-wrap gap-3 mb-0">
-                    <li>Gestión de privacidad</li>
-                    <li>Configurar cookies</li>
-                </ul>
-
-            </div>
-            <div class="col-3 d-flex justify-content-end">
-                <p>© 2026 HANGER</p>
-            </div>
-        </div>
-
-        <div class="row mx-0 mt-3 d-none d-md-flex fs-6 bg-body-secondary">
-            <div class="col-9 d-flex flex-column justify-content-start gap-2">
-
-                <ul class="list-unstyled d-flex flex-wrap gap-3 mb-0">
-                    <li>Términos y condiciones de compra</li>
-                    <li>Términos y condiciones de hanger</li>
-                    <li>Política de privacidad</li>
-                    <li>Política de cookies</li>
-                </ul>
-
-                <ul class="list-unstyled d-flex flex-wrap gap-3 mb-0">
-                    <li>Gestión de privacidad</li>
-                    <li>Configurar cookies</li>
-                </ul>
-
-            </div>
-            <div class="col-3 d-flex justify-content-end">
-                <p>© 2026 HANGER</p>
+    <footer class="bg-dark text-white pt-4 pb-3 mt-5 w-100 shadow-lg ">
+        <div class="container-fluid px-4">
+            <div class="row align-items-center">
+                <div class="col-12 col-md-9 text-center text-md-start mb-3 mb-md-0">
+                    <a href="#" class="text-white-50 text-decoration-none me-3 small hover-white">Términos y condiciones de compra</a>
+                    <a href="#" class="text-white-50 text-decoration-none me-3 small hover-white">Términos y condiciones de hanger</a>
+                    <a href="#" class="text-white-50 text-decoration-none me-3 small hover-white">Política de privacidad</a>
+                    <a href="#" class="text-white-50 text-decoration-none me-3 small hover-white">Política de cookies</a>
+                    <a href="#" class="text-white-50 text-decoration-none small hover-white">Gestión de privacidad</a>
+                </div>
+                <div class="col-12 col-md-3 text-center text-md-end">
+                    <span class="small fw-bold">&copy; 2026 HANGER</span>
+                </div>
             </div>
         </div>
     </footer>

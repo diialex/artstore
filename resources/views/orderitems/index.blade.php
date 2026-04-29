@@ -14,7 +14,7 @@
                     <li class="mb-2">
                         <strong>Orden #{{ $orderitem->id }}</strong> - ${{ $orderitem->total_amount }} ({{ $orderitem->status }})
                         <a href="{{ route('orderitems.edit', $orderitem) }}" class="btn btn-warning">Editar</a>
-                        <form method="POST" action="{{ route('orderitems.destroy', $orderitem) }}" style="display:inline;">
+                        <form method="POST" action="{{ route('orderitems.delete', $orderitem) }}" style="display:inline;">
                             @csrf @method('DELETE')
                             <button class="btn btn-danger">Eliminar</button>
                         </form>
