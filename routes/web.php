@@ -18,17 +18,16 @@ Route::resource('products', ProductController::class);
 Route::resource('payments', PaymentController::class);
 Route::resource('orders', OrderController::class);
 Route::resource('orderitems', OrderItemController::class);
-
-Route::get('/', [HomeController::class, 'index'])->name('home');
-
-# CATEGORIES CRUD
 Route::resource('categories', CategoryController::class);
-
-# PRODUCTS CRUD
 Route::resource('products', ProductController::class);
 
+Route::get('/', [HomeController::class, 'index'])->name('index');
+
+Route::get('home', function(){
+    return view('auth.dashboard');
+})->middleware(['auth','verified'])->name('home'); //Es necesario verificar el email para acceder al dashboard (Protegido por el middleware 'verified')
+
 #USER CRUD
-#USER
 
 Route::get('/users', [UsersController::class, 'index'])->name('users.index');
 
