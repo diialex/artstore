@@ -38,7 +38,7 @@ class OrderController extends Controller
         $order= Order::firstOrCreate([
             'user_id' => 1,
             'status' => 'pending',
-            'total_amount' => 0
+            'total_amount' => $product->price
         ]);
 
         $item= $order->items()->where('product_id', $product->id)->first();
