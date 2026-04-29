@@ -36,8 +36,9 @@ class OrderController extends Controller
     public function addProducttoOrder(Product $product)
     {
         $order= Order::firstOrCreate([
-            'user_id' => auth()->id(),
-            'status' => 'pending'
+            'user_id' => 1,
+            'status' => 'pending',
+            'total_amount' => 0
         ]);
 
         $item= $order->items()->where('product_id', $product->id)->first();
@@ -45,6 +46,16 @@ class OrderController extends Controller
             $item->quantity = $item->quantity + 1;
             $item->price = $product->price;
             $item->save();
+            
+            $total = 0;
+            foreach ($order->items as $item) {
+                $total += $item->price * $item->quantity;
+            }
+
+            $order->update(['total_amount' => $total]);
+
+
+            $this->orderService->update($order);
         }else{
             $order->items()->create([
                 'order_id' => $order->id,
@@ -59,7 +70,8 @@ class OrderController extends Controller
     }
 
     public function carrito(){
-        return view('orders.carrito');
+        $order = Order::where('user_id',1)->where('status', 'pending')->first();
+        return view('orders.carrito', compact('order'));
     }
 
     /**

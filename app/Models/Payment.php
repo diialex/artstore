@@ -10,6 +10,7 @@ class Payment extends Model
         'order_id',
         'payment_method',
         'status',
+        'shipping_address',
     ];
 
     protected $appends = ['amount'];  

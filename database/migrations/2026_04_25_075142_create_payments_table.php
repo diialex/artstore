@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->string('payment_method');
             $table->enum('status', ['pending', 'completed', 'failed']);
+            $table->string('shipping_address')->nullable();
             $table->timestamps();
         });
     }
