@@ -11,6 +11,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+<<<<<<< HEAD
         // 1. Creamos tu cuenta de Administrador (Problema 2)
         User::create([
             'username' => 'admin',
@@ -30,5 +31,11 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call(ProductSeeder::class);
+=======
+        $this->call([
+            RolesSeeder::class,
+            UsersSeeder::class,
+        ]);
+>>>>>>> main
     }
 }
