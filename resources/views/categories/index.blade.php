@@ -30,7 +30,7 @@
                                 <td class="text-end">
                                     <a href="{{ route('categories.edit', $category) }}" class="btn btn-outline-warning btn-sm">✏️</a>
                                     
-                                    <form action="{{ route('categories.destroy', $category) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Borrar categoría?');">
+                                    <form action="{{ route('categories.delete', $category) }}" method="POST" class="d-inline" onsubmit="return confirm('¿Borrar categoría?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit" class="btn btn-outline-danger btn-sm">🗑️</button>
