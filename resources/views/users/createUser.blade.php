@@ -20,15 +20,22 @@
 
 <input type="password" name="password_confirmation" placeholder="confirm password" class="form-control mb-2">
 
-<select name="role" class="form-control mb-2">
-    <option value="">Selecciona un rol</option>
-    @foreach ($roles as $role)
-        <option value="{{ $role->id }}">
+@foreach($roles as $role)
+    <div class="form-check">
+        <!-- El name debe ser igual para todos y terminar en [] -->
+        <input class="form-check-input" 
+               type="checkbox" 
+               name="roles[]" 
+               value="{{ $role->id }}" 
+               id="role_{{ $role->id }}"
+               {{ (is_array(old('roles')) && in_array($role->id, old('roles'))) ? 'checked' : '' }}>
+        
+        <label class="form-check-label" for="role_{{ $role->id }}">
             {{ $role->name }}
-        </option>
-    @endforeach
-</select>
-@error('role') <div class="alert alert-danger"> Selecciona un rol </div> @enderror
+        </label>
+    </div>
+@endforeach
+@error('roles[]') <div class="alert alert-danger"> Selecciona un rol </div> @enderror
 
 <button class="btn btn-primary btn-block" type="submit">
 Crear nuevo usuario
