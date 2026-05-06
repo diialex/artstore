@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-
-
 use App\Http\Requests\Roles\StoreRolesRequest;
 use App\Http\Requests\Users\StoreUsersRequest;
 use App\Http\Requests\Users\UpdateUsersRequest;
@@ -14,7 +12,6 @@ use App\Models\User;
 use App\Models\Role;
 use App\Services\UsersService;
 use Hash;
-use function PHPUnit\Framework\throwException;
 
 class UsersController extends Controller
 {
@@ -44,20 +41,19 @@ class UsersController extends Controller
      */
     public function store(StoreUsersRequest $request)
     {
-        try{
+        try {
             $newUser = new User;
             $newUser -> username = $request -> username;
             $newUser -> name = $request -> name;
             $newUser -> email = $request -> email;
-            $newUser -> password = Hash::make($request->password);
+            $newUser -> password = User::encryptPassword($request -> password);
             $newUser -> phone = $request -> phone;
-            $newUser -> address = $request -> address;
             $this->userService->store($newUser);
 
             $newUser->roles()->attach($request->role);
-            } catch (\Throwable $e) {
-                dd($e->getMessage());
-            }
+        } catch (\Throwable $e) {
+            dd($e->getMessage());
+        }
 
         return redirect('/users');
     }
@@ -65,13 +61,13 @@ class UsersController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $username)
     {
-        try{
-            $user = $this->userService->get($id);
+        try {
+            $user = $this->userService->getUserByUsername($username);
             $users = [$user];
             return view('users.listUsers', compact('users'));
-        }catch(Exception $e){
+        } catch (Exception $e) {
             $msg = $e->getMessage();
             return view('users.listUsers', compact('msg'));
         }
@@ -80,10 +76,10 @@ class UsersController extends Controller
     public function show_by_username(string $username)
     {
         $user = $this->userService->getUserByUsername($username);
-        if(!$user){
+        if (!$user) {
             return view('users.listUsers', [
-            'users' => [], 
-            'msg' => "Usuario no encontrado"
+                'users' => [], 
+                'msg' => "Usuario no encontrado"
             ]);
         }
 
@@ -94,17 +90,15 @@ class UsersController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(string $username)
     {
-        try{
-            $user = $this->userService->get($id);
+        try {
+            $user = $this->userService->getUserByUsername($username);
             $roles = $this->rolesService->getAll();
             return view('users.editUser', compact('user', 'roles'));
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return view('users.listUsers', ['users' => [], 'msg' => $e->getMessage()]);
         }
-        
-        
     }
 
     /**
@@ -119,30 +113,33 @@ class UsersController extends Controller
         $user->name     = $request->name;
         $user->email    = $request->email;
         $user->phone    = $request->phone;
-        $user->address  = $request->address;
 
         if ($request->filled('password')) {
-            $user->password = Hash::make($request->password);
+            $user->password = User::encryptPassword($request->password);
         }
 
-        $role = $this->rolesService->get($request->role);
-        if (!$role) {
-            throw new Exception("El rol seleccionado no existe");
+            $user->username = $request->username;
+            $user->name     = $request->name;
+            $user->email    = $request->email;
+            $user->phone    = $request->phone;
+
+            if ($request->filled('password')) {
+                $user->password = Hash::make($request->password);
+            }
+
+            $this->userService->update($user, $request->role);
+
+        } catch (\Throwable $e) {
+            dd([
+                'Mensaje' => $e->getMessage(),
+                'Archivo' => $e->getFile(),
+                'Linea'   => $e->getLine(),
+                'Datos_Enviados' => $request->all()
+            ]);
         }
 
-        $this->userService->update($user, $request->role);
-
-    } catch (\Throwable $e) {
-        dd([
-        'Mensaje' => $e->getMessage(),
-        'Archivo' => $e->getFile(),
-        'Linea'   => $e->getLine(),
-        'Datos_Enviados' => $request->all()
-    ]);
+        return redirect('/users')->with('msg', 'Usuario actualizado con éxito');
     }
-
-    return redirect('/users')->with('msg', 'Usuario actualizado con éxito');
-}
 
     /**
      * Remove the specified resource from storage.
@@ -152,16 +149,20 @@ class UsersController extends Controller
         try {
             $user = $this->userService->get($id);
             $this->userService->delete($user);
-            
         } catch (\Throwable $e) {
-        dd([
-        'Mensaje' => $e->getMessage(),
-        'Archivo' => $e->getFile(),
-        'Linea'   => $e->getLine(),
-        ]);
+            dd([
+                'Mensaje' => $e->getMessage(),
+                'Archivo' => $e->getFile(),
+                'Linea'   => $e->getLine(),
+            ]);
         }
 
         return redirect('/users')->with('msg', 'Usuario eliminado con éxito');
     }
 
+    public function showAddresses(string $username){
+        $user = $this->userService->getUserByUsername($username);
+        $addresses = $user->addresses;
+        return view('addresses.listAddresses', compact('addresses'));
+    }
 }

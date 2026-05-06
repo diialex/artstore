@@ -1,0 +1,22 @@
+//  PALETA DE COLORES PERSONALIZADA
+// Sobrescribiendo las variables por defecto de Bootstrap
+
+$primary: #7A3B4F;    // Burdeos 
+$secondary: #3B7A41;  // Verde oscuro
+$dark: #3B2B30;       // Burdeos casi negro
+$light: #fdebf1;      // Rosa muy suave
+$success: #A4CFAB;    // Verde suave
+$info: #99FFA3;       // Menta brillante
+
+// Cambiar ligeramente el color de fondo de toda la web para que no sea blanco nuclear
+$body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
+
+// 2. IMPORTAR BOOTSTRAP
+// Bootstrap leerá las variables anteriores 
+@import 'bootstrap/scss/bootstrap';
+
+// 3. AQUÍ PODEMOS PONER CSS EXTRAS
+.banner-img {
+    object-fit: cover;
+    object-position: center;
+}

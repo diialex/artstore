@@ -31,52 +31,57 @@
 
             @foreach($categories as $category)
                 <div class="col-6 col-sm-6 col-lg-3">
-                    <div class="ratio ratio-1x1 index-video-container clicable">
-                        <video muted loop playsinline class="object-fit-cover w-100 h-100 clicable">
-                            <source src="{{ $category['video'] }}" type="video/mp4">
-                        </video>
-                        <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-25"></div>
-                        <div
-                            class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center text-white">
-                            <h1 class="d-none d-sm-block fs-2 fw-bold m-0 p-2 text-center">{{ $category['name'] }}</h1>
-                            <h1 class="d-block d-sm-none fs-4 fw-bold m-0 p-2 text-center">{{ $category['name'] }}</h1>
+                    <a href="{{ route('products.index', ['category' => $category->id]) }}" class="text-decoration-none">
+                        <div class="ratio ratio-1x1 index-video-container clicable">
+                            <video muted loop playsinline class="object-fit-cover w-100 h-100 clicable">
+                                <source src="{{ asset($category->video ?? 'media/video/default.mp4') }}" type="video/mp4">
+                            </video>
+                            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-25"></div>
+                            <div class="position-absolute d-flex align-items-center justify-content-center text-white w-100 h-100">
+                                <h1 class="fs-2 fw-bold m-0 p-2 text-center text-uppercase">{{ $category->name }}</h1>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            @endforeach
+            <div class="row">
+            @foreach($products as $product)
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ $product->title }}</h5>
+                            <p class="card-text text-muted">{{ Str::limit($product->description, 80) }}</p>
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="h5 text-primary mb-0">{{ $product->price }} €</span>
+                                <span class="badge bg-secondary">Stock: {{ $product->stock }}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card-footer bg-white d-flex justify-content-between">
+                            
+                            <a href="{{ route('products.edit', $product) }}" class="btn btn-outline-warning btn-sm">
+                                Editar
+                            </a>
+
+                            <a href="{{ route('orders.addProduct', $product) }}" class="btn btn-outline-warning btn-sm">
+                                Añadir al carrito
+                            </a>
+
+                            <form action="{{ route('products.delete', $product) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres aniquilar este producto?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-outline-danger btn-sm">
+                                    Borrar
+                                </button>
+                            </form>
+
                         </div>
                     </div>
                 </div>
             @endforeach
         </div>
+        </div>
     </main>
-
-    <div class="offcanvas offcanvas-start bg-light text-black" tabindex="-1" id="menuLateral">
-        <div class="offcanvas-header">
-            <i class="bi bi-x-lg fs-2 clicable" data-bs-dismiss="offcanvas"></i>
-        </div>
-        <div class="offcanvas-body">
-            <ul class="list-unstyled me-4 pe-3">
-                <li class="py-2 border-bottom border-secondary"><a href="index.html"
-                        class="text-black text-decoration-none fs-5">Inicio</a></li>
-                <li class="py-2 border-bottom border-secondary"><a href="#"
-                        class="text-black text-decoration-none fs-5">Descubrir - TODO</a></li>
-                <li class="py-2 border-bottom border-secondary"><a href="#"
-                        class="text-black text-decoration-none fs-5">Social - TODO</a></li>
-                <li class="py-2"><a href="#" class="text-black text-decoration-none fs-5">Info - TODO</a></li>
-            </ul>
-        </div>
-    </div>
-    <div class="offcanvas offcanvas-end bg-light text-black" tabindex="-1" id="iniciarSesion">
-        <div class="offcanvas-header justify-content-end">
-            <i class="bi bi-x-lg fs-2 clicable" data-bs-dismiss="offcanvas"></i>
-        </div>
-        <div class="offcanvas-body">
-            <form class="me-4 pe-3">
-                <label class="form-label" for="username-input">Username:</label>
-                <input id="username-input" type="email" class="form-control" placeholder="name@example.com" />
-                <label class="form-label mt-3" for="password-input">Password:</label>
-                <input id="password-input" type="password" class="form-control" placeholder="*****" />
-                <a href="profile.html" type="button" class="btn btn-primary mt-3">Login</a>
-            </form>
-        </div>
-    </div>
 
     <script src="lib/own/videoHover.js"></script>
     </body>

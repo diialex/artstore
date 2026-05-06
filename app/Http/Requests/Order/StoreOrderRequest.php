@@ -24,6 +24,7 @@ class StoreOrderRequest extends FormRequest
     {
         return [
             'total_amount' => 'required|decimal:2|min:0',
+            'id_product' => 'required|exists:products,id',
             'status' => 'required|in:pending,completed,cancelled',
             'shipping_address' => 'nullable|string',
         ];

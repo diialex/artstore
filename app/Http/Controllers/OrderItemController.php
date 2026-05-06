@@ -82,6 +82,6 @@ class OrderItemController extends Controller
     public function destroy(int $id)
     {
         $this->service->delete($id);
-        return redirect()->route('orderitems.index')->with('success', 'Order Item deleted successfully.');
+        return redirect()->route('orders.carrito')->with('success', 'Order Item deleted successfully.');
     }
 }

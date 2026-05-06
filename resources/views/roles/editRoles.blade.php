@@ -1,5 +1,7 @@
 @extends('layout')
 
+@section('title', 'Edit roles')
+
 @section('content')
 
 <form action="{{ route('roles.update', $role->id) }}" method="POST">

@@ -6,12 +6,13 @@ use App\Http\Requests\Roles\StoreRolesRequest;
 use App\Http\Requests\Roles\UpdateRolesRequest;
 use App\Models\Role;
 use App\Services\RolesService;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Http\Request;
 
 class RolesController extends Controller
 {
-    public function __construct(protected RolesService $service){
 
+    public function __construct(protected RolesService $service){
     }
     /**
      * Display a listing of the resource.
@@ -51,27 +52,9 @@ class RolesController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $name)
     {
-        try{
-            $role = $this->service->get($id);
-            $roles = [$role];
-            return view('roles.listRoles', compact('roles'));
-        }catch(\Throwable $e){
-            $msg = $e->getMessage();
-            return view('roles.listRoles', compact('msg'));
-        }
-        
-        ;
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-
-    public function show_by_name(string $name)
-    {
-        $role = $this->service->getUserByName($name);
+        $role = $this->service->get($name);
         if(!$role){
             return view('roles.listRoles', [
             'roles' => [], 
@@ -83,10 +66,10 @@ class RolesController extends Controller
         return view('roles.listRoles', compact('roles'));
     }
 
-    public function edit(string $id)
+    public function edit(string $colum)
     {
         try{
-            $role = $this->service->get($id);
+            $role = $this->service->get($colum);
             return view('roles.editRoles', compact('role'));
         }catch(\Throwable $e){
             return view('roles.listRoles', ['roles' => [], 'msg' => $e->getMessage()]);
@@ -96,10 +79,10 @@ class RolesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateRolesRequest $request, string $id)
+    public function update(UpdateRolesRequest $request, string $colum)
     {
         try {
-        $role = $this->service->get($id);
+        $role = $this->service->get($colum);
 
         $role->name = $request->name;
         $role->description = $request->description;
@@ -121,10 +104,10 @@ class RolesController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $colum)
     {
         try {
-            $user = $this->service->get($id);
+            $user = $this->service->get($colum);
             $this->service->delete($user);
             
         } catch (\Throwable $e) {

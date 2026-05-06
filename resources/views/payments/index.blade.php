@@ -1,4 +1,4 @@
-<x-layout>
+@extends('layout')
     <div class="row m-4">
         <div class="col-12">
             @if(session('message'))
@@ -14,7 +14,7 @@
                     <li class="mb-2">
                         <strong>{{ $payment->title }}</strong> ({{ $payment->status }})
                         <a href="{{ route('payments.edit', $payment) }}" class="btn btn-warning">Editar</a>
-                        <form method="POST" action="{{ route('payments.destroy', $payment) }}" style="display:inline;">
+                        <form method="POST" action="{{ route('payments.delete', $payment) }}" style="display:inline;">
                             @csrf @method('DELETE')
                             <button class="btn btn-danger">Eliminar</button>
                         </form>
@@ -23,4 +23,3 @@
             </ul>
         </div>
     </div>
-</x-layout>
