@@ -12,10 +12,6 @@ class HomeController extends Controller
 {
     public function index(): View
     {
-        
-        if (auth()->user()->roles()->where('name', 'admin')->exists()){
-            return view('admin.PanelAdministrador');
-        }
 
         $categories = Category::all(); // Obtener todas las categorías para mostrar en la vista
         $products = Product::all();

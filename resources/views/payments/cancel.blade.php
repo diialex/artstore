@@ -1,3 +1,2 @@
-<x-layout>
+@extends('layout')
     <div>PAGO NO REALIZADO</div>
-</x-layout>

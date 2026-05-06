@@ -1,5 +1,7 @@
 @extends('layout')
 
+@section('title', 'Users')
+
 @section('content')
 
     <a href="{{ route('users.create') }}" class="btn btn-primary mb-3">Crear usuarios</a>

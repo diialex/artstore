@@ -1,5 +1,7 @@
 @extends('layout')
 
+@section('title', 'Create roles')
+
 @section('content')
 
 <form action="{{ route('roles.store') }}" method="POST">

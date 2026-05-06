@@ -1,5 +1,6 @@
 @extends('layout')
 
+@section('title', 'Create user')
 @section('content')
 <form action="{{ route('users.store') }}" method="POST">
 @csrf {{-- Cláusula para obtener un token de formulario al enviarlo --}}
