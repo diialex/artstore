@@ -1,5 +1,7 @@
 @extends('layout')
 
+@section('title', 'Create address')
+
 @section('content')
     <form action="{{ route('addresses.store') }}" method="POST">
         @csrf

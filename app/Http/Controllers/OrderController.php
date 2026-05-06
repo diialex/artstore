@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Http\Requests\Order\StoreOrderRequest;
 use App\Http\Requests\Order\UpdateOrderRequest;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
@@ -35,15 +36,11 @@ class OrderController extends Controller
 
     public function addProducttoOrder(Product $product)
     {
-        $order = Order::firstOrCreate(
-            [
-                'user_id' => 1,
-                'status' => 'pending'
-            ],
-            [
-                'total_amount' => $product->price
-            ]
-        );
+
+        $order = new Order;
+        $order->total_amount = $product->price;
+        $order->user()->associate(auth()->user());
+        $order->save();
 
         $item= $order->items()->where('product_id', $product->id)->first();
         if ($item){
@@ -51,15 +48,15 @@ class OrderController extends Controller
             $item->price = $product->price;
             $item->save();
         }else{
-            $order->items()->create([
-                'order_id' => $order->id,
-                'product_id' => $product->id,
-                'quantity' => 1,
-                'price' => $product->price
-            ]);
+            $item = new OrderItem;
+            $item->quantity =1;
+            $item->price = $product->price;
+            $item->order()->associate($order);
+            $item->product()->associate($product);
+            $order->items()->save($item);
         }
 
-        // Actualizar total_amount después de agregar/actualizar el item
+
         $total = 0;
         foreach ($order->items as $item) {
             $total += $item->price * $item->quantity;
@@ -71,7 +68,14 @@ class OrderController extends Controller
     }
 
     public function carrito(){
-        $order = Order::where('user_id',1)->where('status', 'pending')->first();
+        $order = Order::where('user_id',auth()->user())->where('status', 'pending')->orWhere('status', 'failed')->first();
+        if (!$order){
+            $orderService = new OrderService();
+            $order= new Order;
+            $order->user()->associate(auth()->user());
+            $order->total_amount=0;
+            $order=$orderService->save($order);
+        }
         $order=$this->updateOrder($order);
         return view('orders.carrito', compact('order'));
     }
