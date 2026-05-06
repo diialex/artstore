@@ -1,5 +1,7 @@
 @extends('layout')
 
+@section('title', 'Roles')
+
 @section('content')
 
     <a href="{{ route('roles.create') }}">Crear usuarios</a>

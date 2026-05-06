@@ -54,8 +54,8 @@ Route::delete('/users/{id}', [UsersController::class, 'delete'])
 #ROLE
 
 Route::get('/roles', [RolesController::class, 'index'])
-    ->name('roles.index')
-    ->can('viewAny', Role::class);
+    ->name('roles.index');
+    /*->can('viewAny', Role::class);*/
 
 Route::get('/roles/create', [RolesController::class, 'create'])
     ->name('roles.create');
@@ -72,7 +72,7 @@ Route::get("/roles/{role}/edit", [RolesController::class, 'edit'])
 Route::put('/roles/{role}', [RolesController::class, 'update'])
     ->name('roles.update');
 
-Route::delete('/roles/{role}', [RolesController::class, 'delete'])
+Route::delete('/roles/{role}', [RolesController::class, 'destroy'])
     ->name('roles.delete');
 
 #ADDRESS
@@ -132,7 +132,7 @@ Route::put('/updateCategory/{category}', [CategoryController::class, 'update'])
     ->name('categories.update')
     /*->can('update', 'category')*/;
 
-Route::delete('/deleteCategory/{category}', [CategoryController::class, 'delete'])
+Route::delete('/deleteCategory/{category}', [CategoryController::class, 'destroy'])
     ->name('categories.delete')
     /*->can('delete', 'category')*/;
 
@@ -161,7 +161,7 @@ Route::put('/updateProduct/{product}', [ProductController::class, 'update'])
     ->name('products.update')
     /*->can('update', 'product')*/;
 
-Route::delete('/deleteProduct/{product}', [ProductController::class, 'delete'])
+Route::delete('/deleteProduct/{product}', [ProductController::class, 'destroy'])
     ->name('products.delete')
     /*->can('delete', 'product')*/;
 
@@ -190,7 +190,7 @@ Route::put('/updatePayment/{payment}', [PaymentController::class, 'update'])
     ->name('payments.update')
     /*->can('update', 'payment')*/;
 
-Route::delete('/deletePayment/{payment}', [PaymentController::class, 'delete'])
+Route::delete('/deletePayment/{payment}', [PaymentController::class, 'destroy'])
     ->name('payments.delete')
     /*->can('delete', 'payment')*/;
 
@@ -222,7 +222,7 @@ Route::put('/updateOrder/{order}', [OrderController::class, 'update'])
     ->name('orders.update')
     /*->can('update', 'order')*/;
 
-Route::delete('/deleteOrder/{order}', [OrderController::class, 'delete'])
+Route::delete('/deleteOrder/{order}', [OrderController::class, 'destroy'])
     ->name('orders.delete')
     /*->can('delete', 'order')*/;
 
@@ -251,7 +251,7 @@ Route::put('/updateOrderitem/{orderitem}', [OrderItemController::class, 'update'
     ->name('orderitems.update')
     /*->can('update', 'orderitem')*/;
 
-Route::delete('/deleteOrderitem/{orderitem}', [OrderItemController::class, 'delete'])
+Route::delete('/deleteOrderitem/{orderitem}', [OrderItemController::class, 'destroy'])
     ->name('orderitems.delete')
     /*->can('delete', 'orderitem')*/;
 

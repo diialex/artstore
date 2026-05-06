@@ -1,5 +1,7 @@
 @extends('layout')
 
+@section('title', 'Users')
+
 @section('content')
 
     <a href="{{ route('users.create') }}" class="btn btn-primary mb-3">Crear usuarios</a>
@@ -37,13 +39,13 @@
 
                         <td>
                             <div class="btn-group" role="group">
-                                <a href="{{ route('users.edit', auth()->user()->username) }}" class="btn btn-sm btn-primary">Editar</a>
+                                <a href="{{ route('users.edit', $user->username) }}" class="btn btn-sm btn-primary">Editar</a>
 
-                                <a href="{{ route('addresses.show', auth()->user()->username) }}" class="btn btn-sm btn-info text-white">
+                                <a href="{{ route('addresses.show', $user->username) }}" class="btn btn-sm btn-info text-white">
                                     Direcciones
                                 </a>
 
-                                <form action="{{ route('users.delete', auth()->user()->username) }}" method="POST" class="d-inline"
+                                <form action="{{ route('users.delete', $user->username) }}" method="POST" class="d-inline"
                                     onsubmit="return confirm('¿Estás seguro de borrar a {{ $user->username }}?')">
                                     @csrf
                                     @method('DELETE')

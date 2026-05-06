@@ -1,5 +1,7 @@
 @extends('layout')
 
+@section('title', 'Editar Usuario')
+
 @section('content')
 <form action="{{ route('users.update', $user->id) }}" method="POST">
 @csrf

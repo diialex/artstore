@@ -1,4 +1,8 @@
-<x-layout>
+@extends('layout')
+
+@section('title', )
+
+@section('content')
     <div class="row justify-content-center">
         <div class="col-md-4">
             <form method="POST" action="{{ $product->exists ? route('products.update', $product) : route('products.store') }}">
@@ -90,4 +94,4 @@
             </form>
         </div>
     </div>
-</x-layout>
+@section('content')
