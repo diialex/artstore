@@ -12,13 +12,13 @@
             </div>
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="media/images/banner-example1.jpg" class="d-block w-100 h-25 banner-img" alt="..." />
+                    <img src="public/media/images/banner-example1.jpg" class="d-block w-100 h-25 banner-img" alt="..." />
                 </div>
                 <div class="carousel-item">
-                    <img src="media/images/banner-example2.jpg" class="d-block w-100 h-25 banner-img" alt="..." />
+                    <img src="public/media/images/banner-example2.jpg" class="d-block w-100 h-25 banner-img" alt="..." />
                 </div>
                 <div class="carousel-item">
-                    <img src="media/images/banner-example3.jpg" class="d-block w-100 h-25 banner-img" alt="..." />
+                    <img src="public/media/images/banner-example3.jpg" class="d-block w-100 h-25 banner-img" alt="..." />
                 </div>
             </div>
         </div>
