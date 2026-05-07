@@ -26,7 +26,7 @@ class CreateProductRequest extends FormRequest
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric',
-            'image_url' => 'nullable|url',
+            'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'categories' => 'nullable|array',
             'category.*' => 'exists:categories,id',
             'sizes' => 'nullable|array',

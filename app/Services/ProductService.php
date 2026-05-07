@@ -27,13 +27,22 @@ class ProductService
 
     public function create(array $data): Product
     {
+
+        if (isset($data['image_url'])) {
+            $imgUrl= $data['image_url'];
+            $dataImg= ('public\media\imgProd'+ $imgUrl);
+            $data['image'] = $dataImg;
+            $product = Product::create($data);
+
+        }
+
         $product = Product::create($data);
 
         if (isset($data['categories'])) {
             $product->categories()->attach($data['categories']);
         }
 
-        // NUEVO: Guardamos las tallas dinámicas del botón +
+        
         if (isset($data['sizes'])) {
             $isUserAdmin = auth()->check() && auth()->user()->hasRol('Admin');
             

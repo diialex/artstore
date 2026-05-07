@@ -5,7 +5,7 @@
 @section('content')
     <div class="row justify-content-center">
         <div class="col-md-4">
-            <form method="POST" action="{{ $product->exists ? route('products.update', $product) : route('products.store') }}">
+            <form method="POST" enctype="multipart/form-data" action="{{ $product->exists ? route('products.update', $product) : route('products.store') }}">
                 @csrf
                 @if($product->exists) @method('PUT') @endif
 
@@ -19,6 +19,18 @@
                     <label>Descripción</label>
                     <textarea name="description" class="form-control">{{ old('description', $product->description) }}</textarea>
                     @error('description') <div class="text-danger">{{ $message }}</div> @enderror
+                </div>
+
+                <div class="form-group mb-3">
+                    <label>Imagen del Producto</label>
+                    <input type="file" name="image_url" class="form-control" accept="image/*">
+                    @error('image_url') <div class="text-danger">{{ $message }}</div> @enderror
+                    @if($product->exists && $product->image_url)
+                        <div class="mt-2">
+                            <small class="text-muted">Imagen actual:</small>
+                            <img src="{{ asset($product->image_url) }}" alt="{{ $product->title }}" style="max-width: 150px; margin-top: 5px;">
+                        </div>
+                    @endif
                 </div>
                 
                 <div class="form-group mb-3">
@@ -41,7 +53,7 @@
                         @foreach($categories as $category)
                             <div class="col-md-4">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="categories[]" value="{{ $category->id }}"
+                                    <input class="form-check-input" type="checkbox" name="categories[]" value="{{ $category->id }}" required
                                         {{ in_array($category->id, old('categories', $product->categories->pluck('id')->toArray())) ? 'checked' : '' }}>
                                     <label class="form-check-label">{{ $category->name }}</label>
                                 </div>
@@ -94,3 +106,4 @@
             </form>
         </div>
     </div>
+@endsection
