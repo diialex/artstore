@@ -13,11 +13,11 @@
     <header>
         <nav class="container-fluid sticky-top bg-primary px-3 py-2 border-bottom">
             <div class="row">
-                <div class="col-4 d-flex justify-content-start gap-2 gap-md-3 align-items-center">
-                    <i id="burger-menu" class="bi bi-list fs-2 clicable mb-0" data-bs-toggle="offcanvas"
+                <div class="col-4 d-flex justify-content-start gap-2 gap-md-3 align-items-center cursor-pointer">
+                    <i id="burger-menu" class="bi bi-list fs-2 cursor-pointer mb-0" data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral"></i>
                     <a href="{{ route('home') }}" class="text-dark text-decoration-none d-flex align-items-center">
-                        <i class="bi bi-shop fs-2 clicable mb-0"></i>
+                        <i class="bi bi-shop fs-2 cursor-pointer mb-0"></i>
                     </a>
                 </div>
 
@@ -27,13 +27,41 @@
 
                 <div class="col-4 d-flex justify-content-end gap-2 gap-md-3 align-items-center">
                     @auth
-                        <span class="text-dark">{{ Auth::user()->username }}</span>
+                        <div class="dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                {{ auth()->user()->username }}
+                            </a>
+
+                            <!-- El Menú Desplegable -->
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li><h6 class="dropdown-header">Opciones de cuenta</h6></li>
+                                @if (auth()->user()->roles->where('name', 'admin')->first())
+                                    <li><a class="dropdown-item" href="/perfil"><i class="bi bi-person me-2"></i>Panel administrador</a></li>
+                                @endif
+                                @if(auth()->user()->roles->where('name', 'seller')->first())
+                                    <li><a class="dropdown-item" href="/perfil"><i class="bi bi-person me-2"></i>Mi Tienda</a></li>
+                                @endif
+                                @if (auth()->user()->roles->where('name', 'user')->first())
+                                    <li><a class="dropdown-item" href="/perfil"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
+                                    <li><a class="dropdown-item" href="/pedidos"><i class="bi bi-bag me-2"></i>Mis Pedidos</a></li>
+                                @endif
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </div>
                     @else
-                        <i id="perfil" class="bi bi-person fs-2 clicable mb-0" data-bs-toggle="offcanvas"
+                        <i id="perfil" class="bi bi-person fs-2 cursor-pointer mb-0" data-bs-toggle="offcanvas"
                             data-bs-target="#iniciarSesion"></i>
                     @endauth
                     <a href="{{ route('orders.index') }}" class="text-dark text-decoration-none">
-                        <i class="bi bi-bag fs-2 clicable mb-0"></i>
+                        <i class="bi bi-bag fs-2 cursor-pointer mb-0"></i>
                     </a>
                 </div>
             </div>
@@ -69,7 +97,7 @@
         </div>
         <div class="offcanvas-body">
             <ul class="list-unstyled me-4 pe-3">
-                <li class="py-2 border-bottom border-secondary"><a href="index.html"
+                <li class="py-2 border-bottom border-secondary"><a href="{{ url('/') }}" 
                         class="text-black text-decoration-none fs-5">Inicio</a></li>
                 <li class="py-2 border-bottom border-secondary"><a href="#"
                         class="text-black text-decoration-none fs-5">Descubrir - TODO</a></li>
@@ -95,8 +123,8 @@
                 @endif
                 <form method="POST" action="{{ route('login') }}" class="me-4 pe-3 mt-3">
                     @csrf
-                    <label class="form-label" for="email">Email:</label>
-                    <input id="email" type="email" name="email" class="form-control" placeholder="name@example.com" required autofocus />
+                    <label class="form-label" for="userCredential">Email or username:</label>
+                    <input id="userCredential" type="text" name="userCredential" class="form-control" required autofocus />
                     
                     <label class="form-label mt-3" for="password">Password:</label>
                     <input id="password" type="password" name="password" class="form-control" placeholder="*****" required />
@@ -133,4 +161,5 @@
         </div>
     </div>
 </body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </html>

@@ -1,5 +1,7 @@
 @extends('layout')
 
+@section('title', 'Addresses')
+
 @section('content')
 
 <a href="{{ route('addresses.create', isset($userId) ? ['user_id' => $userId] : []) }}" class="btn btn-primary mb-3">Crear dirección</a>
