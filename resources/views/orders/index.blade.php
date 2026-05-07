@@ -1,4 +1,5 @@
 @extends('layout')
+@section('content')
     <div class="row m-4">
         <div class="col-12">
             @if(session('success'))
@@ -23,4 +24,5 @@
             </ul>
         </div>
     </div>
+@endsection
 

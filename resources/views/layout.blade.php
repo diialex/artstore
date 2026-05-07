@@ -1,19 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title')</title>
-    <link rel="icon" type="image/x-icon" href="media/images/logo.ico">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    @vite(['resources/css/app.scss', 'resources/js/app.js'])
-</head>
+@extends('headLayout')
+@section('pagina')
 <body class="bg-light">
     <header>
-        <nav class="container-fluid sticky-top bg-primary px-3 py-2 border-bottom">
+        <nav class="container-fluid sticky-top bg-primary px-3 py-3 border-bottom">
             <div class="row">
-                <div class="col-4 d-flex justify-content-start gap-2 gap-md-3 align-items-center cursor-pointer">
+                <div class="col-4 d-flex justify-content-start gap-2 gap-md-3 align-items-center cursor-pointer z-3">
                     <i id="burger-menu" class="bi bi-list fs-2 cursor-pointer mb-0" data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral"></i>
                     <a href="{{ route('home') }}" class="text-dark text-decoration-none d-flex align-items-center">
@@ -21,11 +12,11 @@
                     </a>
                 </div>
 
-                <div class="col-4 d-flex justify-content-center">
+                <div class="position-absolute start-50 top-50 translate-middle w-auto d-flex justify-content-center z-2">
                     <img src="{{ asset('media/images/logo.png') }}" alt="Logo Hanger" class="cursor-pointer" style="height: 70px; width: auto; object-fit: contain;">
                 </div>
 
-                <div class="col-4 d-flex justify-content-end gap-2 gap-md-3 align-items-center">
+                <div class="col-4 ms-auto d-flex justify-content-end gap-2 gap-md-3 align-items-center z-3">
                     @auth
                         <div class="dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -162,4 +153,4 @@
     </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</html>
+@endsection

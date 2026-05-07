@@ -24,3 +24,12 @@ $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
 .cursor-pointer{
     cursor: pointer;
 }
+
+.hide-scrollbar {
+    scrollbar-width: none !important; 
+    -ms-overflow-style: none !important; 
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+    display: none !important;
+}

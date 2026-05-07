@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ControlPanelController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\StripeController;
 use Illuminate\Support\Facades\Route;
@@ -273,3 +274,8 @@ Route::get('/forzar-login-user', function () {
     Auth::login($user);
     return "Ya estás logueado como User";
 });
+
+//ControlPanel
+
+Route::get('/controlPanel', [ControlPanelController::class, 'index'])
+    ->name('controlPanel.dashboard');
