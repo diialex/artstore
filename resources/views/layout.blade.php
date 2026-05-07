@@ -22,7 +22,7 @@
                 </div>
 
                 <div class="col-4 d-flex justify-content-center">
-                    <img src="{{ asset('media/images/logo.png') }}" alt="Logo Hanger" class="cursor-pointer" style="height: 70px; width: auto; object-fit: contain;">
+                    <img src="{{ asset('storage/media/images/logo.png') }}" alt="Logo Hanger" style="height: 70px; width: auto; object-fit: contain;">
                 </div>
 
                 <div class="col-4 d-flex justify-content-end gap-2 gap-md-3 align-items-center">

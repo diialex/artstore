@@ -14,13 +14,13 @@
             </div>
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="{{ asset('media/images/banner-example1.jpg') }}" class="d-block w-100 h-25 banner-img" alt="..." />
+                    <img src="{{ asset('storage/media/images/banner-example1.jpg') }}" class="d-block w-100 h-25 banner-img" alt="..." />
                 </div>
                 <div class="carousel-item">
-                    <img src="{{ asset('media/images/banner-example2.jpg') }}" class="d-block w-100 h-25 banner-img" alt="..." />
+                    <img src="{{ asset('storage/media/images/banner-example2.jpg') }}" class="d-block w-100 h-25 banner-img" alt="..." />
                 </div>
                 <div class="carousel-item">
-                    <img src="{{ asset('media/images/banner-example3.jpg') }}" class="d-block w-100 h-25 banner-img" alt="..." />
+                    <img src="{{ asset('storage/media/images/banner-example3.jpg') }}" class="d-block w-100 h-25 banner-img" alt="..." />
                 </div>
             </div>
         </div>
@@ -53,40 +53,11 @@
                 <p class="d-none d-md-block display-5 mb-0">Productos</p>
                 <hr class="border-secondary border-3">
             </div>
-            @foreach($products as $product)
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ $product->title }}</h5>
-                            <p class="card-text text-muted">{{ Str::limit($product->description, 80) }}</p>
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <span class="h5 text-primary mb-0">{{ $product->price }} €</span>
-                                <span class="badge bg-secondary">Stock: {{ $product->stock }}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="card-footer bg-white d-flex justify-content-between">
-                            
-                            <a href="{{ route('products.edit', $product) }}" class="btn btn-outline-warning btn-sm">
-                                Editar
-                            </a>
-
-                            <a href="{{ route('orders.addProduct', $product) }}" class="btn btn-outline-warning btn-sm">
-                                Añadir al carrito
-                            </a>
-
-                            <form action="{{ route('products.delete', $product) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que quieres aniquilar este producto?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-outline-danger btn-sm">
-                                    Borrar
-                                </button>
-                            </form>
-
-                        </div>
-                    </div>
-                </div>
-            @endforeach
+            <div class="row">
+                @foreach($products as $product)
+                    @include('products.card')
+                @endforeach
+            </div>
         </div>
         </div>
     </main>
