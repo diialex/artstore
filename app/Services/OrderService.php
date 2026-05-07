@@ -16,6 +16,12 @@ class OrderService
         return Order::findOrFail($id);
     }
 
+    public function save(Order $order){
+        $order->status='pending';
+        $order->save();
+        return $order;
+    }
+
 
     public function create(array $data): Order
     {

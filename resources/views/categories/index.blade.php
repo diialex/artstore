@@ -1,4 +1,4 @@
-<x-layout>
+@extends('layout')
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2>Categorías</h2>
@@ -43,4 +43,3 @@
             </div>
         </div>
     </div>
-</x-layout>

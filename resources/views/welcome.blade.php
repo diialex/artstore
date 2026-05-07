@@ -1,4 +1,6 @@
-<x-layout>
+@extends('layout')
+@section('title', 'Inicio')
+@section('content')
     <main>
         <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel" data-bs-interval="6000"
             data-bs-pause="false">
@@ -85,4 +87,4 @@
 
     <script src="lib/own/videoHover.js"></script>
     </body>
-</x-layout>
+@endsection

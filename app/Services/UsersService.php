@@ -40,4 +40,15 @@ class UsersService
     public function delete($user){
         $user->delete();
     }
+
+    public function login($request){
+        if(!$request->userCredential){
+            return null;
+        }
+        if (filter_var($request->userCredential, FILTER_VALIDATE_EMAIL)){
+            return User::where('email', $request->userCredential)->first();
+        }else{
+            return $this->getUserByUsername($request->userCredential);
+        }
+    }
 }

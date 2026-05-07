@@ -1,6 +1,6 @@
 @extends('layout')
 
-@section('title', )
+@section('title')
 
 @section('content')
     <div class="row justify-content-center">
@@ -94,4 +94,3 @@
             </form>
         </div>
     </div>
-@section('content')

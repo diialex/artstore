@@ -1,4 +1,4 @@
-<x-layout>
+@extends('layout')
     <div class="row m-4">
         <div class="col-6">
             <h3>{{ $orderItem->id ? 'Editar Artículo de Orden' : 'Nuevo Artículo de Orden' }}</h3>
@@ -50,4 +50,3 @@
             </form>
         </div>
     </div>
-</x-layout>
