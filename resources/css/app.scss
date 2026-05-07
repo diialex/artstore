@@ -21,3 +21,6 @@ $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
 .transition-transform { transition: transform 0.3s ease; }
 .transition-transform:hover { transform: scale(1.05); }
 .hover-opacity-25:hover { opacity: 0.25 !important; }
+.cursor-pointer{
+    cursor: pointer;
+}
