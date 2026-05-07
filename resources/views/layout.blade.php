@@ -11,7 +11,7 @@
 </head>
 <body class="bg-light">
     <header>
-        <nav class="container-fluid sticky-top bg-light px-3 py-2 border-bottom">
+        <nav class="container-fluid sticky-top bg-primary px-3 py-2 border-bottom">
             <div class="row">
                 <div class="col-4 d-flex justify-content-start gap-2 gap-md-3 align-items-center">
                     <i id="burger-menu" class="bi bi-list fs-2 clicable mb-0" data-bs-toggle="offcanvas"

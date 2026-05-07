@@ -53,8 +53,10 @@ class ProductController extends Controller
     public function store(CreateProductRequest $request)
     {
     
-
-        $this->productService->create($request->validated());
+        $prod= $request->validated();
+        $dataImg= ('public\media\imgProd'+ $prod->image);
+        $prod->image = $dataImg;
+        $this->productService->create($prod);
 
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
