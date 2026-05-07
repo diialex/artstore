@@ -30,15 +30,16 @@
             </div>
 
             @foreach($categories as $category)
-                <div class="col-6 col-sm-6 col-lg-3">
+                <div class="col-12 col-sm-6 col-lg-4">
                     <a href="{{ route('products.index', ['category' => $category->id]) }}" class="text-decoration-none">
-                        <div class="ratio ratio-1x1 index-video-container clicable">
-                            <video muted loop playsinline class="object-fit-cover w-100 h-100 clicable">
-                                <source src="{{ asset($category->video ?? 'media/video/default.mp4') }}" type="video/mp4">
-                            </video>
-                            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-25"></div>
+                        <div class="ratio ratio-1x1 position-relative overflow-hidden rounded-4 shadow-sm" style="cursor: pointer;">
+                            
+                            <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" class="object-fit-cover w-100 h-100 transition-transform">
+                            
+                            <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50 transition-opacity hover-opacity-25"></div>
+                            
                             <div class="position-absolute d-flex align-items-center justify-content-center text-white w-100 h-100">
-                                <h1 class="fs-2 fw-bold m-0 p-2 text-center text-uppercase">{{ $category->name }}</h1>
+                                <h3 class="fs-1 fw-bolder m-0 p-2 text-center text-uppercase tracking-wide">{{ $category->name }}</h3>
                             </div>
                         </div>
                     </a>

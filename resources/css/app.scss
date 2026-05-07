@@ -11,12 +11,13 @@ $info: #99FFA3;       // Menta brillante
 // Cambiar ligeramente el color de fondo de toda la web para que no sea blanco nuclear
 $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
 
-// 2. IMPORTAR BOOTSTRAP
-// Bootstrap leerá las variables anteriores 
 @import 'bootstrap/scss/bootstrap';
 
-// 3. AQUÍ PODEMOS PONER CSS EXTRAS
 .banner-img {
     object-fit: cover;
     object-position: center;
 }
+
+.transition-transform { transition: transform 0.3s ease; }
+.transition-transform:hover { transform: scale(1.05); }
+.hover-opacity-25:hover { opacity: 0.25 !important; }

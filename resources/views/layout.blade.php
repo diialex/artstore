@@ -40,7 +40,7 @@
         </nav>
     </header>
     <main class="container-fluid py-3 flex-fill min-vh-100">
-        @yield('content')
+        {{ $slot }}
     </main>
     <footer class="bg-dark text-white pt-4 pb-3 mt-5 w-100 shadow-lg ">
         <div class="container-fluid px-4">
@@ -69,7 +69,7 @@
         </div>
         <div class="offcanvas-body">
             <ul class="list-unstyled me-4 pe-3">
-                <li class="py-2 border-bottom border-secondary"><a href="index.html"
+                <li class="py-2 border-bottom border-secondary"><a href="{{ url('/') }}" 
                         class="text-black text-decoration-none fs-5">Inicio</a></li>
                 <li class="py-2 border-bottom border-secondary"><a href="#"
                         class="text-black text-decoration-none fs-5">Descubrir - TODO</a></li>
