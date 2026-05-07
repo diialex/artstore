@@ -6,7 +6,10 @@
         <div class="col-md-4">
             <form method="POST" enctype="multipart/form-data" action="{{ $product->exists ? route('products.update', $product) : route('products.store') }}">
                 @csrf
-                @if($product->exists) @method('PUT') @endif
+                @if($product->exists) @method('PUT') 
+                    @section('title', 'Editar Producto')
+                @endif
+                @section('title', 'Crear Producto')
 
                 <div class="form-group mb-3">
                     <label>Título</label>
