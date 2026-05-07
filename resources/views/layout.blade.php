@@ -68,7 +68,7 @@
         </nav>
     </header>
     <main class="container-fluid py-3 flex-fill min-vh-100">
-        {{ $slot }}
+        @yield('content')
     </main>
     <footer class="bg-dark text-white pt-4 pb-3 mt-5 w-100 shadow-lg ">
         <div class="container-fluid px-4">
