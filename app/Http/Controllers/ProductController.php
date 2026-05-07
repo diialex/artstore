@@ -54,8 +54,6 @@ class ProductController extends Controller
     {
     
         $prod= $request->validated();
-        $dataImg= ('public\media\imgProd'+ $prod->image);
-        $prod->image = $dataImg;
         $this->productService->create($prod);
 
         return redirect()->route('products.index')->with('success', 'Product created successfully.');

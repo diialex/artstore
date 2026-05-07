@@ -26,7 +26,7 @@
                     </form>
                 </div>
             </div>
-            <a href="{{ route('products.create') }}" class="btn btn-success">➕ Crear Nuevo</a>
+            <a href="{{ route('products.create') }}" class="btn btn-success">Crear Nuevo</a>
         </div>
 
         @if(session('success'))
