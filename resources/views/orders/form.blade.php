@@ -1,4 +1,6 @@
-<x-layout>
+@extends('layout')
+@section('title', $order->id ? 'Editar Orden' : 'Nueva Orden')
+@section('content')
     <div class="row m-4">
         <div class="col-6">
             <h3>{{ $order->id ? 'Editar Orden' : 'Nueva Orden' }}</h3>
@@ -43,4 +45,3 @@
             </form>
         </div>
     </div>
-</x-layout>
