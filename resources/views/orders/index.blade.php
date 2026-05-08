@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container mt-5 mb-5" style="max-width: 900px;">
+    
     <div class="d-flex justify-content-between align-items-end mb-5 border-bottom pb-4">
         <div>
             <h1 class="display-6 fw-bolder text-uppercase tracking-widest m-0">Mis Pedidos</h1>
@@ -24,7 +25,7 @@
         <div class="text-center py-5">
             <i class="bi bi-bag-x display-1 text-light-emphasis"></i>
             <h3 class="fw-light mt-4">No tienes pedidos todavía</h3>
-            <a href="{{ url('/') }}" class="btn btn-outline-dark rounded-pill px-5 mt-3 fw-bold">IR A LA TIENDA</a>
+            <a href="{{ route('home') }}" class="btn btn-outline-dark rounded-pill px-5 mt-3 fw-bold">IR A LA TIENDA</a>
         </div>
     @else
         <div class="row g-3">

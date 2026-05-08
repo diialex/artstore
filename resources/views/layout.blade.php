@@ -27,7 +27,7 @@
                                 <li><h6 class="dropdown-header">Opciones de cuenta</h6></li>
                                 
                                 @if (auth()->user()->roles->where('name', 'admin')->first())
-                                    <li><a class="dropdown-item" href="/perfil"><i class="bi bi-person-gear me-2"></i>Panel administrador</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('controlPanel.dashboard') }}"><i class="bi bi-person-gear me-2"></i>Panel administrador</a></li>
                                 @endif
                                 
                                 @if(auth()->user()->roles->where('name', 'seller')->first())
@@ -35,8 +35,8 @@
                                 @endif
                                 
                                 @if (auth()->user()->roles->where('name', 'user')->first())
-                                    <li><a class="dropdown-item" href="/perfil"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
-                                    <li><a class="dropdown-item" href="/pedidos"><i class="bi bi-bag me-2"></i>Mis Pedidos</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('users.show', auth()->user()->username) }}"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-bag me-2"></i>Mis Pedidos</a></li>
                                 @endif
                                 
                                 <li><hr class="dropdown-divider"></li>
@@ -54,9 +54,26 @@
                         <i id="perfil" class="bi bi-person fs-2 cursor-pointer mb-0" data-bs-toggle="offcanvas"
                             data-bs-target="#iniciarSesion"></i>
                     @endauth
-                    <a href="{{ route('orders.index') }}" class="text-dark text-decoration-none">
+                    
+                    <a href="{{ route('orders.carrito') }}" class="text-dark text-decoration-none position-relative d-flex align-items-center">
                         <i class="bi bi-bag fs-2 cursor-pointer mb-0"></i>
+                        @php
+                            $cartCount = 0;
+                            if(auth()->check()) {
+                                $activeOrder = \App\Models\Order::where('user_id', auth()->id())
+                                                    ->whereIn('status', ['pending', 'failed'])
+                                                    ->first();
+                                $cartCount = $activeOrder ? $activeOrder->items->sum('quantity') : 0;
+                            }
+                        @endphp
+                        @if($cartCount > 0)
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem; margin-top: 5px; margin-left: -5px;">
+                                {{ $cartCount }}
+                            </span>
+                        @endif
                     </a>
+                    {{-- FIN DE LA MAGIA --}}
+
                 </div>
             </div>
         </nav>

@@ -27,24 +27,14 @@ class ProductService
 
     public function create(array $data): Product
     {
-
-        if (isset($data['image_url'])) {
-            $imgUrl= $data['image_url'];
-            $dataImg= ('public\media\imgProd'+ $imgUrl);
-            $data['image'] = $dataImg;
-            $product = Product::create($data);
-
-        }
-
         $product = Product::create($data);
 
         if (isset($data['categories'])) {
             $product->categories()->attach($data['categories']);
         }
-
         
         if (isset($data['sizes'])) {
-            $isUserAdmin = auth()->check() && auth()->user()->hasRol('Admin');
+            $isUserAdmin = auth()->check() && auth()->user()->role_id == 1; // Ajustado por si acaso
             
             foreach ($data['sizes'] as $sizeData) {
                 if (!empty($sizeData['name'])) { 
@@ -72,7 +62,7 @@ class ProductService
         
         if (isset($data['sizes'])) {
             $product->sizes()->delete(); 
-            $isUserAdmin = auth()->check() && auth()->user()->hasRol('Admin');
+            $isUserAdmin = auth()->check() && auth()->user()->role_id == 1; 
 
             foreach ($data['sizes'] as $sizeData) {
                 if (!empty($sizeData['name'])) {

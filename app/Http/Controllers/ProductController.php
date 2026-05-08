@@ -19,21 +19,15 @@ class ProductController extends Controller
     {
         $this->productService = $productService;
     }
-
-    public function categories()
-    {
-        return $this->belongsToMany(Category::class);
-
-    }
     
     public function index(Request $request)
     {
-        $categoryId=$request->input('category'); // Obtener el ID de la categoría desde la query string
+        $categoryId=$request->input('category');
 
         $products = $this->productService->getAll($categoryId);
 
-        $categories = Category::all(); // Obtener todas las categorías para el filtro   
-        return view('products.index', compact('products', 'categories', 'categoryId')); // Pasamos también el categoryId para mantener el filtro seleccionado
+        $categories = Category::all(); 
+        return view('products.index', compact('products', 'categories', 'categoryId')); 
     }
 
     /**
@@ -41,8 +35,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = Category::all(); // Obtener todas las categorías para el select
-        $product = new Product(); // Creamos un producto vacío para reutilizar el formulario de edición
+        $categories = Category::all();
+        $product = new Product(); 
 
         return view('products.form', compact('product', 'categories')); 
     }
@@ -53,10 +47,11 @@ class ProductController extends Controller
     public function store(CreateProductRequest $request)
     {
     
-        $prod= $request->validated();
-        $dataImg= ('public\media\imgProd'+ $prod->image);
-        $prod->image = $dataImg;
-        $this->productService->create($prod);
+        $data= $request->validated();
+        if(isset($data['image'])){
+            $data['image'] = $request->file('image')->store('public/media/imgProd');
+        }
+        $this->productService->create($data);
 
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
@@ -74,7 +69,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-         $categories = Category::all(); // Obtener todas las categorías para el select
+         $categories = Category::all();
 
         return view('products.form', compact('product', 'categories'));
     }
@@ -84,10 +79,8 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        // 1. Mandamos el producto y los datos limpios al Servicio
         $this->productService->update($product, $request->validated());
 
-        // 2. Redirigimos al catálogo con un mensaje de éxito
         return redirect()->route('products.index')->with('success', 'Producto actualizado correctamente');
     }
 
@@ -96,10 +89,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        // 1. Mandamos el producto al Servicio para que lo aniquile
         $this->productService->delete($product);
 
-        // 2. Redirigimos al catálogo
         return redirect()->route('products.index')->with('success', 'Producto eliminado para siempre');
     }
 }
