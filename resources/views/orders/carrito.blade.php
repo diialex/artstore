@@ -26,7 +26,7 @@
                     <div class="row align-items-center mb-4 pb-4 border-bottom position-relative producto-cesta">
                         <div class="col-4 col-md-3">
                             @if($item->product->image_url)
-                                <img src="{{ asset('storage/' . $item->product->image_url) }}" 
+                                <img src="{{ asset($item->product->image_url) }}" 
                                      class="img-fluid rounded-4 object-fit-cover shadow-sm" 
                                      alt="{{ $item->product->title }}" style="aspect-ratio: 3/4;">
                             @else

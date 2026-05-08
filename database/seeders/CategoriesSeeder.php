@@ -30,5 +30,17 @@ class CategoriesSeeder extends Seeder
             'description' => 'Zapatillas clásicas y versátiles, ideales para cualquier estilo de vida.',
             'image' => 'media/images/jordans.png'
         ]);
+
+        Category::create([
+            'name' => 'Nuevo',
+            'description' => 'Últimas novedades en tienda.',
+            'image' => 'media/images/new.png'
+        ]);
+
+        Category::create([
+            'name' => 'Rebajas',
+            'description' => 'Productos con descuento.',
+            'image' => 'media/images/sales.png'
+        ]);
     }
 }
