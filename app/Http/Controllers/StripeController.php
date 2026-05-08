@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Address; // <-- IMPORTANTE: Añadimos el modelo Address
 use App\Services\AddressService;
 use App\Services\OrderItemService;
 use App\Services\OrderService;
@@ -11,7 +12,7 @@ use App\Services\PaymentService;
 use Stripe\StripeClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\OrderConfirmed; // Asegúrate de tener este Mailable creado
+use App\Mail\OrderConfirmed; 
 
 class StripeController extends Controller {
 
@@ -21,6 +22,27 @@ class StripeController extends Controller {
     ) {}
 
     public function createCheckout(Request $request, $orderId) {
+        
+        if ($request->address_mode === 'saved') {
+            $addressId = $request->address_id; 
+        } else {
+            $request->validate([
+                'new_street' => 'required|string|max:255',
+                'new_city' => 'required|string|max:255',
+                'new_zip_code' => 'required|string|max:20',
+            ], [
+                'required' => 'Debes rellenar todos los campos de la nueva dirección.'
+            ]);
+
+            $address = Address::create([
+                'user_id' => auth()->id(),
+                'street' => $request->new_street,
+                'city' => $request->new_city,
+                'zip_code' => $request->new_zip_code,
+            ]);
+            $addressId = $address->id;
+        }
+
         $stripe = new StripeClient(config('services.stripe.secret'));
         
         $orderService = new OrderService();
@@ -52,7 +74,7 @@ class StripeController extends Controller {
             'mode' => 'payment',
             'metadata' => [
                 'order_id' => $order->id,
-                'address_id' => $request->address_id // Guardamos esto aquí para el success
+                'address_id' => $addressId 
             ],
             'success_url' => route('payments.success') . '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('payments.cancel'),
@@ -63,7 +85,7 @@ class StripeController extends Controller {
             'stripe_id'      => $checkout->id,
             'payment_method' => $checkout->payment_method_types[0],
             'status'         => 'pending',
-            'shipping_address' => $request->address_id
+            'shipping_address' => $addressId
         ]);
 
         return redirect($checkout->url);
