@@ -1,5 +1,5 @@
 @extends('layout')
-
+@section('content')
     <div>
         <h1 class="mb-4">Carrito de Compras</h1>
 
@@ -52,3 +52,4 @@
             </div>
         @endif
     </div>
+@endsection

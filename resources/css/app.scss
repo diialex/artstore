@@ -25,6 +25,15 @@ $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
     cursor: pointer;
 }
 
+.tarjeta-categoria {
+    .transition-transform { transition: transform 0.4s ease-in-out; }
+    .hover-opacity-25 { transition: opacity 0.4s ease-in-out; }
+    &:hover {
+        .transition-transform { transform: scale(1.05); }
+        .hover-opacity-25 { opacity: 0.25 !important; }
+    }
+}
+
 .hide-scrollbar {
     scrollbar-width: none !important; 
     -ms-overflow-style: none !important; 
@@ -32,4 +41,12 @@ $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
 
 .hide-scrollbar::-webkit-scrollbar {
     display: none !important;
+}
+
+.producto-card {
+    transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+    }
 }
