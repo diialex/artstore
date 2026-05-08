@@ -24,7 +24,7 @@
         <div class="text-center py-5">
             <i class="bi bi-bag-x display-1 text-light-emphasis"></i>
             <h3 class="fw-light mt-4">No tienes pedidos todavía</h3>
-            <a href="{{ route('home') }}" class="btn btn-outline-dark rounded-pill px-5 mt-3 fw-bold">IR A LA TIENDA</a>
+            <a href="{{ url('/') }}" class="btn btn-outline-dark rounded-pill px-5 mt-3 fw-bold">IR A LA TIENDA</a>
         </div>
     @else
         <div class="row g-3">
