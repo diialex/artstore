@@ -12,12 +12,10 @@ use App\Models\Order;
 class OrderItemController extends Controller
 {
 
-    public function __construct(protected OrderItemService $service)
-    {
+    public function __construct(
         protected OrderItemService $service,
-        protected OrderService $orderService
-
-    }
+        protected OrderService $orderService 
+    ) {}
 
     /**
      * Display a listing of the resource.
