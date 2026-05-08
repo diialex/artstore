@@ -33,11 +33,13 @@
         @endguest
 
         @auth
-            <a href="{{ route('orders.addProduct', $product) }}" class="btn btn-dark w-100 fw-bold rounded-pill mb-2">
-                <i class="bi bi-cart-plus me-2"></i>Añadir al carrito
-            </a>
+            <form action="{{ route('orders.addProduct', $product) }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-dark w-100 fw-bold rounded-pill mb-2 py-2">
+                    <i class="bi bi-cart-plus me-2"></i>Añadir al carrito
+                </button>
+            </form>
 
-            {{-- SOLO ADMINISTRADORES (Asegúrate de que role_id == 1 es tu admin) --}}
             @if(Auth::user()->role_id == 1) 
                 <div class="d-flex gap-2 mt-2 pt-2 border-top">
                     <a href="{{ route('products.edit', $product) }}" class="btn btn-outline-warning btn-sm flex-fill fw-bold rounded-pill">

@@ -50,3 +50,24 @@ $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
         box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
     }
 }
+
+.tracking-wide {
+    letter-spacing: 0.1em;
+}
+
+.producto-cesta {
+    transition: background-color 0.3s ease;
+    border-color: #f1f5f9 !important;
+    
+    &:hover {
+        background-color: #fafafa; 
+    }
+}
+
+.btn-hover-scale {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    }
+}
