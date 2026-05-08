@@ -17,7 +17,15 @@ class OrderService
     }
 
     public function save(Order $order){
-        $order->status='pending';
+        if (!$order->exists) {
+        $order->status = 'pending';
+        }
+        
+        // Si ya existe y no tiene estado, también lo ponemos
+        if (empty($order->status)) {
+            $order->status = 'pending';
+        }
+
         $order->save();
         return $order;
     }

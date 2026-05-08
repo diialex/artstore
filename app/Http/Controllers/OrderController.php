@@ -52,15 +52,15 @@ class OrderController extends Controller
         $user = Auth::user();
 
         $order = Order::where('user_id', $user->id)
-                      ->whereIn('status', ['pending', 'failed'])
-                      ->first();
+                    ->whereIn('status', ['pending', 'failed'])
+                    ->first();
 
         if (!$order) {
             $order = new Order;
             $order->total_amount = 0;
-            $order->status = 'pending'; // Aseguramos que empiece como pendiente
             $order->user()->associate($user);
-            $order->save();
+        
+            $this->orderService->save($order); 
         }
 
         $item = $order->items()->where('product_id', $product->id)->first();
@@ -76,6 +76,7 @@ class OrderController extends Controller
             $item->product()->associate($product);
             $item->save();
         }
+
         $this->updateOrder($order);
         return redirect()->route('orders.carrito')->with('success', 'Producto agregado exitosamente.');
     }
