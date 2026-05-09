@@ -1,4 +1,5 @@
 @extends('layout')
+@section('content')
     <div class="row justify-content-center">
         <div class="col-md-4">
             <form method="POST" action="{{ $payment->exists ? route('payments.update', $payment) : route('payments.store') }}">
@@ -37,3 +38,4 @@
             </form>
         </div>
     </div>
+@endsection

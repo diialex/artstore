@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ControlPanelController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\StripeController;
 use Illuminate\Support\Facades\Route;
@@ -19,8 +20,8 @@ use App\Models\Address;
 
 #VISTAS
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/paymentSuccess', [StripeController::class, ])->name('payments.success');
-Route::get('/paymentError', [StripeController::class, ])->name('payments.cancel');
+Route::get('/paymentSuccess', [StripeController::class, 'successPayment' ])->name('payments.success');
+Route::get('/paymentError', [StripeController::class, 'cancelPayment' ])->name('payments.cancel');
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
@@ -104,7 +105,7 @@ Route::delete('/deleteAddress/{address}', [AddressController::class, 'delete'])
     ->name('addresses.delete')
     /*->can('delete', 'address')*/;
 
-Route::get('/addProduct/{product}', [OrderController::class, 'addProducttoOrder'])
+Route::post('/addProduct/{product}', [OrderController::class, 'addProducttoOrder'])
     ->name('orders.addProduct');
 
 #CATEGORIES
@@ -136,6 +137,10 @@ Route::delete('/deleteCategory/{category}', [CategoryController::class, 'destroy
     ->name('categories.delete')
     /*->can('delete', 'category')*/;
 
+Route::get('/categories/{category}/products', [ProductController::class, 'indexByCategory'])
+    ->name('categories.products');
+
+
 #PRODUCTS
 Route::get('/products', [ProductController::class, 'index'])
     ->name('products.index')
@@ -143,10 +148,12 @@ Route::get('/products', [ProductController::class, 'index'])
 
 Route::get('/products/create', [ProductController::class, 'create'])
     ->name('products.create')
+    ->middleware('can:admin-access')
     /*->can('create', Product::class)*/;
 
 Route::post('/products', [ProductController::class, 'store'])
     ->name('products.store')
+    ->middleware('can:admin-access')
     /*->can('create', Product::class)*/;
 
 Route::get("/products/{product}", [ProductController::class, 'show'])
@@ -155,14 +162,17 @@ Route::get("/products/{product}", [ProductController::class, 'show'])
 
 Route::get('/editProduct/{product}', [ProductController::class, 'edit'])
     ->name('products.edit')
+    ->middleware('can:admin-access')
     /*->can('update', 'product')*/;
 
 Route::put('/updateProduct/{product}', [ProductController::class, 'update'])
     ->name('products.update')
+    ->middleware('can:admin-access')
     /*->can('update', 'product')*/;
 
 Route::delete('/deleteProduct/{product}', [ProductController::class, 'destroy'])
     ->name('products.delete')
+    ->middleware('can:admin-access')
     /*->can('delete', 'product')*/;
 
 #PAYMENTS
@@ -273,3 +283,8 @@ Route::get('/forzar-login-user', function () {
     Auth::login($user);
     return "Ya estás logueado como User";
 });
+
+//ControlPanel
+
+Route::get('/controlPanel', [ControlPanelController::class, 'index'])
+    ->name('controlPanel.dashboard');

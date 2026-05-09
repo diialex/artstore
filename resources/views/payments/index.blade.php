@@ -1,4 +1,5 @@
-@extends('layout')
+@extends('adminLayout')
+@section('content')
     <div class="row m-4">
         <div class="col-12">
             @if(session('message'))
@@ -23,3 +24,4 @@
             </ul>
         </div>
     </div>
+@endsection

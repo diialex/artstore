@@ -34,7 +34,7 @@
             @foreach($categories as $category)
                 <div class="col-12 col-sm-6 col-lg-4">
                     <a href="{{ route('products.index', ['category' => $category->id]) }}" class="text-decoration-none">
-                        <div class="ratio ratio-1x1 position-relative overflow-hidden rounded-4 shadow-sm" style="cursor: pointer;">
+                        <div class="ratio ratio-1x1 position-relative overflow-hidden rounded-4 shadow-sm tarjeta-categoria" style="cursor: pointer;">
                             
                             <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" class="object-fit-cover w-100 h-100 transition-transform">
                             
@@ -53,11 +53,11 @@
                 <p class="d-none d-md-block display-5 mb-0">Productos</p>
                 <hr class="border-secondary border-3">
             </div>
-            <div class="row">
-                @foreach($products as $product)
-                    @include('products.card')
-                @endforeach
-            </div>
+            @foreach($products as $product)
+                <div class="col-md-4 mb-4">
+                    @include('partials.product-card', ['product' => $product])
+                </div>
+            @endforeach
         </div>
         </div>
     </main>
