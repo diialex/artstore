@@ -48,4 +48,16 @@ class OrderService
         $order->delete();
         return true;
     }
+
+
+    public function updateOrderTotal(Order $order)
+    {
+        $total = $order->items->sum(function ($item) {
+            return $item->price * $item->quantity;
+        });
+
+        $order->update(['total_amount' => $total]);
+
+        return $order;
+    }
 }

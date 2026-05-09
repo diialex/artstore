@@ -101,18 +101,42 @@
     </footer>
 
     <div class="offcanvas offcanvas-start bg-light text-black" tabindex="-1" id="menuLateral">
-        <div class="offcanvas-header">
+        <div class="offcanvas-header border-bottom border-secondary">
+            <h5 class="offcanvas-title text-uppercase fw-bold tracking-wide">Categorías</h5>
             <i class="bi bi-x-lg fs-2 clicable" data-bs-dismiss="offcanvas"></i>
         </div>
         <div class="offcanvas-body">
             <ul class="list-unstyled me-4 pe-3">
-                <li class="py-2 border-bottom border-secondary"><a href="{{ url('/') }}" 
-                        class="text-black text-decoration-none fs-5">Inicio</a></li>
-                <li class="py-2 border-bottom border-secondary"><a href="#"
-                        class="text-black text-decoration-none fs-5">Descubrir - TODO</a></li>
-                <li class="py-2 border-bottom border-secondary"><a href="#"
-                        class="text-black text-decoration-none fs-5">Social - TODO</a></li>
-                <li class="py-2"><a href="#" class="text-black text-decoration-none fs-5">Info - TODO</a></li>
+                <li class="py-2 border-bottom border-secondary">
+                    <a href="{{ route('home') }}" class="text-black text-decoration-none fs-5 {{ !request('category') ? 'fw-bold' : '' }}">
+                        Inicio / Ver Todo
+                    </a>
+                </li>
+
+                <li class="mt-3">
+                    <span class="text-muted small text-uppercase fw-bold tracking-widest">Colecciones</span>
+                </li>
+                @foreach(App\Models\Category::all() as $cat)
+                    <li class="py-2 border-bottom border-secondary ps-2">
+                        <a href="{{ route('home', ['category' => $cat->id]) }}" 
+                        class="text-black text-decoration-none fs-6 {{ request('category') == $cat->id ? 'fw-bold text-primary' : '' }}">
+                        {{ $cat->name }}
+                        </a>
+                    </li>
+                @endforeach
+
+                <li class="mt-4">
+                    <span class="text-muted small text-uppercase fw-bold tracking-widest">Explorar</span>
+                </li>
+                <li class="py-2 border-bottom border-secondary">
+                    <a href="#" class="text-black text-decoration-none fs-5">Descubrir - TODO</a>
+                </li>
+                <li class="py-2 border-bottom border-secondary">
+                    <a href="#" class="text-black text-decoration-none fs-5">Social - TODO</a>
+                </li>
+                <li class="py-2">
+                    <a href="#" class="text-black text-decoration-none fs-5">Info - TODO</a>
+                </li>
             </ul>
         </div>
     </div>

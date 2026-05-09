@@ -161,17 +161,42 @@ class OrderController extends Controller
     }
 
     public function pay(Request $request, Order $order)
-{
-    $request->validate(['address_id' => 'required|exists:addresses,id']);
+    {
+        $request->validate(['address_id' => 'required|exists:addresses,id']);
 
-    $order->update([
-        'status' => 'completed',
-        'address_id' => $request->address_id,
-        'order_date' => now()
-    ]);
+        $order->update([
+            'status' => 'completed',
+            'address_id' => $request->address_id,
+            'order_date' => now()
+        ]);
 
-    Mail::to($order->user->email)->send(new OrderConfirmed($order));
+        Mail::to($order->user->email)->send(new OrderConfirmed($order));
 
-    return redirect()->route('home')->with('success_order', '¡Pedido realizado con éxito! Revisa tu email :).');
-}
+        return redirect()->route('home')->with('success_order', '¡Pedido realizado con éxito! Revisa tu email :).');
+    }
+
+    public function increaseItem(OrderItem $item)
+    {
+        $item->quantity += 1;
+        $item->save();
+        
+        $this->orderService->updateOrderTotal($item->order);
+        
+        return redirect()->route('orders.carrito');
+    }
+
+    public function decreaseItem(OrderItem $item)
+    {
+        $order = $item->order; 
+
+        if ($item->quantity > 1) {
+            $item->quantity -= 1;
+            $item->save();
+        } else {
+            $item->delete();
+        }
+        $this->orderService->updateOrderTotal($order);
+        
+        return redirect()->route('orders.carrito');
+    }
 }

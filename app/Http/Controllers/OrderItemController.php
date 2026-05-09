@@ -12,9 +12,10 @@ use App\Models\Order;
 class OrderItemController extends Controller
 {
 
-    public function __construct(protected OrderItemService $service){
-
-    }
+    public function __construct(
+        protected OrderItemService $service,
+        protected OrderService $orderService 
+    ) {}
 
     /**
      * Display a listing of the resource.
@@ -81,7 +82,13 @@ class OrderItemController extends Controller
      */
     public function destroy(int $id)
     {
+       $item = $this->service->find($id);
+        $order = $item->order; 
+        
         $this->service->delete($id);
-        return redirect()->route('orders.carrito')->with('success', 'Order Item deleted successfully.');
+    
+        this->orderService->updateOrderTotal($order);
+        
+        return redirect()->route('orders.carrito')->with('success', 'Artículo eliminado de la cesta.');
     }
 }

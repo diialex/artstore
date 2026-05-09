@@ -85,3 +85,12 @@ $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
     from { opacity: 0; transform: translateY(-20px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+
+// Estilos para pagina de detalle del producto
+.hover-scale:hover { transform: scale(1.02); }
+.tracking-widest { lg-spacing: 0.2em; }
+.btn-check:checked + .btn-outline-dark {
+    background-color: #000;
+    color: #fff;
+}

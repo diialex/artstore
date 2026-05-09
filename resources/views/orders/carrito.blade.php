@@ -28,7 +28,7 @@
                     <div class="row align-items-center mb-4 pb-4 border-bottom position-relative producto-cesta">
                         <div class="col-4 col-md-3">
                             @if($item->product->image_url)
-                                <img src="{{ asset('storage/' . $item->product->image_url) }}" 
+                                <img src="{{ asset($item->product->image_url) }}" 
                                      class="img-fluid rounded-4 object-fit-cover shadow-sm" 
                                      alt="{{ $item->product->title }}" style="aspect-ratio: 3/4;">
                             @else
@@ -40,7 +40,27 @@
 
                         <div class="col-8 col-md-6 d-flex flex-column h-100 justify-content-center">
                             <h4 class="fw-bold fs-5 mb-1">{{ $item->product->title }}</h4>
-                            <p class="text-muted mb-3">{{ number_format($item->price, 2) }} € <span class="mx-2">|</span> Cantidad: <b>{{ $item->quantity }}</b></p>
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="text-muted me-3">{{ number_format($item->price, 2) }} €</span>
+                                
+                                <div class="d-flex align-items-center border border-secondary rounded-pill px-2 py-1">
+                                    <form action="{{ route('cart.decrease', $item) }}" method="POST" class="m-0">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-link text-dark text-decoration-none px-2 shadow-none border-0">
+                                            <i class="bi bi-dash-lg"></i>
+                                        </button>
+                                    </form>
+                                    
+                                    <span class="mx-2 fw-bold text-center" style="min-width: 20px;">{{ $item->quantity }}</span>
+                                    
+                                    <form action="{{ route('cart.increase', $item) }}" method="POST" class="m-0">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-link text-dark text-decoration-none px-2 shadow-none border-0">
+                                            <i class="bi bi-plus-lg"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                             <form action="{{ route('orderitems.delete', $item->id) }}" method="POST" onsubmit="return confirm('¿Seguro que quieres quitar esto de la cesta?');">
                                 @csrf
                                 @method('DELETE')

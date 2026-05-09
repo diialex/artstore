@@ -23,7 +23,6 @@ Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/paymentSuccess', [StripeController::class, 'successPayment' ])->name('payments.success');
 Route::get('/paymentError', [StripeController::class, 'cancelPayment' ])->name('payments.cancel');
 
-Route::get('/', [HomeController::class, 'index'])->name('index');
 
 Route::get('home', function(){
     return view('auth.dashboard');
@@ -267,6 +266,9 @@ Route::delete('/deleteOrderitem/{orderitem}', [OrderItemController::class, 'dest
 
 Route::get('/carrito', [OrderController::class, 'carrito'])
     ->name('orders.carrito');
+
+Route::post('/cart/increase/{item}', [OrderController::class, 'increaseItem'])->name('cart.increase');
+Route::post('/cart/decrease/{item}', [OrderController::class, 'decreaseItem'])->name('cart.decrease');
 
 //borrar cuando se implemente el login
 use App\Services\UsersService;
