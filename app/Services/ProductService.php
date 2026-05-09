@@ -27,13 +27,9 @@ class ProductService
 
     public function create(array $data): Product
     {
-
         if (isset($data['image_url'])) {
-            $imgUrl= $data['image_url'];
-            $dataImg= ('public\media\imgProd'+ $imgUrl);
-            $data['image'] = $dataImg;
-            $product = Product::create($data);
-
+            $path = $data['image_url']->store('media/imgProd', 'public');
+            $data['image_url'] = $path;
         }
 
         $product = Product::create($data);
@@ -44,14 +40,13 @@ class ProductService
 
         
         if (isset($data['sizes'])) {
-            $isUserAdmin = auth()->check() && auth()->user()->hasRol('Admin');
+           // $isUserAdmin = auth()->check() && auth()->user()->hasRol('Admin');
             
             foreach ($data['sizes'] as $sizeData) {
                 if (!empty($sizeData['name'])) { 
                     $product->sizes()->create([
                         'size' => $sizeData['name'],
                         'stock' => $sizeData['stock'],
-                        'is_approved' => $isUserAdmin
                     ]);
                 }
             }
