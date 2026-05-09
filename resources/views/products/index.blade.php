@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 @extends('adminLayout')
 @section('title', 'Productos')
+=======
+@extends('layout')
+>>>>>>> 9112b6595c9c46fb955b644729a87aa7a6b6e6c6
 @section('content')
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -39,9 +43,17 @@
         @endif
 
         <div class="row">
+<<<<<<< HEAD
                  @foreach($products as $product)
                     @include('products.card')
                 @endforeach
+=======
+            @foreach($products as $product)
+                <div class="col-md-4 mb-4">
+                    @include('partials.product-card', ['product' => $product])
+                </div>
+            @endforeach
+>>>>>>> 9112b6595c9c46fb955b644729a87aa7a6b6e6c6
         </div>
 
         @if(method_exists($products, 'links'))
