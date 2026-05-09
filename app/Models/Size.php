@@ -9,13 +9,14 @@ class Size extends Model
 {
     use HasFactory;
 
-    protected $table = 'product_sizes'; // Especificamos el nombre de la tabla
-
     protected $fillable = [
         'product_id',
         'size',
         'stock',
-        'is_approved'
+    ];
+
+    protected $hidden = [
+        'id',
     ];
 
     // Relación con el producto
