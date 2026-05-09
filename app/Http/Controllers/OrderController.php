@@ -49,7 +49,7 @@ class OrderController extends Controller
     }
     public function addProducttoOrder(Request $request, Product $product)
     {
-        $user = Auth::user();80
+        $user = Auth::user();
  
 
 
