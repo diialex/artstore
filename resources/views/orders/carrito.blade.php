@@ -28,7 +28,7 @@
                     <div class="row align-items-center mb-4 pb-4 border-bottom position-relative producto-cesta">
                         <div class="col-4 col-md-3">
                             @if($item->product->image_url)
-                                <img src="{{ asset('storage/' . $item->product->image_url) }}" 
+                                <img src="{{ asset($item->product->image_url) }}" 
                                      class="img-fluid rounded-4 object-fit-cover shadow-sm" 
                                      alt="{{ $item->product->title }}" style="aspect-ratio: 3/4;">
                             @else
@@ -40,7 +40,27 @@
 
                         <div class="col-8 col-md-6 d-flex flex-column h-100 justify-content-center">
                             <h4 class="fw-bold fs-5 mb-1">{{ $item->product->title }}</h4>
-                            <p class="text-muted mb-3">{{ number_format($item->price, 2) }} € <span class="mx-2">|</span> Cantidad: <b>{{ $item->quantity }}</b></p>
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="text-muted me-3">{{ number_format($item->price, 2) }} €</span>
+                                
+                                <div class="d-flex align-items-center border border-secondary rounded-pill px-2 py-1">
+                                    <form action="{{ route('cart.decrease', $item) }}" method="POST" class="m-0">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-link text-dark text-decoration-none px-2 shadow-none border-0">
+                                            <i class="bi bi-dash-lg"></i>
+                                        </button>
+                                    </form>
+                                    
+                                    <span class="mx-2 fw-bold text-center" style="min-width: 20px;">{{ $item->quantity }}</span>
+                                    
+                                    <form action="{{ route('cart.increase', $item) }}" method="POST" class="m-0">
+                                        @csrf
+                                        <button type="submit" class="btn btn-sm btn-link text-dark text-decoration-none px-2 shadow-none border-0">
+                                            <i class="bi bi-plus-lg"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                             <form action="{{ route('orderitems.delete', $item->id) }}" method="POST" onsubmit="return confirm('¿Seguro que quieres quitar esto de la cesta?');">
                                 @csrf
                                 @method('DELETE')
@@ -74,20 +94,65 @@
                     </div>
 
                     <p class="small text-muted mb-4">El total incluye IVA.</p>
+                    
                     <form method="post" action="{{ route('payments.pay', $order) }}">
                         @csrf
+                        
+                        {{-- CSS Corregido --}}
+                        <style>
+                            .seccion-nueva-dir, .seccion-guardada-dir { display: none; margin-top: 15px; }
+            
+                            #modo_guardada:checked ~ .seccion-guardada-dir { display: block; }
+                            #modo_nueva:checked ~ .seccion-nueva-dir { display: block; }
+                        </style>
+
                         <div class="mb-4">
-                            <label for="address_id" class="form-label small fw-bold text-uppercase tracking-wide">Enviar a:</label>
-                            <select name="address_id" id="address_id" class="form-select form-select-lg border-dark bg-transparent" required>
-                                @foreach ($order->user->addresses as $address)
-                                    <option value="{{ $address->id }}" {{ $loop->first ? 'selected' : '' }}>
-                                        {{ $address->street }}, {{ $address->city }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <label class="form-label small fw-bold text-uppercase tracking-wide mb-3 d-block">Dirección de Envío:</label>
+                            
+                            @if(auth()->user()->addresses && auth()->user()->addresses->count() > 0)
+                                <input class="form-check-input border-dark shadow-none me-1" type="radio" name="address_mode" id="modo_guardada" value="saved" checked>
+                                <label class="form-check-label fw-bold me-4 cursor-pointer" for="modo_guardada">
+                                    Direcciones guardadas
+                                </label>
+                                
+                                <input class="form-check-input border-dark shadow-none me-1" type="radio" name="address_mode" id="modo_nueva" value="new" {{ old('address_mode') == 'new' ? 'checked' : '' }}>
+                                <label class="form-check-label fw-bold cursor-pointer" for="modo_nueva">
+                                    Añadir nueva
+                                </label>
+
+                                <div class="seccion-guardada-dir bg-white p-3 border rounded-3">
+                                    <select name="address_id" class="form-select border-dark bg-transparent shadow-none">
+                                        @foreach ($order->user->addresses as $address)
+                                            <option value="{{ $address->id }}">
+                                                {{ $address->street }}, {{ $address->city }} ({{ $address->zip_code }})
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            @else
+                                <input type="hidden" name="address_mode" id="modo_nueva" value="new">
+                                <div class="alert alert-secondary border-0 small py-2 mb-3">Aún no tienes direcciones. Introduce una:</div>
+                            @endif
+
+                            <div class="seccion-nueva-dir bg-white p-3 border rounded-3 {{ auth()->user()->addresses->count() == 0 ? 'd-block' : '' }}">
+                                <div class="row g-3">
+                                    <div class="col-12">
+                                        <input type="text" name="new_street" class="form-control border-dark bg-transparent shadow-none @error('new_street') is-invalid @enderror" placeholder="Calle y número" value="{{ old('new_street') }}">
+                                        @error('new_street') <span class="text-danger small">{{ $message }}</span> @enderror
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <input type="text" name="new_city" class="form-control border-dark bg-transparent shadow-none @error('new_city') is-invalid @enderror" placeholder="Ciudad" value="{{ old('new_city') }}">
+                                        @error('new_city') <span class="text-danger small">{{ $message }}</span> @enderror
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" name="new_zip_code" class="form-control border-dark bg-transparent shadow-none @error('new_zip_code') is-invalid @enderror" placeholder="C.P." value="{{ old('new_zip_code') }}">
+                                        @error('new_zip_code') <span class="text-danger small">{{ $message }}</span> @enderror
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <button type="submit" class="btn btn-dark w-100 py-3 rounded-pill fw-bold fs-5 text-uppercase tracking-wide btn-hover-scale">
+                        <button type="submit" class="btn btn-dark w-100 py-3 rounded-pill fw-bold fs-5 text-uppercase tracking-wide btn-hover-scale mt-2">
                             Tramitar Pedido <i class="bi bi-arrow-right ms-2"></i>
                         </button>
                     </form>

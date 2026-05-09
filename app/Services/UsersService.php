@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Models\FavoriteList;
 use Illuminate\Database\Eloquent\Collection;
 use Exception;
 use DateTime;
@@ -50,6 +51,30 @@ class UsersService
             return User::where('email', $request->userCredential)->first();
         }else{
             return $this->getUserByUsername($request->userCredential);
+        }
+    }
+
+    public function addFavorites($user_id ,$product_id ){
+        $list = FavoriteList::firstOrCreate(['user_id' => $user_id]);
+        $products_list= $list->products ?? [];
+
+        if (!in_array($product_id, $products_list)){
+            $products_list[] = $product_id;
+        }
+
+        $list->products = $products_list;
+        $list->save();
+    }
+
+    public function removeFavorites($user_id, $product_id){
+        $list = FavoriteList::where('user_id', $user_id)->first();
+        if ($list) {
+            $products_list = $list->products ?? [];
+            $products_list = array_filter($products_list, function($id) use ($product_id) {
+                return $id != $product_id;
+            });
+            $list->products = array_values($products_list);
+            $list->save();
         }
     }
 

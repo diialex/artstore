@@ -37,10 +37,9 @@ class ProductService
         if (isset($data['categories'])) {
             $product->categories()->attach($data['categories']);
         }
-
         
         if (isset($data['sizes'])) {
-           // $isUserAdmin = auth()->check() && auth()->user()->hasRol('Admin');
+            $isUserAdmin = auth()->check() && auth()->user()->role_id == 1; // Ajustado por si acaso
             
             foreach ($data['sizes'] as $sizeData) {
                 if (!empty($sizeData['name'])) { 
@@ -67,7 +66,7 @@ class ProductService
         
         if (isset($data['sizes'])) {
             $product->sizes()->delete(); 
-            $isUserAdmin = auth()->check() && auth()->user()->hasRol('Admin');
+            $isUserAdmin = auth()->check() && auth()->user()->role_id == 1; 
 
             foreach ($data['sizes'] as $sizeData) {
                 if (!empty($sizeData['name'])) {

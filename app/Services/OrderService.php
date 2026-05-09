@@ -17,7 +17,15 @@ class OrderService
     }
 
     public function save(Order $order){
-        $order->status='pending';
+        if (!$order->exists) {
+        $order->status = 'pending';
+        }
+        
+        // Si ya existe y no tiene estado, también lo ponemos
+        if (empty($order->status)) {
+            $order->status = 'pending';
+        }
+
         $order->save();
         return $order;
     }
@@ -39,5 +47,17 @@ class OrderService
         $order = $this->find($id);
         $order->delete();
         return true;
+    }
+
+
+    public function updateOrderTotal(Order $order)
+    {
+        $total = $order->items->sum(function ($item) {
+            return $item->price * $item->quantity;
+        });
+
+        $order->update(['total_amount' => $total]);
+
+        return $order;
     }
 }

@@ -8,8 +8,10 @@ use App\Http\Requests\Order\UpdateOrderRequest;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Services\OrderService;
+use App\Mail\OrderConfirmed;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -22,8 +24,20 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = $this->orderService->getAll();
-        return view('orders.index', compact('orders'));
+        $user = auth()->user();
+        if ($user->role_id == 1) { 
+            $orders = Order::where('status', '!=', 'pending')
+                        ->orderBy('created_at', 'desc')
+                        ->get();
+            return view('admin.orders.index', compact('orders')); // Una vista de tabla/gestión
+        }
+
+        $orders = Order::where('user_id', $user->id)
+                    ->where('status', '!=', 'pending')
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+
+        return view('orders.index', compact('orders')); 
     }
 
     /**
@@ -35,7 +49,9 @@ class OrderController extends Controller
     }
     public function addProducttoOrder(Request $request, Product $product)
     {
-        $user = Auth::user();
+        $user = Auth::user();80
+ 
+
 
         $order = Order::where('user_id', $user->id)
                       ->whereIn('status', ['pending', 'failed'])
@@ -62,6 +78,7 @@ class OrderController extends Controller
             $item->product()->associate($product);
             $item->save();
         }
+
         $this->updateOrder($order);
         return redirect()->route('orders.carrito')->with('success', 'Producto agregado exitosamente.');
     }
@@ -143,5 +160,45 @@ class OrderController extends Controller
     {
         $this->orderService->delete($id);
         return redirect()->route('orders.index')->with('success', 'Orden eliminada exitosamente.');
+    }
+
+    public function pay(Request $request, Order $order)
+    {
+        $request->validate(['address_id' => 'required|exists:addresses,id']);
+
+        $order->update([
+            'status' => 'completed',
+            'address_id' => $request->address_id,
+            'order_date' => now()
+        ]);
+
+        Mail::to($order->user->email)->send(new OrderConfirmed($order));
+
+        return redirect()->route('home')->with('success_order', '¡Pedido realizado con éxito! Revisa tu email :).');
+    }
+
+    public function increaseItem(OrderItem $item)
+    {
+        $item->quantity += 1;
+        $item->save();
+        
+        $this->orderService->updateOrderTotal($item->order);
+        
+        return redirect()->route('orders.carrito');
+    }
+
+    public function decreaseItem(OrderItem $item)
+    {
+        $order = $item->order; 
+
+        if ($item->quantity > 1) {
+            $item->quantity -= 1;
+            $item->save();
+        } else {
+            $item->delete();
+        }
+        $this->orderService->updateOrderTotal($order);
+        
+        return redirect()->route('orders.carrito');
     }
 }

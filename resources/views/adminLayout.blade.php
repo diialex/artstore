@@ -38,6 +38,10 @@
                             </li>
                         </ul>
                     </div>
+                    <img src="{{ asset('/storage/media/images/logo.png') }}" alt="Logo Hanger" class="cursor-pointer" style="height: 70px; width: auto; object-fit: contain;">
+                </div>
+
+                <div class="col-4 ms-auto d-flex justify-content-end gap-2 gap-md-3 align-items-center z-3">
                 </div>
             </div>
         </nav>
