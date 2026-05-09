@@ -27,11 +27,10 @@
                                 <li><h6 class="dropdown-header">Opciones de cuenta</h6></li>
                                 
                                 @if (auth()->user()->roles->where('name', 'admin')->first())
-<<<<<<< HEAD
                                     <li><a class="dropdown-item" href="{{ route('controlPanel.dashboard') }}"><i class="bi bi-person me-2"></i>Panel administrador</a></li>
-=======
-                                    <li><a class="dropdown-item" href="/perfil"><i class="bi bi-person-gear me-2"></i>Panel administrador</a></li>
->>>>>>> 9112b6595c9c46fb955b644729a87aa7a6b6e6c6
+
+                                    <li><a class="dropdown-item" href="{{ route('controlPanel.dashboard') }}"><i class="bi bi-person-gear me-2"></i>Panel administrador</a></li>
+
                                 @endif
                                 
                                 @if(auth()->user()->roles->where('name', 'seller')->first())
@@ -39,8 +38,8 @@
                                 @endif
                                 
                                 @if (auth()->user()->roles->where('name', 'user')->first())
-                                    <li><a class="dropdown-item" href="/perfil"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
-                                    <li><a class="dropdown-item" href="/pedidos"><i class="bi bi-bag me-2"></i>Mis Pedidos</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('users.show', auth()->user()->username) }}"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-bag me-2"></i>Mis Pedidos</a></li>
                                 @endif
                                 
                                 <li><hr class="dropdown-divider"></li>
@@ -58,9 +57,26 @@
                         <i id="perfil" class="bi bi-person fs-2 cursor-pointer mb-0" data-bs-toggle="offcanvas"
                             data-bs-target="#iniciarSesion"></i>
                     @endauth
-                    <a href="{{ route('orders.index') }}" class="text-dark text-decoration-none">
+                    
+                    <a href="{{ route('orders.carrito') }}" class="text-dark text-decoration-none position-relative d-flex align-items-center">
                         <i class="bi bi-bag fs-2 cursor-pointer mb-0"></i>
+                        @php
+                            $cartCount = 0;
+                            if(auth()->check()) {
+                                $activeOrder = \App\Models\Order::where('user_id', auth()->id())
+                                                    ->whereIn('status', ['pending', 'failed'])
+                                                    ->first();
+                                $cartCount = $activeOrder ? $activeOrder->items->sum('quantity') : 0;
+                            }
+                        @endphp
+                        @if($cartCount > 0)
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem; margin-top: 5px; margin-left: -5px;">
+                                {{ $cartCount }}
+                            </span>
+                        @endif
                     </a>
+                    {{-- FIN DE LA MAGIA --}}
+
                 </div>
             </div>
         </nav>
@@ -88,18 +104,42 @@
     </footer>
 
     <div class="offcanvas offcanvas-start bg-light text-black" tabindex="-1" id="menuLateral">
-        <div class="offcanvas-header">
+        <div class="offcanvas-header border-bottom border-secondary">
+            <h5 class="offcanvas-title text-uppercase fw-bold tracking-wide">Categorías</h5>
             <i class="bi bi-x-lg fs-2 clicable" data-bs-dismiss="offcanvas"></i>
         </div>
         <div class="offcanvas-body">
             <ul class="list-unstyled me-4 pe-3">
-                <li class="py-2 border-bottom border-secondary"><a href="{{ url('/') }}" 
-                        class="text-black text-decoration-none fs-5">Inicio</a></li>
-                <li class="py-2 border-bottom border-secondary"><a href="#"
-                        class="text-black text-decoration-none fs-5">Descubrir - TODO</a></li>
-                <li class="py-2 border-bottom border-secondary"><a href="#"
-                        class="text-black text-decoration-none fs-5">Social - TODO</a></li>
-                <li class="py-2"><a href="#" class="text-black text-decoration-none fs-5">Info - TODO</a></li>
+                <li class="py-2 border-bottom border-secondary">
+                    <a href="{{ route('home') }}" class="text-black text-decoration-none fs-5 {{ !request('category') ? 'fw-bold' : '' }}">
+                        Inicio / Ver Todo
+                    </a>
+                </li>
+
+                <li class="mt-3">
+                    <span class="text-muted small text-uppercase fw-bold tracking-widest">Colecciones</span>
+                </li>
+                @foreach(App\Models\Category::all() as $cat)
+                    <li class="py-2 border-bottom border-secondary ps-2">
+                        <a href="{{ route('home', ['category' => $cat->id]) }}" 
+                        class="text-black text-decoration-none fs-6 {{ request('category') == $cat->id ? 'fw-bold text-primary' : '' }}">
+                        {{ $cat->name }}
+                        </a>
+                    </li>
+                @endforeach
+
+                <li class="mt-4">
+                    <span class="text-muted small text-uppercase fw-bold tracking-widest">Explorar</span>
+                </li>
+                <li class="py-2 border-bottom border-secondary">
+                    <a href="#" class="text-black text-decoration-none fs-5">Descubrir - TODO</a>
+                </li>
+                <li class="py-2 border-bottom border-secondary">
+                    <a href="#" class="text-black text-decoration-none fs-5">Social - TODO</a>
+                </li>
+                <li class="py-2">
+                    <a href="#" class="text-black text-decoration-none fs-5">Info - TODO</a>
+                </li>
             </ul>
         </div>
     </div>

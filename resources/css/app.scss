@@ -43,7 +43,6 @@ $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
     display: none !important;
 }
 
-<<<<<<< HEAD
 .arrow-icon {
     transition: transform 0.3s ease; /* Para que el giro sea suave */
 }
@@ -52,7 +51,6 @@ $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
 [data-bs-toggle="collapse"]:not(.collapsed) .arrow-icon {
     transform: rotate(90deg);
 }
-=======
 .producto-card {
     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
     &:hover {
@@ -63,6 +61,11 @@ $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
 
 .tracking-wide {
     letter-spacing: 0.1em;
+}
+
+.tracking-widest {
+    letter-spacing: 0.2em;
+    font-size: 0.8rem;
 }
 
 .producto-cesta {
@@ -81,4 +84,22 @@ $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
         box-shadow: 0 10px 20px rgba(0,0,0,0.2);
     }
 }
->>>>>>> 9112b6595c9c46fb955b644729a87aa7a6b6e6c6
+
+.animate__fadeInDown {
+    animation: fadeInDown 0.5s ease-out;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
+// Estilos para pagina de detalle del producto
+.hover-scale:hover { transform: scale(1.02); }
+.tracking-widest { lg-spacing: 0.2em; }
+.btn-check:checked + .btn-outline-dark {
+    background-color: #000;
+    color: #fff;
+}
+
