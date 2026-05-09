@@ -52,4 +52,16 @@ class UsersService
             return $this->getUserByUsername($request->userCredential);
         }
     }
+
+    public function addFavorites($user_id ,$product_id ){
+        $list = FavoriteList::firstOrCreate(['user_id' => $user_id]);
+        $products_list= $list->products ?? [];
+
+        if (!in_array($product_id, $products_list)){
+            $products_list[] = $product_id;
+        }
+
+        $list->products = $products_list;
+        $list->save();
+    }
 }

@@ -165,4 +165,12 @@ class UsersController extends Controller
         $addresses = $user->addresses;
         return view('addresses.listAddresses', compact('addresses'));
     }
+
+    public function addFavorites(AddFavoritesRequest $request){
+        $this->userService->addFavorites(
+            auth()->id(),
+            $request->product_id
+        );
+        
+    }
 }
