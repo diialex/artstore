@@ -11,7 +11,10 @@
 
             <form method="POST" enctype="multipart/form-data" action="{{ $product->exists ? route('products.update', $product) : route('products.store') }}" class="p-4 bg-white border rounded-4 shadow-sm">
                 @csrf
-                @if($product->exists) @method('PUT') @endif
+                @if($product->exists) @method('PUT') 
+                    @section('title', 'Editar Producto')
+                @endif
+                @section('title', 'Crear Producto')
 
                 <div class="form-group mb-3">
                     <label class="fw-bold small text-uppercase">Título</label>

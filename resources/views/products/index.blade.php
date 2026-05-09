@@ -1,4 +1,5 @@
 @extends('layout')
+@section('title', 'Productos')
 @section('content')
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
@@ -27,7 +28,7 @@
                     </form>
                 </div>
             </div>
-            <a href="{{ route('products.create') }}" class="btn btn-success">➕ Crear Nuevo</a>
+            <a href="{{ route('products.create') }}" class="btn btn-success">Crear Nuevo</a>
         </div>
 
         @if(session('success'))

@@ -1,4 +1,6 @@
 @extends('layout')
+@section('title', 'Carrito')
+@section('content')
 
 @section('content')
 <div class="container-fluid px-4 px-lg-5 mt-4 mb-5">

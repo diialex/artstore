@@ -1,12 +1,11 @@
 @extends('layout')
-
+@section('title', 'Carrito')
 @section('content')
-<div class="container mt-5 mb-5" style="max-width: 900px;">
-    
-    <div class="d-flex justify-content-between align-items-end mb-5 border-bottom pb-4">
-        <div>
-            <h1 class="display-6 fw-bolder text-uppercase tracking-widest m-0">Mis Pedidos</h1>
-            <p class="text-muted small mb-0">Gestiona tus compras y revisa su estado</p>
+    <div class="row m-4">
+        <div class="col-12">
+            @if(session('success'))
+                <div class="alert alert-success my-2">{{ session('success') }}</div>
+            @endif
         </div>
         @if(auth()->user()->role_id == 1)
             <a href="{{ route('orders.create') }}" class="btn btn-dark btn-sm rounded-pill px-4 tracking-wide">
