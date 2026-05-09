@@ -4,22 +4,22 @@
     <header>
         <nav class="container-fluid sticky-top bg-primary px-3 py-3 border-bottom">
             <div class="row">
-                <div class="col-4 d-flex justify-content-start gap-2 gap-md-3 align-items-center cursor-pointer z-3">
-                    <i id="burger-menu" class="bi bi-list fs-2 cursor-pointer mb-0" data-bs-toggle="offcanvas"
+                <div class="col-4 d-flex justify-content-start gap-2 gap-md-3 align-items-center cursor-pointer">
+                    <i id="burger-menu" class="bi bi-list text-white fs-2 cursor-pointer mb-0" data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral"></i>
-                    <a href="{{ route('home') }}" class="text-dark text-decoration-none d-flex align-items-center">
+                    <a href="{{ route('home') }}" class="text-white text-decoration-none d-flex align-items-center">
                         <i class="bi bi-shop fs-2 cursor-pointer mb-0"></i>
                     </a>
                 </div>
 
-                <div class="col-4 d-flex justify-content-center">
-                    <img src="{{ asset('storage/media/images/logo.png') }}" alt="Logo Hanger" style="height: 70px; width: auto; object-fit: contain;">
+                <div class="position-absolute start-50 top-50 translate-middle w-auto d-flex justify-content-center z-2">
+                    <img src="{{ asset('media/images/logo.png') }}" alt="Logo Hanger" class="cursor-pointer" style="height: 70px; width: auto; object-fit: contain;">
                 </div>
 
                 <div class="col-4 ms-auto d-flex justify-content-end gap-2 gap-md-3 align-items-center z-3">
                     @auth
                         <div class="dropdown">
-                            <a class="nav-link dropdown-toggle text-dark fw-bold" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <a class="nav-link text-white dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                 {{ auth()->user()->username }}
                             </a>
 
@@ -37,6 +37,7 @@
                                 @if (auth()->user()->roles->where('name', 'user')->first())
                                     <li><a class="dropdown-item" href="{{ route('users.show', auth()->user()->username) }}"><i class="bi bi-person me-2"></i>@lang('messages.profile')</a></li>
                                     <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-bag me-2"></i>@lang('messages.orders')</a></li>
+                                    <li><a class="dropdown-item" href="/favoritos"><i class="bi bi-heart me-2"></i>@lang('messages.fav')</a></li>
                                 @endif
                                 
                                 <li><hr class="dropdown-divider"></li>
@@ -51,9 +52,10 @@
                             </ul>
                         </div>
                     @else
-                        <i id="perfil" class="bi bi-person fs-2 cursor-pointer mb-0" data-bs-toggle="offcanvas"
+                        <i id="perfil" class="bi bi-person text-white fs-2 cursor-pointer mb-0" data-bs-toggle="offcanvas"
                             data-bs-target="#iniciarSesion"></i>
                     @endauth
+                    <a href="{{ route('orders.index') }}" class="text-white text-decoration-none">
                     
                     <a href="{{ route('orders.carrito') }}" class="text-dark text-decoration-none position-relative d-flex align-items-center">
                         <i class="bi bi-bag fs-2 cursor-pointer mb-0"></i>
@@ -80,8 +82,7 @@
     <main class="container-fluid py-3 flex-fill">
         @yield('content')
     </main>
-
-    <footer class="bg-dark text-white pt-4 pb-3 mt-5 w-100 shadow-lg ">
+    <footer class="bg-white text-white pt-4 pb-3 mt-5 w-100 shadow-lg ">
         <div class="container-fluid px-4">
             <div class="row align-items-center">
                 <div class="col-12 col-md-9 text-center text-md-start mb-3 mb-md-0">
@@ -174,7 +175,51 @@
                     <a href="{{ route('register') }}" class="btn btn-secondary w-100"> @lang('messages.register')</a>
                 </form>
             @endguest
+
+            
+            @auth
+                <div class="text-center mt-4">
+                    <i class="bi bi-person-circle display-1 text-primary"></i>
+                    <h3 class="mt-3 fw-bold">¡Hola, {{ auth()->user()->username }}!</h3>
+                    <p class="text-muted">{{ auth()->user()->email }}</p>
+                    
+                    <hr class="border-secondary border-2 my-4 mx-3">
+                    
+                    <a href="{{ route('home') }}" class="btn btn-white w-100 mb-3 fs-5">Mi Panel</a>
+                    
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-outline-danger w-100 fs-5">Cerrar Sesión</button>
+                    </form>
+                </div>
+            @endauth
+
         </div>
     </div>
 </body>
 @endsection
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.querySelectorAll('.add-favorite-form').forEach(form => {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(form);
+            
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+</script>
+</html>

@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('adminLayout')
 @section('title', 'Carrito')
 @section('content')
     <div class="row m-4">

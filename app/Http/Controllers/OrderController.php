@@ -49,18 +49,20 @@ class OrderController extends Controller
     }
     public function addProducttoOrder(Request $request, Product $product)
     {
-        $user = Auth::user();
+        $user = Auth::user();80
+ 
+
 
         $order = Order::where('user_id', $user->id)
-                    ->whereIn('status', ['pending', 'failed'])
-                    ->first();
+                      ->whereIn('status', ['pending', 'failed'])
+                      ->first();
 
         if (!$order) {
             $order = new Order;
             $order->total_amount = 0;
+            $order->status = 'pending'; // Aseguramos que empiece como pendiente
             $order->user()->associate($user);
-        
-            $this->orderService->save($order); 
+            $order->save();
         }
 
         $item = $order->items()->where('product_id', $product->id)->first();
