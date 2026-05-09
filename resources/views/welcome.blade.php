@@ -14,13 +14,13 @@
             </div>
             <div class="carousel-inner">
                 <div class="carousel-item active">
-                    <img src="{{ asset('media/images/banner-example1.jpg') }}" class="d-block w-100 h-25 banner-img" alt="..." />
+                    <img src="{{ asset('storage/media/images/banner-example1.jpg') }}" class="d-block w-100 h-25 banner-img" alt="..." />
                 </div>
                 <div class="carousel-item">
-                    <img src="{{ asset('media/images/banner-example2.jpg') }}" class="d-block w-100 h-25 banner-img" alt="..." />
+                    <img src="{{ asset('storage/media/images/banner-example2.jpg') }}" class="d-block w-100 h-25 banner-img" alt="..." />
                 </div>
                 <div class="carousel-item">
-                    <img src="{{ asset('media/images/banner-example3.jpg') }}" class="d-block w-100 h-25 banner-img" alt="..." />
+                    <img src="{{ asset('storage/media/images/banner-example3.jpg') }}" class="d-block w-100 h-25 banner-img" alt="..." />
                 </div>
             </div>
         </div>

@@ -27,6 +27,11 @@ class ProductService
 
     public function create(array $data): Product
     {
+        if (isset($data['image_url'])) {
+            $path = $data['image_url']->store('media/imgProd', 'public');
+            $data['image_url'] = $path;
+        }
+
         $product = Product::create($data);
 
         if (isset($data['categories'])) {
@@ -41,7 +46,6 @@ class ProductService
                     $product->sizes()->create([
                         'size' => $sizeData['name'],
                         'stock' => $sizeData['stock'],
-                        'is_approved' => $isUserAdmin
                     ]);
                 }
             }
