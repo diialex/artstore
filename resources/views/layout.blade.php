@@ -12,8 +12,8 @@
                     </a>
                 </div>
 
-                <div class="col-4 d-flex justify-content-center">
-                    <img src="{{ asset('storage/media/images/logo.png') }}" alt="Logo Hanger" style="height: 70px; width: auto; object-fit: contain;">
+                <div class="position-absolute start-50 top-50 translate-middle w-auto d-flex justify-content-center z-2">
+                    <img src="{{ asset('media/images/logo.png') }}" alt="Logo Hanger" class="cursor-pointer" style="height: 70px; width: auto; object-fit: contain;">
                 </div>
 
                 <div class="col-4 ms-auto d-flex justify-content-end gap-2 gap-md-3 align-items-center z-3">
@@ -27,7 +27,10 @@
                                 <li><h6 class="dropdown-header">Opciones de cuenta</h6></li>
                                 
                                 @if (auth()->user()->roles->where('name', 'admin')->first())
+                                    <li><a class="dropdown-item" href="{{ route('controlPanel.dashboard') }}"><i class="bi bi-person me-2"></i>Panel administrador</a></li>
+
                                     <li><a class="dropdown-item" href="{{ route('controlPanel.dashboard') }}"><i class="bi bi-person-gear me-2"></i>Panel administrador</a></li>
+
                                 @endif
                                 
                                 @if(auth()->user()->roles->where('name', 'seller')->first())

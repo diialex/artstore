@@ -43,6 +43,14 @@ $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
     display: none !important;
 }
 
+.arrow-icon {
+    transition: transform 0.3s ease; /* Para que el giro sea suave */
+}
+
+/* Cuando el botón NO tiene la clase 'collapsed' (es decir, está abierto) */
+[data-bs-toggle="collapse"]:not(.collapsed) .arrow-icon {
+    transform: rotate(90deg);
+}
 .producto-card {
     transition: all 0.3s cubic-bezier(.25,.8,.25,1);
     &:hover {
@@ -94,3 +102,4 @@ $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
     background-color: #000;
     color: #fff;
 }
+
