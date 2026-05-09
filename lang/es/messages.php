@@ -4,22 +4,24 @@ return [
     
     'welcome' => 'Welcome to HANGER',
     'collections' => 'Colecciones',
-    'login_to_buy' => 'Inicia sesión para comprar',
-    'account_options' => 'Opciones de cuenta',
     'empty_cart' => 'Tu cesta está vacía.',
     
+    
+    #login related
+    'login_to_buy' => 'Inicia sesión para comprar',
     'pass' => 'Contraseña',
     'email_user' => 'Correo o usuario',
     'register' => 'Registrarse',
+    'no_account' => '¿No tienes una cuenta?',
 
     #header
     'cart' => 'Tu Cesta',
     
     'wrong_credentials' => 'Credenciales incorrectas.',
     'forgot_password' => '¿Olvidaste tu contraseña?',
-
-
-
+    
+    
+    
     #categories
     'categories' => 'Categorías',
     
@@ -28,11 +30,12 @@ return [
     'all_products' => 'Todos los productos',
     'discover' => 'Descubrir productos',
     'add_to_cart' => 'Añadir a la cesta',
-
+    
     
     
     #personal panel
-
+    
+    'account_options' => 'Opciones de cuenta',
     'admin_panel' => 'Panel de administrador',    
     'profile' => 'Mi Perfil',
     'orders' => 'Mis pedidos',

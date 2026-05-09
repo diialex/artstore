@@ -13,7 +13,7 @@
                 </div>
 
                 <div class="position-absolute start-50 top-50 translate-middle w-auto d-flex justify-content-center z-2">
-                    <img src="{{ asset('media/images/logo.png') }}" alt="Logo Hanger" class="cursor-pointer" style="height: 70px; width: auto; object-fit: contain;">
+                    <img src="{{ asset('storage/media/images/logo.png') }}" alt="Logo Hanger" class="cursor-pointer" style="height: 70px; width: auto; object-fit: contain;">
                 </div>
 
                 <div class="col-4 ms-auto d-flex justify-content-end gap-2 gap-md-3 align-items-center z-3">
@@ -55,9 +55,8 @@
                         <i id="perfil" class="bi bi-person text-white fs-2 cursor-pointer mb-0" data-bs-toggle="offcanvas"
                             data-bs-target="#iniciarSesion"></i>
                     @endauth
-                    <a href="{{ route('orders.index') }}" class="text-white text-decoration-none">
                     
-                    <a href="{{ route('orders.carrito') }}" class="text-dark text-decoration-none position-relative d-flex align-items-center">
+                    <a href="{{ route('orders.carrito') }}" class="text-white text-decoration-none position-relative d-flex align-items-center">
                         <i class="bi bi-bag fs-2 cursor-pointer mb-0"></i>
                         @php
                             $cartCount = 0;
@@ -82,7 +81,8 @@
     <main class="container-fluid py-3 flex-fill">
         @yield('content')
     </main>
-    <footer class="bg-white text-white pt-4 pb-3 mt-5 w-100 shadow-lg ">
+
+    <footer class="bg-dark text-white pt-4 pb-3 mt-5 w-100 shadow-lg">
         <div class="container-fluid px-4">
             <div class="row align-items-center">
                 <div class="col-12 col-md-9 text-center text-md-start mb-3 mb-md-0">
@@ -176,7 +176,6 @@
                 </form>
             @endguest
 
-            
             @auth
                 <div class="text-center mt-4">
                     <i class="bi bi-person-circle display-1 text-primary"></i>
@@ -193,33 +192,29 @@
                     </form>
                 </div>
             @endauth
-
         </div>
     </div>
+
+    <!-- SCRIPTS DENTRO DEL BODY -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.querySelectorAll('.add-favorite-form').forEach(form => {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                try {
+                    const response = await fetch(form.action, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (response.ok) {
+                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    </script>
 </body>
 @endsection
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    document.querySelectorAll('.add-favorite-form').forEach(form => {
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const formData = new FormData(form);
-            
-            try {
-                const response = await fetch(form.action, {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                if (response.ok) {
-                    
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        });
-    });
-</script>
-</html>
