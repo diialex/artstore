@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Models\FavoriteList;
 use Illuminate\Database\Eloquent\Collection;
 use Exception;
 

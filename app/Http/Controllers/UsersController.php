@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Roles\StoreRolesRequest;
+use App\Http\Requests\Users\AddFavoritesRequest;
 use App\Http\Requests\Users\StoreUsersRequest;
 use App\Http\Requests\Users\UpdateUsersRequest;
 use App\Services\RolesService;
