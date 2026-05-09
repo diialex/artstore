@@ -35,7 +35,7 @@
             <form action="{{ route('orders.addProduct', $product) }}" method="POST">
                 @csrf
                 <button type="submit" class="btn btn-dark w-100 fw-bold rounded-pill mb-2 py-2">
-                    <i class="bi bi-cart-plus me-2"></i>Añadir al carrito
+                    <i class="bi bi-cart-plus me-2"></i>@lang('messages.add_to_cart')
                 </button>
             </form>
 

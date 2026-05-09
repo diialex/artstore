@@ -24,8 +24,7 @@
 
             <div class="row g-4 m-0 px-2 px-md-5 mt-4">
                 <div class="col-12">
-                    <p class="d-block d-md-none display-6 mb-0 text-uppercase tracking-wide">Categorías</p>
-                    <p class="d-none d-md-block display-5 mb-0 text-uppercase tracking-wide">Categorías</p>
+                    <p class="d-none d-md-block display-5 mb-0 text-uppercase tracking-wide">@lang('messages.categories')</p>
                     <hr class="border-dark border-2 opacity-100">
                 </div>
 
@@ -48,7 +47,7 @@
         <div class="row g-4 m-0 px-2 px-md-5 {{ request('category') ? 'mt-2' : 'mt-5' }}">
             <div class="col-12">
                 @php
-                    $titulo = request('category') ? $categories->where('id', request('category'))->first()->name : 'Todos los productos';
+                    $titulo = request('category') ? $categories->where('id', request('category'))->first()->name : trans('messages.all_products');
                 @endphp
                 <p class="d-block d-md-none display-6 mb-0 text-uppercase tracking-wide">{{ $titulo }}</p>
                 <p class="d-none d-md-block display-5 mb-0 text-uppercase tracking-wide">{{ $titulo }}</p>

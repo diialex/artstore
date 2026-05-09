@@ -1,0 +1,21 @@
+<?php
+return [
+    'collections' => 'Collections',
+    'all_products' => 'All products',
+    'add_to_cart' => 'Add to bag',
+    'login_to_buy' => 'Login to buy',
+    'cart' => 'Your Bag',
+    'admin_panel' => 'Admin Panel',    
+    'profile' => 'My Profile',
+    'orders' => 'My Orders',
+    'account_options' => 'Account Options',
+    'empty_cart' => 'Your bag is empty.',
+    'discover' => 'Discover products',
+    'categories' => 'Categories',
+    'terms_conditions_purchase' => 'Terms and conditions of purchase',
+    'terms_conditions_hanger' => 'Terms and conditions of hanger',
+    'privacy_policy' => 'Privacy policy',
+    'cookie_policy' => 'Cookie policy',
+    'privacy_management' => 'Privacy management',
+    'logout' => 'Logout',
+];

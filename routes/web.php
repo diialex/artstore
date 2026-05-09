@@ -299,3 +299,20 @@ Route::get('/forzar-login-user', function () {
 
 Route::get('/controlPanel', [ControlPanelController::class, 'index'])
     ->name('controlPanel.dashboard');
+
+//Idiomas y traducciones
+Route::get('/lang/{locale}', function ($locale) {
+    if (!in_array($locale, ['en', 'es'])) {
+        abort(400);
+    }
+
+    if (auth()->check()) {
+        $user = auth()->user();
+        $user->locale = $locale;
+        $user->save();
+    } else {
+        session()->put('locale', $locale);
+    }
+
+    return redirect()->back();
+})->name('lang.switch');

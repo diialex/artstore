@@ -27,20 +27,17 @@
                                 <li><h6 class="dropdown-header">Opciones de cuenta</h6></li>
                                 
                                 @if (auth()->user()->roles->where('name', 'admin')->first())
-                                    <li><a class="dropdown-item" href="{{ route('controlPanel.dashboard') }}"><i class="bi bi-person me-2"></i>Panel administrador</a></li>
-
-                                    <li><a class="dropdown-item" href="{{ route('controlPanel.dashboard') }}"><i class="bi bi-person-gear me-2"></i>Panel administrador</a></li>
-
+                                    <li><a class="dropdown-item" href="{{ route('controlPanel.dashboard') }}"><i class="bi bi-person-gear me-2"></i>@lang('messages.admin_panel')</a></li>
                                 @endif
                                 
                                 @if(auth()->user()->roles->where('name', 'seller')->first())
-                                    <li><a class="dropdown-item" href="/perfil"><i class="bi bi-shop-window me-2"></i>Mi Tienda</a></li>
+                                    <li><a class="dropdown-item" href="/perfil"><i class="bi bi-shop-window me-2"></i>@lang('messages.profile')</a></li>
                                 @endif
                                 
                                 @if (auth()->user()->roles->where('name', 'user')->first())
-                                    <li><a class="dropdown-item" href="{{ route('users.show', auth()->user()->username) }}"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-bag me-2"></i>Mis Pedidos</a></li>
-                                    <li><a class="dropdown-item" href="/favoritos"><i class="bi bi-heart me-2"></i>Favoritos</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('users.show', auth()->user()->username) }}"><i class="bi bi-person me-2"></i>@lang('messages.profile')</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-bag me-2"></i>@lang('messages.orders')</a></li>
+                                    <li><a class="dropdown-item" href="/favoritos"><i class="bi bi-heart me-2"></i>@lang('messages.fav')</a></li>
                                 @endif
                                 
                                 <li><hr class="dropdown-divider"></li>
@@ -48,7 +45,7 @@
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
                                         <button type="submit" class="dropdown-item text-danger">
-                                            <i class="bi bi-box-arrow-right me-2"></i>Cerrar sesión
+                                            <i class="bi bi-box-arrow-right me-2"></i>@lang('messages.logout')
                                         </button>
                                     </form>
                                 </li>
@@ -77,8 +74,6 @@
                             </span>
                         @endif
                     </a>
-                    {{-- FIN DE LA MAGIA --}}
-
                 </div>
             </div>
         </nav>
@@ -91,13 +86,18 @@
         <div class="container-fluid px-4">
             <div class="row align-items-center">
                 <div class="col-12 col-md-9 text-center text-md-start mb-3 mb-md-0">
-                    <a href="#" class="text-white-50 text-decoration-none me-3 small hover-white">Términos y condiciones de compra</a>
-                    <a href="#" class="text-white-50 text-decoration-none me-3 small hover-white">Términos y condiciones de hanger</a>
-                    <a href="#" class="text-white-50 text-decoration-none me-3 small hover-white">Política de privacidad</a>
-                    <a href="#" class="text-white-50 text-decoration-none me-3 small hover-white">Política de cookies</a>
-                    <a href="#" class="text-white-50 text-decoration-none small hover-white">Gestión de privacidad</a>
+                    <a href="#" class="text-white-50 text-decoration-none me-3 small hover-white">@lang('messages.terms_conditions_purchase')</a>
+                    <a href="#" class="text-white-50 text-decoration-none me-3 small hover-white">@lang('messages.terms_conditions_hanger')</a>
+                    <a href="#" class="text-white-50 text-decoration-none me-3 small hover-white">@lang('messages.privacy_policy')</a>
+                    <a href="#" class="text-white-50 text-decoration-none me-3 small hover-white">@lang('messages.cookie_policy')</a>
+                    <a href="#" class="text-white-50 text-decoration-none small hover-white">@lang('messages.privacy_management')</a>
                 </div>
-                <div class="col-12 col-md-3 text-center text-md-end">
+                <div class="col-12 col-md-3 text-center text-md-end d-flex justify-content-center justify-content-md-end align-items-center gap-3">
+                    <div class="small tracking-widest">
+                        <a href="{{ route('lang.switch', 'es') }}" class="text-decoration-none {{ app()->getLocale() == 'es' ? 'text-white fw-bold' : 'text-white-50' }}">ES</a>
+                        <span class="text-white-50 mx-1">|</span>
+                        <a href="{{ route('lang.switch', 'en') }}" class="text-decoration-none {{ app()->getLocale() == 'en' ? 'text-white fw-bold' : 'text-white-50' }}">EN</a>
+                    </div>
                     <span class="small fw-bold">&copy; 2026 HANGER</span>
                 </div>
             </div>
@@ -106,7 +106,7 @@
 
     <div class="offcanvas offcanvas-start bg-light text-black" tabindex="-1" id="menuLateral">
         <div class="offcanvas-header border-bottom border-secondary">
-            <h5 class="offcanvas-title text-uppercase fw-bold tracking-wide">Categorías</h5>
+            <h5 class="offcanvas-title text-uppercase fw-bold tracking-wide">@lang('message.categories')</h5>
             <i class="bi bi-x-lg fs-2 clicable" data-bs-dismiss="offcanvas"></i>
         </div>
         <div class="offcanvas-body">
@@ -118,7 +118,7 @@
                 </li>
 
                 <li class="mt-3">
-                    <span class="text-muted small text-uppercase fw-bold tracking-widest">Colecciones</span>
+                    <span class="text-muted small text-uppercase fw-bold tracking-widest">@lang('messages.collections')</span>
                 </li>
                 @foreach(App\Models\Category::all() as $cat)
                     <li class="py-2 border-bottom border-secondary ps-2">
@@ -151,28 +151,28 @@
         </div>
         <div class="offcanvas-body">
             @guest
-                <h4 class="mb-4 text-center">Bienvenido</h4>
+                <h4 class="mb-4 text-center">@lang('messages.welcome')</h4>
                 @if ($errors->any())
                     <div class="alert alert-danger mt-3 mb-0 p-2">
-                        Credenciales incorrectas.
+                        @lang('messages.wrong_credentials')
                     </div>
                 @endif
                 <form method="POST" action="{{ route('login') }}" class="me-4 pe-3 mt-3">
                     @csrf
-                    <label class="form-label" for="userCredential">Email or username:</label>
+                    <label class="form-label" for="userCredential">@lang('messages.email_user')</label>
                     <input id="userCredential" type="text" name="userCredential" class="form-control" required autofocus />
                     
-                    <label class="form-label mt-3" for="password">Password:</label>
+                    <label class="form-label mt-3" for="password">@lang('messages.pass')</label>
                     <input id="password" type="password" name="password" class="form-control" placeholder="*****" required />
                     
                     <button type="submit" class="btn btn-primary mt-3 w-100">Login</button>
                     
                     <div class="text-center mt-2">
-                        <a href="{{ route('password.request') }}" class="text-decoration-none text-secondary">¿Olvidaste tu contraseña?</a>
+                        <a href="{{ route('password.request') }}" class="text-decoration-none text-secondary">@lang('messages.forgot_password')</a>
                     </div>
 
-                    <p class="mt-4 mb-2 text-center border-top pt-3">¿No tienes una cuenta?</p>
-                    <a href="{{ route('register') }}" class="btn btn-secondary w-100">Register</a>
+                    <p class="mt-4 mb-2 text-center border-top pt-3">@lang('messages.no_account')</p>
+                    <a href="{{ route('register') }}" class="btn btn-secondary w-100"> @lang('messages.register')</a>
                 </form>
             @endguest
 
