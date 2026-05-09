@@ -33,50 +33,58 @@ class OrderController extends Controller
     {
         return view('orders.form', [ 'order' => new Order() ]);
     }
-
-    public function addProducttoOrder(Product $product)
+    public function addProducttoOrder(Request $request, Product $product)
     {
+        $user = Auth::user();
 
-        $order = new Order;
-        $order->total_amount = $product->price;
-        $order->user()->associate(auth()->user());
-        $order->save();
+        $order = Order::where('user_id', $user->id)
+                      ->whereIn('status', ['pending', 'failed'])
+                      ->first();
 
-        $item= $order->items()->where('product_id', $product->id)->first();
-        if ($item){
-            $item->quantity = $item->quantity + 1;
-            $item->price = $product->price;
+        if (!$order) {
+            $order = new Order;
+            $order->total_amount = 0;
+            $order->status = 'pending'; // Aseguramos que empiece como pendiente
+            $order->user()->associate($user);
+            $order->save();
+        }
+
+        $item = $order->items()->where('product_id', $product->id)->first();
+        
+        if ($item) {
+            $item->quantity += 1;
             $item->save();
-        }else{
+        } else {
             $item = new OrderItem;
-            $item->quantity =1;
+            $item->quantity = 1;
             $item->price = $product->price;
             $item->order()->associate($order);
             $item->product()->associate($product);
-            $order->items()->save($item);
+            $item->save();
         }
-
-
-        $total = 0;
-        foreach ($order->items as $item) {
-            $total += $item->price * $item->quantity;
-        }
-        $order->update(['total_amount' => $total]);
-        $this->orderService->update($order);
-
-        return redirect()->route('orders.carrito')->with('success', 'Producto agregado a la orden exitosamente.');
+        $this->updateOrder($order);
+        return redirect()->route('orders.carrito')->with('success', 'Producto agregado exitosamente.');
     }
 
-    public function carrito(){
-        $order = Order::where('user_id',auth()->user())->where('status', 'pending')->orWhere('status', 'failed')->first();
-        if (!$order){
-            $orderService = new OrderService();
-            $order= new Order;
-            $order->user()->associate(auth()->user());
-            $order->total_amount=0;
-            $order=$orderService->save($order);
+    public function carrito()
+    {
+        $user_id = Auth::id();
+        
+        $order = Order::where('user_id', $user_id)
+                      ->where(function($query) {
+                          $query->where('status', 'pending')
+                                ->orWhere('status', 'failed');
+                      })->first();
+
+        if (!$order) {
+            $order = new Order;
+            $order->user()->associate(Auth::user());
+            $order->total_amount = 0;
+            $order->status = 'pending';
+            $order->save();
         }
-        $order=$this->updateOrder($order);
+
+        $order = $this->updateOrder($order);
         return view('orders.carrito', compact('order'));
     }
 

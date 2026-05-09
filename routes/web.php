@@ -105,7 +105,7 @@ Route::delete('/deleteAddress/{address}', [AddressController::class, 'delete'])
     ->name('addresses.delete')
     /*->can('delete', 'address')*/;
 
-Route::get('/addProduct/{product}', [OrderController::class, 'addProducttoOrder'])
+Route::post('/addProduct/{product}', [OrderController::class, 'addProducttoOrder'])
     ->name('orders.addProduct');
 
 #CATEGORIES
