@@ -38,34 +38,45 @@
 
                 <form action="{{ route('orders.addProduct', $product) }}" method="POST" class="mt-5">
                     @csrf
-                    
                     <div class="mb-4">
                         <label class="fw-bold text-uppercase small tracking-wide d-block mb-3">Selecciona tu talla</label>
+                        
                         <div class="row g-2">
-                            @forelse($product->sizes as $size)
-                                @if($size->stock > 0)
-                                    <div class="col-4">
-                                        <input type="radio" class="btn-check" name="size_id" id="size_{{ $size->id }}" value="{{ $size->id }}" required>
-                                        <label class="btn btn-outline-dark w-100 py-3 rounded-0 fw-bold text-uppercase" for="size_{{ $size->id }}">
-                                            {{ $size->size }}
+                            @if($product->sizes && $product->sizes->count() > 0)
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    @foreach($product->sizes as $size)
+                                        {{-- Input oculto que maneja la selección --}}
+                                        <input type="radio" class="btn-check" name="size_id" 
+                                            id="size_{{ $size->id }}" value="{{ $size->id }}" 
+                                            autocomplete="off" {{ $size->stock <= 0 ? 'disabled' : '' }} required>
+                                        
+                                        {{-- Label estilizado como botón --}}
+                                        <label class="btn btn-outline-primary btn-hover-scale d-flex flex-column align-items-center justify-content-center p-2" 
+                                            for="size_{{ $size->id }}" 
+                                            style="min-width: 70px; border-width: 2px; border-radius: 8px;">
+                                            
+                                            <span class="fw-bold">{{ $size->size }}</span>
+                                            
+                                            <small class="text-uppercase" style="font-size: 0.65rem; opacity: 0.8;">
+                                                {{ $size->stock }} ud.
+                                            </small>
                                         </label>
-                                    </div>
-                                @else
-                                    <div class="col-4">
-                                        <button type="button" class="btn btn-light w-100 py-3 rounded-0 text-muted disabled text-decoration-line-through">
-                                            {{ $size->size }}
-                                        </button>
-                                    </div>
-                                @endif
-                            @empty
-                                <div class="col-12">
-                                    <p class="text-muted italic small">Talla única / Stock general</p>
+                                    @endforeach
                                 </div>
-                            @endforelse
+                            @else
+                                <div class="col-12">
+                                    <span class="badge bg-light text-danger p-2 w-100 text-start">
+                                        <i class="bi bi-exclamation-triangle me-2"></i>No hay tallas disponibles para este producto
+                                    </span>
+                                </div>
+                            @endif
 
-                            <div class="mb-2">
+                            {{-- Sección de Categorías --}}
+                            <div class="mt-2 border-top pt-3">
                                 @foreach($product->categories as $category)
-                                    <span class="text-muted text-uppercase small tracking-widest me-2">{{ $category->name }}</span>
+                                    <span class="text-muted text-uppercase small tracking-widest me-3" style="font-size: 0.7rem;">
+                                        <i class="bi bi-tag-fill me-1"></i>{{ $category->name }}
+                                    </span>
                                 @endforeach
                             </div>
                         </div>

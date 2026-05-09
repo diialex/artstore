@@ -20,13 +20,14 @@ class Product extends Model
     // Relación 1:N con Tallas
     public function sizes()
     {
-        return $this->hasMany(Size::class);
+    // CAMBIO: De belongsTo a hasMany
+    return $this->hasMany(Size::class, 'product_id'); 
     }
 
-    // Esto te permite llamar a $product->total_stock en cualquier parte del código
     public function getTotalStockAttribute(): int
     {
-        // Suma la columna 'stock' de todas las tallas relacionadas
-        return $this->sizes->sum('stock');
+        // Ahora que es hasMany, sizes devolverá una Colección (o vacía), 
+        // permitiendo que sum() funcione correctamente.
+        return $this->sizes ? $this->sizes->sum('stock') : 0;
     }
 }
