@@ -64,4 +64,24 @@ class UsersService
         $list->products = $products_list;
         $list->save();
     }
+
+    public function removeFavorites($user_id, $product_id){
+        $list = FavoriteList::where('user_id', $user_id)->first();
+        if ($list) {
+            $products_list = $list->products ?? [];
+            $products_list = array_filter($products_list, function($id) use ($product_id) {
+                return $id != $product_id;
+            });
+            $list->products = array_values($products_list);
+            $list->save();
+        }
+    }
+
+    public function deleteFavorites($user_id){
+        $list = FavoriteList::where('user_id', $user_id)->first();
+        if ($list) {
+            $list->delete();
+        }
+    }
+
 }

@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Users\AddFavoritesRequest;
 use App\Http\Requests\Users\StoreUsersRequest;
 use App\Http\Requests\Users\UpdateUsersRequest;
+use App\Models\FavoriteList;
+use App\Models\Product;
 use App\Services\RolesService;
 use Exception;
 use Illuminate\Http\Request;
@@ -171,6 +173,23 @@ class UsersController extends Controller
             auth()->id(),
             $request->product_id
         );
+        return redirect()->back();
+    }
+
+    public function showFavorites(){
+        $user = auth()->user();
+        $favoriteList = $user->favoriteList;
         
+        if (!$favoriteList || empty($favoriteList->products)) {
+            return view('users.favorites', ['products' => []]);
+        }
+        
+        $products = Product::whereIn('id', $favoriteList->products)->get();
+        return view('users.favorites', compact('products'));
+    }
+
+    public function removeFavorites(Product $product){
+        $this->userService->removeFavorites(auth()->id(), $product->id);
+        return redirect()->back();
     }
 }

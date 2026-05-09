@@ -20,31 +20,45 @@
         </div>
 
         <div class="card-footer bg-white d-flex justify-content-between">
-            @if(auth()->user()->roles->contains('id', 1))
+            @if (auth()->user())
+                @if(auth()->user()->roles->contains('id', 1))
 
-                <a href="{{ route('products.edit', $product) }}" class="btn btn-outline-warning btn-sm">
-                    ✏️ Editar
-                </a>
+                    <a href="{{ route('products.edit', $product) }}" class="btn btn-outline-warning btn-sm">
+                        ✏️ Editar
+                    </a>
 
-                <form action="{{ route('products.delete', $product) }}" method="POST"
-                    onsubmit="return confirm('¿Estás seguro de que quieres aniquilar este producto?');">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-outline-danger btn-sm">
-                        🗑️ Borrar
-                    </button>
-                    <!-- Usuario tiene rol 1 o 2 -->
+                    <form action="{{ route('products.delete', $product) }}" method="POST"
+                        onsubmit="return confirm('¿Estás seguro de que quieres aniquilar este producto?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-outline-danger btn-sm">
+                            🗑️ Borrar
+                        </button>
+                        <!-- Usuario tiene rol 1 o 2 -->
+
+                @elseif (auth()->user()->roles->contains('id', 2))
+                        <a href="{{ route('orders.carrito', $product) }}" class="btn btn-outline-warning btn-sm">
+                            🛒 Carrito
+                        </a>
+                        @if($isFavoritesPage ?? false)
+                            <form action="{{ route('users.favorites.remove', $product) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Eliminar de favoritos?');">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-outline-danger btn-sm" title="Eliminar de favoritos">
+                                    🗑️
+                                </button>
+                            </form>
+                        @else
+                            <form action="{{ route('users.favorites.add') }}" method="POST" style="display:inline;" class="add-favorite-form">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <button type="submit" class="btn btn-outline-warning btn-sm" title="Añadir a favoritos">
+                                    ❤
+                                </button>
+                            </form>
+                        @endif
+                    @endif
             @endif
-
-            @if (auth()->user()->roles->contains('id', 2))
-                <a href="{{ route('orders.carrito', $product) }}" class="btn btn-outline-warning btn-sm">
-                    Añadir al carrito
-                </a>
-                <a href="{{ route('orders.carrito', $product) }}" class="btn btn-outline-warning btn-sm" title="Añadir a favoritos">
-                    ❤
-                </a>
-            @endif
-            </form>
 
         </div>
     </div>

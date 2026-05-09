@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lista_favoritos', function (Blueprint $table) {
+        Schema::create('favorite_list', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
             $table->json('products')->default(json_encode([]));

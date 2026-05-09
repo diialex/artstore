@@ -258,6 +258,16 @@ Route::delete('/deleteOrderitem/{orderitem}', [OrderItemController::class, 'dest
 Route::get('/carrito', [OrderController::class, 'carrito'])
     ->name('orders.carrito');
 
+
+Route::get('/favoritos', [UsersController::class, 'showFavorites'])
+    ->name('users.favorites');
+
+Route::post('/favoritos/add', [UsersController::class, 'addFavorites'])
+    ->name('users.favorites.add');
+
+Route::delete('/favoritos/{product}', [UsersController::class, 'removeFavorites'])
+    ->name('users.favorites.remove');
+
 //borrar cuando se implemente el login
 use App\Services\UsersService;
 Route::get('/forzar-login-admin', function () {
