@@ -33,3 +33,12 @@ $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
 .hide-scrollbar::-webkit-scrollbar {
     display: none !important;
 }
+
+.arrow-icon {
+    transition: transform 0.3s ease; /* Para que el giro sea suave */
+}
+
+/* Cuando el botón NO tiene la clase 'collapsed' (es decir, está abierto) */
+[data-bs-toggle="collapse"]:not(.collapsed) .arrow-icon {
+    transform: rotate(90deg);
+}

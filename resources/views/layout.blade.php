@@ -23,11 +23,10 @@
                                 {{ auth()->user()->username }}
                             </a>
 
-                            <!-- El Menú Desplegable -->
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                 <li><h6 class="dropdown-header">Opciones de cuenta</h6></li>
                                 @if (auth()->user()->roles->where('name', 'admin')->first())
-                                    <li><a class="dropdown-item" href="/perfil"><i class="bi bi-person me-2"></i>Panel administrador</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('controlPanel.dashboard') }}"><i class="bi bi-person me-2"></i>Panel administrador</a></li>
                                 @endif
                                 @if(auth()->user()->roles->where('name', 'seller')->first())
                                     <li><a class="dropdown-item" href="/perfil"><i class="bi bi-person me-2"></i>Mi Tienda</a></li>
