@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\FavoriteList;
 use Illuminate\Database\Eloquent\Collection;
 use Exception;
+use DateTime;
 
 class UsersService
 {
@@ -77,11 +78,59 @@ class UsersService
         }
     }
 
-    public function deleteFavorites($user_id){
-        $list = FavoriteList::where('user_id', $user_id)->first();
-        if ($list) {
-            $list->delete();
-        }
+    public function getAllRolUser(){
+        return User::whereHas('roles', function($query) {
+            $query->where('name', 'user');
+                })->get();
     }
 
+    public function getDataChartUserRegister(){
+        $label_months = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
+        $date = new DateTime();
+        $users = $this->getAllRolUser();
+
+        $currentMonth = (int)$date->format('n');
+        $currentYear = (int)$date->format('Y');
+
+        $months = array_fill(0,$currentMonth,0);
+
+        $labelMonths = array_slice($label_months, 0, $currentMonth);
+        
+        foreach($users as $user){
+            if($user->created_at->year == $currentYear){
+                $month=(int)$user->created_at->month-1;
+                $months[$month]+=1;
+            }
+            
+        }
+
+        return ["title" => 'Users Register', 
+                "subtitle"=>'Users register this year',
+                "data" => $months,
+                "labelX"=> $labelMonths];
+    }
+
+    public function getDataChartSalesPerUsers(){
+        $users=$this->getAllRolUser();
+        $top = array_fill(0, 10, 0);
+        $top_label = array_fill(0,10, "");
+        foreach($users as $user){
+            if($user->orders !=null){
+                $ordersCount = count($user->orders);
+                for($i = 0; $i < count($top); $i++){
+                    if($top[$i]<$ordersCount){
+                        $top[$i] = $ordersCount;
+                        $top_label[$i] = $user->username;
+                        break;
+                    }
+                }
+            }
+            
+        }
+
+        return ["title" => 'Top 10 orders per user', 
+                "subtitle"=>'User orders',
+                "data" => $top,
+                "labelX"=> $top_label];
+    }
 }

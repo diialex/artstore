@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('adminLayout')
 @section('title', 'Productos')
 @section('content')
     <div class="container mt-4">
@@ -39,9 +39,11 @@
         @endif
 
         <div class="row">
-                 @foreach($products as $product)
-                    @include('products.card')
-                @endforeach
+            @foreach($products as $product)
+                <div class="col-md-4 mb-4">
+                    @include('partials.product-card', ['product' => $product])
+                </div>
+            @endforeach
         </div>
 
         @if(method_exists($products, 'links'))

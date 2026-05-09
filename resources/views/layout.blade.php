@@ -1,17 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title')</title>
-    <link rel="icon" type="image/x-icon" href="media/images/logo.ico">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    @vite(['resources/css/app.scss', 'resources/js/app.js'])
-</head>
-<body class="bg-light">
+@extends('headLayout')
+@section('pagina')
+<body class="bg-light d-flex flex-column min-vh-100">
     <header>
-        <nav class="container-fluid sticky-top bg-primary px-3 py-2 border-bottom">
+        <nav class="container-fluid sticky-top bg-primary px-3 py-3 border-bottom">
             <div class="row">
                 <div class="col-4 d-flex justify-content-start gap-2 gap-md-3 align-items-center cursor-pointer">
                     <i id="burger-menu" class="bi bi-list text-white fs-2 cursor-pointer mb-0" data-bs-toggle="offcanvas"
@@ -21,31 +12,37 @@
                     </a>
                 </div>
 
-                <div class="col-4 d-flex justify-content-center">
-                    <img src="{{ asset('storage/media/images/logo.png') }}" alt="Logo Hanger" style="height: 70px; width: auto; object-fit: contain;">
+                <div class="position-absolute start-50 top-50 translate-middle w-auto d-flex justify-content-center z-2">
+                    <img src="{{ asset('media/images/logo.png') }}" alt="Logo Hanger" class="cursor-pointer" style="height: 70px; width: auto; object-fit: contain;">
                 </div>
 
-                <div class="col-4 d-flex justify-content-end gap-2 gap-md-3 align-items-center">
+                <div class="col-4 ms-auto d-flex justify-content-end gap-2 gap-md-3 align-items-center z-3">
                     @auth
                         <div class="dropdown">
                             <a class="nav-link text-white dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                 {{ auth()->user()->username }}
                             </a>
 
-                            <!-- El Menú Desplegable -->
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                                 <li><h6 class="dropdown-header">Opciones de cuenta</h6></li>
+                                
                                 @if (auth()->user()->roles->where('name', 'admin')->first())
-                                    <li><a class="dropdown-item" href="/perfil"><i class="bi bi-person me-2"></i>Panel administrador</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('controlPanel.dashboard') }}"><i class="bi bi-person me-2"></i>Panel administrador</a></li>
+
+                                    <li><a class="dropdown-item" href="{{ route('controlPanel.dashboard') }}"><i class="bi bi-person-gear me-2"></i>Panel administrador</a></li>
+
                                 @endif
+                                
                                 @if(auth()->user()->roles->where('name', 'seller')->first())
-                                    <li><a class="dropdown-item" href="/perfil"><i class="bi bi-person me-2"></i>Mi Tienda</a></li>
+                                    <li><a class="dropdown-item" href="/perfil"><i class="bi bi-shop-window me-2"></i>Mi Tienda</a></li>
                                 @endif
+                                
                                 @if (auth()->user()->roles->where('name', 'user')->first())
-                                    <li><a class="dropdown-item" href="/perfil"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
-                                    <li><a class="dropdown-item" href="/pedidos"><i class="bi bi-bag me-2"></i>Mis Pedidos</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('users.show', auth()->user()->username) }}"><i class="bi bi-person me-2"></i>Mi Perfil</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-bag me-2"></i>Mis Pedidos</a></li>
                                     <li><a class="dropdown-item" href="/favoritos"><i class="bi bi-heart me-2"></i>Favoritos</a></li>
                                 @endif
+                                
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
                                     <form method="POST" action="{{ route('logout') }}">
@@ -62,13 +59,32 @@
                             data-bs-target="#iniciarSesion"></i>
                     @endauth
                     <a href="{{ route('orders.index') }}" class="text-white text-decoration-none">
+                    
+                    <a href="{{ route('orders.carrito') }}" class="text-dark text-decoration-none position-relative d-flex align-items-center">
                         <i class="bi bi-bag fs-2 cursor-pointer mb-0"></i>
+                        @php
+                            $cartCount = 0;
+                            if(auth()->check()) {
+                                $activeOrder = \App\Models\Order::where('user_id', auth()->id())
+                                                    ->whereIn('status', ['pending', 'failed'])
+                                                    ->first();
+                                $cartCount = $activeOrder ? $activeOrder->items->sum('quantity') : 0;
+                            }
+                        @endphp
+                        @if($cartCount > 0)
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.6rem; margin-top: 5px; margin-left: -5px;">
+                                {{ $cartCount }}
+                            </span>
+                        @endif
                     </a>
+                    {{-- FIN DE LA MAGIA --}}
+
                 </div>
             </div>
         </nav>
     </header>
-    <main class="container-fluid py-3 flex-fill min-vh-100">
+    
+    <main class="container-fluid py-3 flex-fill">
         @yield('content')
     </main>
     <footer class="bg-white text-white pt-4 pb-3 mt-5 w-100 shadow-lg ">
@@ -87,34 +103,53 @@
             </div>
         </div>
     </footer>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
-        crossorigin="anonymous">
-    </script>
 
     <div class="offcanvas offcanvas-start bg-light text-black" tabindex="-1" id="menuLateral">
-        <div class="offcanvas-header">
+        <div class="offcanvas-header border-bottom border-secondary">
+            <h5 class="offcanvas-title text-uppercase fw-bold tracking-wide">Categorías</h5>
             <i class="bi bi-x-lg fs-2 clicable" data-bs-dismiss="offcanvas"></i>
         </div>
         <div class="offcanvas-body">
             <ul class="list-unstyled me-4 pe-3">
-                <li class="py-2 border-bottom border-secondary"><a href="{{ url('/') }}" 
-                        class="text-black text-decoration-none fs-5">Inicio</a></li>
-                <li class="py-2 border-bottom border-secondary"><a href="#"
-                        class="text-black text-decoration-none fs-5">Descubrir - TODO</a></li>
-                <li class="py-2 border-bottom border-secondary"><a href="#"
-                        class="text-black text-decoration-none fs-5">Social - TODO</a></li>
-                <li class="py-2"><a href="#" class="text-black text-decoration-none fs-5">Info - TODO</a></li>
+                <li class="py-2 border-bottom border-secondary">
+                    <a href="{{ route('home') }}" class="text-black text-decoration-none fs-5 {{ !request('category') ? 'fw-bold' : '' }}">
+                        Inicio / Ver Todo
+                    </a>
+                </li>
+
+                <li class="mt-3">
+                    <span class="text-muted small text-uppercase fw-bold tracking-widest">Colecciones</span>
+                </li>
+                @foreach(App\Models\Category::all() as $cat)
+                    <li class="py-2 border-bottom border-secondary ps-2">
+                        <a href="{{ route('home', ['category' => $cat->id]) }}" 
+                        class="text-black text-decoration-none fs-6 {{ request('category') == $cat->id ? 'fw-bold text-primary' : '' }}">
+                        {{ $cat->name }}
+                        </a>
+                    </li>
+                @endforeach
+
+                <li class="mt-4">
+                    <span class="text-muted small text-uppercase fw-bold tracking-widest">Explorar</span>
+                </li>
+                <li class="py-2 border-bottom border-secondary">
+                    <a href="#" class="text-black text-decoration-none fs-5">Descubrir - TODO</a>
+                </li>
+                <li class="py-2 border-bottom border-secondary">
+                    <a href="#" class="text-black text-decoration-none fs-5">Social - TODO</a>
+                </li>
+                <li class="py-2">
+                    <a href="#" class="text-black text-decoration-none fs-5">Info - TODO</a>
+                </li>
             </ul>
         </div>
     </div>
+
     <div class="offcanvas offcanvas-end bg-light text-black" tabindex="-1" id="iniciarSesion">
         <div class="offcanvas-header justify-content-end">
             <i class="bi bi-x-lg fs-2 clicable" data-bs-dismiss="offcanvas"></i>
         </div>
         <div class="offcanvas-body">
-            
-            
             @guest
                 <h4 class="mb-4 text-center">Bienvenido</h4>
                 @if ($errors->any())
@@ -162,6 +197,7 @@
         </div>
     </div>
 </body>
+@endsection
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
     document.querySelectorAll('.add-favorite-form').forEach(form => {

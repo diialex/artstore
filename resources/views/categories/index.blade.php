@@ -1,7 +1,8 @@
-@extends('layout')
+@extends('adminLayout')
+@section('content')
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
-            <h2>Categorías</h2>
+            <h2>CategoradminLayoutías</h2>
             <a href="{{ route('categories.create') }}" class="btn btn-success">➕ Nueva Categoría</a>
         </div>
 
@@ -43,3 +44,4 @@
             </div>
         </div>
     </div>
+@endsection
