@@ -2,49 +2,52 @@
 @section('pagina')
 <body class="bg-light d-flex flex-column min-vh-100">
     <header>
-        <nav class="container-fluid sticky-top bg-primary px-3 py-3 border-bottom">
-            <div class="row">
-                <div class="col-4 d-flex justify-content-start gap-2 gap-md-3 align-items-center cursor-pointer">
-                    <i id="burger-menu" class="bi bi-list text-white fs-2 cursor-pointer mb-0" data-bs-toggle="offcanvas"
+        <nav class="bg-primary px-3 py-3 border-bottom sticky-top">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <!-- Left section -->
+                <div style="display: flex; gap: 1rem; align-items: center;">
+                    <i id="burger-menu" class="bi bi-list text-white fs-2 cursor-pointer" data-bs-toggle="offcanvas"
                         data-bs-target="#menuLateral"></i>
                     <a href="{{ route('home') }}" class="text-white text-decoration-none d-flex align-items-center">
-                        <i class="bi bi-shop fs-2 cursor-pointer mb-0"></i>
+                        <i class="bi bi-shop fs-2"></i>
                     </a>
                 </div>
 
-                <div class="position-absolute start-50 top-50 translate-middle w-auto d-flex justify-content-center z-2">
+                <!-- Center logo -->
+                <div>
                     <img src="{{ asset('storage/media/images/logo.png') }}" alt="Logo Hanger" class="cursor-pointer" style="height: 70px; width: auto; object-fit: contain;">
                 </div>
 
-                <div class="col-4 ms-auto d-flex justify-content-end gap-2 gap-md-3 align-items-center z-3">
+                <!-- Right section -->
+                <div style="display: flex; gap: 1rem; align-items: center;">
                     @auth
-                        <div class="dropdown">
-                            <a class="nav-link text-white dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <div class="dropdown" style="position: relative; display: inline-block;">
+                            <button class="dropdown-toggle" type="button" id="userDropdown" style="background: none; border: none; color: white; font-size: 1rem; cursor: pointer; padding: 0;">
                                 {{ auth()->user()->username }}
-                            </a>
+                            </button>
 
-                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                                <li><h6 class="dropdown-header">Opciones de cuenta</h6></li>
+                            <ul class="dropdown-menu dropdown-menu-end" id="userDropdownMenu" style="display: none; position: absolute; right: 0; background: white; border: 1px solid #ccc; border-radius: 0.25rem; min-width: 200px; box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); z-index: 1000; top: 100%; margin-top: 0.5rem; list-style: none; padding: 0;">
+                                <li style="padding: 0.5rem 1rem; border-bottom: 1px solid #e9ecef;"><h6 style="margin: 0; font-weight: 600; font-size: 0.875rem; text-transform: uppercase; color: #6c757d;">Opciones de cuenta</h6></li>
                                 
-                                @if (auth()->user()->roles->where('name', 'admin')->first())
-                                    <li><a class="dropdown-item" href="{{ route('controlPanel.dashboard') }}"><i class="bi bi-person-gear me-2"></i>@lang('messages.admin_panel')</a></li>
+                                @if (auth()->user()->hasRol('admin'))
+                                    <li><a class="dropdown-item" href="{{ route('controlPanel.dashboard') }}" style="display: block; padding: 0.5rem 1rem; color: #212529; text-decoration: none;"><i class="bi bi-person-gear me-2"></i>@lang('messages.admin_panel')</a></li>
                                 @endif
                                 
-                                @if(auth()->user()->roles->where('name', 'seller')->first())
-                                    <li><a class="dropdown-item" href="/perfil"><i class="bi bi-shop-window me-2"></i>@lang('messages.profile')</a></li>
+                                @if(auth()->user()->hasRol('seller'))
+                                    <li><a class="dropdown-item" href="/perfil" style="display: block; padding: 0.5rem 1rem; color: #212529; text-decoration: none;"><i class="bi bi-shop-window me-2"></i>@lang('messages.profile')</a></li>
                                 @endif
                                 
-                                @if (auth()->user()->roles->where('name', 'user')->first())
-                                    <li><a class="dropdown-item" href="{{ route('users.show', auth()->user()->username) }}"><i class="bi bi-person me-2"></i>@lang('messages.profile')</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('orders.index') }}"><i class="bi bi-bag me-2"></i>@lang('messages.orders')</a></li>
-                                    <li><a class="dropdown-item" href="/favoritos"><i class="bi bi-heart me-2"></i>@lang('messages.fav')</a></li>
+                                @if (auth()->user()->hasRol('user'))
+                                    <li><a class="dropdown-item" href="{{ route('users.show', auth()->user()->username) }}" style="display: block; padding: 0.5rem 1rem; color: #212529; text-decoration: none;"><i class="bi bi-person me-2"></i>@lang('messages.profile')</a></li>
+                                    <li><a class="dropdown-item" href="{{ route('orders.index') }}" style="display: block; padding: 0.5rem 1rem; color: #212529; text-decoration: none;"><i class="bi bi-bag me-2"></i>@lang('messages.orders')</a></li>
+                                    <li><a class="dropdown-item" href="/favoritos" style="display: block; padding: 0.5rem 1rem; color: #212529; text-decoration: none;"><i class="bi bi-heart me-2"></i>@lang('messages.fav')</a></li>
                                 @endif
                                 
-                                <li><hr class="dropdown-divider"></li>
+                                <li style="border-top: 1px solid #e9ecef; margin: 0.5rem 0;"></li>
                                 <li>
-                                    <form method="POST" action="{{ route('logout') }}">
+                                    <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
                                         @csrf
-                                        <button type="submit" class="dropdown-item text-danger">
+                                        <button type="submit" style="display: block; width: 100%; text-align: left; padding: 0.5rem 1rem; border: none; background: none; color: #dc3545; cursor: pointer; text-decoration: none;">
                                             <i class="bi bi-box-arrow-right me-2"></i>@lang('messages.logout')
                                         </button>
                                     </form>
@@ -52,12 +55,12 @@
                             </ul>
                         </div>
                     @else
-                        <i id="perfil" class="bi bi-person text-white fs-2 cursor-pointer mb-0" data-bs-toggle="offcanvas"
+                        <i id="perfil" class="bi bi-person text-white fs-2 cursor-pointer" data-bs-toggle="offcanvas"
                             data-bs-target="#iniciarSesion"></i>
                     @endauth
                     
                     <a href="{{ route('orders.carrito') }}" class="text-white text-decoration-none position-relative d-flex align-items-center">
-                        <i class="bi bi-bag fs-2 cursor-pointer mb-0"></i>
+                        <i class="bi bi-bag fs-2"></i>
                         @php
                             $cartCount = 0;
                             if(auth()->check()) {
@@ -198,6 +201,32 @@
     <!-- SCRIPTS DENTRO DEL BODY -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Dropdown functionality
+        const userDropdownBtn = document.getElementById('userDropdown');
+        const userDropdownMenu = document.getElementById('userDropdownMenu');
+        
+        if (userDropdownBtn && userDropdownMenu) {
+            userDropdownBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                userDropdownMenu.style.display = userDropdownMenu.style.display === 'none' ? 'block' : 'none';
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.dropdown')) {
+                    userDropdownMenu.style.display = 'none';
+                }
+            });
+            
+            // Close dropdown when clicking a menu item
+            userDropdownMenu.querySelectorAll('a, button').forEach(item => {
+                item.addEventListener('click', function() {
+                    userDropdownMenu.style.display = 'none';
+                });
+            });
+        }
+        
         document.querySelectorAll('.add-favorite-form').forEach(form => {
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
