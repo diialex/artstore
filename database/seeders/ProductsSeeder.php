@@ -21,7 +21,7 @@ class ProductsSeeder extends Seeder
             'description' => 'Zapatillas de baloncesto icónicas con diseño retro y tecnología de puntera.',
             'price' => 150.00,
             'stock' => 10,
-            'image_url' => 'storage/media/images/air-jordan-1-high-unc-toe-release.png'
+            'image_url' => 'storage/app/public/media/images/air-jordan-1-high-unc-toe-release.png'
         ]);
         
         $product_1->categories()->attach([2, 3, 4]);
@@ -33,7 +33,7 @@ class ProductsSeeder extends Seeder
             'description' => 'Zapatillas clásicas y versátiles, ideales para cualquier estilo de vida.',
             'price' => 120.00,
             'stock' => 15,
-            'image_url' => 'storage/media/images/daRealConverse.png'
+            'image_url' => 'storage/app/public/media/images/daRealConverse.png'
         ]);
 
         $product_2->categories()->attach([1, 5]);

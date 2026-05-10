@@ -162,7 +162,6 @@
                 @endif
                 <form method="POST" action="{{ route('login') }}" class="me-4 pe-3 mt-3">
                     @csrf
-                    <input type="hidden" name="redirect_to" value="{{ request()->url() }}" />
                     <label class="form-label" for="userCredential">@lang('messages.email_user')</label>
                     <input id="userCredential" type="text" name="userCredential" class="form-control" required autofocus />
                     
