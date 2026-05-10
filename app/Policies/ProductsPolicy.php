@@ -6,11 +6,21 @@ use App\Models\User;
 
 class ProductsPolicy
 {
-    /**
-     * Create a new policy instance.
-     */
-    public function __construct()
+
+    public function create(User $user): bool
     {
-        //
+        return false;
+    }
+
+
+    public function update(User $user): bool
+    {
+        return false;
+    }
+
+
+    public function delete(User $user): bool
+    {
+        return false;
     }
 }

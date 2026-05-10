@@ -9,8 +9,11 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['id', 'title', 'description', 'price', 'stock', 'image_url'];
-
+    protected $fillable = ['title', 'description', 'price', 'image_url'];
+    
+    protected $hidden = [
+        'id',
+    ];
     // Relación N:M con Categorías
     public function categories()
     {
@@ -23,11 +26,5 @@ class Product extends Model
     // CAMBIO: De belongsTo a hasMany
     return $this->hasMany(Size::class, 'product_id'); 
     }
-
-    public function getTotalStockAttribute(): int
-    {
-        // Ahora que es hasMany, sizes devolverá una Colección (o vacía), 
-        // permitiendo que sum() funcione correctamente.
-        return $this->sizes ? $this->sizes->sum('stock') : 0;
-    }
+    
 }
