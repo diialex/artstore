@@ -16,7 +16,7 @@
                     <img src="{{ asset('storage/media/images/logo.png') }}" alt="Logo Hanger" class="cursor-pointer" style="height: 70px; width: auto; object-fit: contain;">
                 </div>
 
-                <div style="display: flex; gap: 1rem; align-items: center;">
+                <div class="col-4 ms-auto d-flex justify-content-end gap-2 gap-md-3 align-items-center z-3 position-relative">
                     @auth
                         <div class="dropdown" style="display: inline-block;">
                             <button class="btn btn-link text-white text-decoration-none dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="padding: 0; font-size: 1rem;">

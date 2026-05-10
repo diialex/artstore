@@ -12,6 +12,10 @@ class Order extends Model
         'status',
     ];
 
+    protected $hidden = [
+        'id',
+    ];
+
     public function payments()
     {
         return $this->hasOne(Payment::class);

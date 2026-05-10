@@ -8,10 +8,12 @@ $light: #fdebf1;      // Rosa muy suave
 $success: #A4CFAB;    // Verde suave
 $info: #99FFA3;       // Menta brillante
 
-// Cambiar ligeramente el color de fondo de toda la web para que no sea blanco nuclear
-$body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
+// Cambiar ligeramente el color de fondo de toda la web
+$body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa
 
 @import 'bootstrap/scss/bootstrap';
+
+// --- CLASES PERSONALIZADAS ---
 
 .banner-img {
     object-fit: cover;
@@ -21,6 +23,7 @@ $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
 .transition-transform { transition: transform 0.3s ease; }
 .transition-transform:hover { transform: scale(1.05); }
 .hover-opacity-25:hover { opacity: 0.25 !important; }
+
 .cursor-pointer{
     cursor: pointer;
 }
@@ -44,10 +47,10 @@ $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa <3
 }
 
 .arrow-icon {
-    transition: transform 0.3s ease; /* Para que el giro sea suave */
+    transition: transform 0.3s ease; 
 }
 
-/* Cuando el botón NO tiene la clase 'collapsed' (es decir, está abierto) */
+/* Cuando el botón NO tiene la clase 'collapsed' (abierto) */
 [data-bs-toggle="collapse"]:not(.collapsed) .arrow-icon {
     transform: rotate(90deg);
 }
