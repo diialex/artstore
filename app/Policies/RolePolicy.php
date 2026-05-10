@@ -4,12 +4,12 @@ namespace App\Policies;
 
 use App\Models\Role;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
-use App\Services\RolesService;
 
 class RolePolicy
 {
-
+    /**
+     * Admin tiene acceso total a cualquier acción antes de evaluar las demás.
+     */
     public function before(User $user, string $ability): bool|null
     {
         if ($user->hasRol('admin')) {
@@ -17,8 +17,9 @@ class RolePolicy
         }
         return null;
     }
+
     /**
-     * Determine whether the user can view any models.
+     * Ver listado de roles — solo admin (gestionado por before()).
      */
     public function viewAny(User $user): bool
     {
@@ -26,7 +27,7 @@ class RolePolicy
     }
 
     /**
-     * Determine whether the user can view the model.
+     * Ver un rol concreto — solo admin (gestionado por before()).
      */
     public function view(User $user, Role $rol): bool
     {
@@ -34,7 +35,7 @@ class RolePolicy
     }
 
     /**
-     * Determine whether the user can create models.
+     * Crear un rol — solo admin (gestionado por before()).
      */
     public function create(User $user): bool
     {
@@ -42,7 +43,7 @@ class RolePolicy
     }
 
     /**
-     * Determine whether the user can update the model.
+     * Actualizar un rol — solo admin (gestionado por before()).
      */
     public function update(User $user, Role $rol): bool
     {
@@ -50,7 +51,7 @@ class RolePolicy
     }
 
     /**
-     * Determine whether the user can delete the model.
+     * Eliminar un rol — solo admin (gestionado por before()).
      */
     public function delete(User $user, Role $rol): bool
     {
@@ -58,7 +59,7 @@ class RolePolicy
     }
 
     /**
-     * Determine whether the user can restore the model.
+     * Restaurar un rol — solo admin (gestionado por before()).
      */
     public function restore(User $user, Role $rol): bool
     {
@@ -66,7 +67,7 @@ class RolePolicy
     }
 
     /**
-     * Determine whether the user can permanently delete the model.
+     * Eliminar permanentemente un rol — solo admin (gestionado por before()).
      */
     public function forceDelete(User $user, Role $rol): bool
     {

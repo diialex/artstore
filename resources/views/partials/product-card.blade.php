@@ -28,7 +28,7 @@
     <div class="card-footer bg-white border-0 pt-0 pb-4 px-3 mt-auto">
         
         @guest
-            <a href="{{ route('login') }}" class="btn btn-outline-dark w-100 fw-bold rounded-pill">
+            <a href="#" data-bs-toggle="offcanvas" data-bs-target="#iniciarSesion" class="btn btn-outline-dark w-100 fw-bold rounded-pill">
                 <i class="bi bi-box-arrow-in-right me-2"></i>@lang('messages.login_to_buy')
             </a>
         @endguest
