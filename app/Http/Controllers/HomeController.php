@@ -9,6 +9,7 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
+use File;
 
 class HomeController extends Controller
 {
@@ -18,15 +19,35 @@ class HomeController extends Controller
 
     public function index(Request $request): View
     {
-        // 1. Miramos si el usuario ha hecho clic en alguna categoría
         $categoryId = $request->input('category');
 
-        // 2. Usamos tu servicio que ya sabe cómo buscar en relaciones N:N
         $products = $this->productService->getAll($categoryId);
 
-        // 3. Mandamos los datos a la vista
         $categories = Category::all();
 
-        return view('welcome', compact('categories', 'products', 'categoryId'));
+        $carouselPath = storage_path('app/public/media/carrusel');
+        $carouselImages = [];
+        
+        if (File::exists($carouselPath)) {
+            $files = File::files($carouselPath);
+            foreach ($files as $file) {
+                $filename = $file->getBasename();
+                if (preg_match('/\.(jpg|jpeg|png|gif|webp)$/i', $filename)) {
+                    $carouselImages[] = 'storage/media/carrusel/' . $filename;
+                }
+            }
+        }
+        
+        // Fallback si no hay imágenes
+        if (empty($carouselImages)) {
+            $carouselImages = [
+                'storage/media/images/banner-example1.jpg',
+                'storage/media/images/banner-example2.jpg',
+                'storage/media/images/banner-example3.jpg',
+                'storage/media/images/banner-example4.jpg',
+            ];
+        }
+
+        return view('welcome', compact('categories', 'products', 'categoryId', 'carouselImages'));
     }
 }
