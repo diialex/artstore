@@ -178,6 +178,11 @@ class UsersController extends Controller
 
     public function showFavorites(){
         $user = auth()->user();
+        
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión para ver tus favoritos');
+        }
+        
         $favoriteList = $user->favoriteList;
         
         if (!$favoriteList || empty($favoriteList->products)) {
