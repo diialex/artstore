@@ -18,6 +18,7 @@ return new class extends Migration
             $table->decimal('price', 8, 2);
             $table->integer('stock')->default(0);
             $table->string('image_url')->nullable();
+            $table->integer('favorite_count')->default(0);
             $table->timestamps();
         });
     }
