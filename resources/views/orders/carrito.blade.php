@@ -40,6 +40,7 @@
 
                         <div class="col-8 col-md-6 d-flex flex-column h-100 justify-content-center">
                             <h4 class="fw-bold fs-5 mb-1">{{ $item->product->title }}</h4>
+                            <h5 class="fw-bold fs-6 mb-1">Talla: {{ $item->size->size }}</h5>
                             <div class="d-flex align-items-center mb-3">
                                 <span class="text-muted me-3">{{ number_format($item->price, 2) }} €</span>
                                 
@@ -61,7 +62,7 @@
                                     </form>
                                 </div>
                             </div>
-                            <form action="{{ route('orderitems.delete', $item->id) }}" method="POST" onsubmit="return confirm('¿Seguro que quieres quitar esto de la cesta?');">
+                            <form action="{{ route('orderitems.delete', $item->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
                                 <button type="submit" class="btn btn-link text-danger p-0 text-decoration-none small text-uppercase fw-bold tracking-wide">

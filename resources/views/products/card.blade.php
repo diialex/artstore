@@ -15,7 +15,7 @@
             <p class="card-text text-muted">{{ Str::limit($product->description, 80) }}</p>
             <div class="d-flex justify-content-between align-items-center mb-2">
                 <span class="h5 text-primary mb-0">{{ $product->price }} €</span>
-                <span class="badge bg-secondary">Stock: {{ $product->total_stock }}</span>
+                <span class="badge bg-secondary">Stock: {{ $product->stock }}</span>
             </div>
         </div>
 

@@ -102,26 +102,43 @@ class StripeController extends Controller {
             $order = $orderService->find($session->metadata->order_id);
 
             if ($session->payment_status === 'paid') {
+
+                foreach($order->items as $item) {
+                    $item->size->stock -= $item->quantity;
+                    $item->size->save();
+                }
                 
                 $order->update(['status' => 'completed']);
                 
-                $payment = $order->payments()->where('stripe_id', $sessionId)->first();
+                $payment = $order->payments()->first();
                 if($payment) {
                     $payment->update(['status' => 'completed']);
                 }
 
-                Mail::to($order->user->email)->send(new OrderConfirmed($order));
+                
 
-                return view('payments.success', [
-                    'customer_email' => $session->customer_details->email,
+                $customerEmail = $session->customer_details?->email ?? $order->user?->email;
+                
+                try {
+                    if ($customerEmail) {
+                        Mail::to($customerEmail)->send(new OrderConfirmed($order));
+                    }
+                } catch (\Exception $mailException) {
+                    \Illuminate\Support\Facades\Log::error('Mail sending failed: ' . $mailException->getMessage());
+                }
+
+                return redirect()->route('home', [
+                    'customer_email' => $customerEmail,
                     'total' => $session->amount_total / 100,
                 ]);
             }
 
-            return redirect()->route('home')->with('error', 'El pago no se completó.');
-
         } catch (\Exception $e) {
             return redirect()->route('home')->with('error', 'Error: ' . $e->getMessage());
         }
+    }
+
+    function cancelPayment(Request $request){
+
     }
 }

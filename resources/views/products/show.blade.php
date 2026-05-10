@@ -36,25 +36,34 @@
                     <p class="text-muted lh-lg">{{ $product->description }}</p>
                 </div>
                 @auth
-                    @if($product->stock <= 0)
+                    @if($product->stock > 0)
                     <form action="{{ route('orders.addProduct', $product) }}" method="POST" class="mt-5">
                         @csrf
                         
                         <div class="mb-4">
                             <label class="fw-bold text-uppercase small tracking-wide d-block mb-3">Selecciona tu talla</label>
+                            <style>
+                                .btn-check:checked + .btn-size-option {
+                                    background-color: var(--bs-primary) !important;
+                                    border-color: var(--bs-primary) !important;
+                                    color: white !important;
+                                }
+                            </style>
                             <div class="row g-2">
                                 @forelse($product->sizes as $size)
                                     @if($size->stock > 0)
-                                        <div class="col-4">
+                                        <div class="col-3">
                                             <input type="radio" class="btn-check" name="size_id" id="size_{{ $size->id }}" value="{{ $size->id }}" required>
-                                            <label class="btn btn-outline-dark w-100 py-3 rounded-0 fw-bold text-uppercase" for="size_{{ $size->id }}">
-                                                {{ $size->size }}
+                                            <label class="btn btn-light border w-100 py-1 px-1 rounded-3 fw-bold text-uppercase transition-transform hover-scale btn-size-option" for="size_{{ $size->id }}">
+                                                <span class="d-block" style="font-size: 0.9rem;">{{ $size->size }}</span>
+                                                <small class="fw-normal text-nowrap" style="font-size: 0.65rem;">{{ $size->stock }} ud.</small>
                                             </label>
                                         </div>
                                     @else
-                                        <div class="col-4">
-                                            <button type="button" class="btn btn-light w-100 py-3 rounded-0 text-muted disabled text-decoration-line-through">
-                                                {{ $size->size }}
+                                        <div class="col-3">
+                                            <button type="button" class="btn btn-light border w-100 py-1 px-1 rounded-3 text-muted disabled text-decoration-line-through">
+                                                <span class="d-block" style="font-size: 0.9rem;">{{ $size->size }}</span>
+                                                <small class="fw-normal text-nowrap" style="font-size: 0.65rem;">Agotado</small>
                                             </button>
                                         </div>
                                     @endif
