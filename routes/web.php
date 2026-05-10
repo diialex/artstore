@@ -165,7 +165,6 @@ Route::get('/categories/{category}/products', [ProductController::class, 'indexB
 
 #PRODUCTS
 
-// Catálogo/home — cualquier usuario autenticado
 Route::get('/products', [ProductController::class, 'index'])
     ->name('products.index')
     ->middleware(['auth'])->can('viewAny', Product::class);
@@ -178,7 +177,6 @@ Route::post('/products', [ProductController::class, 'store'])
     ->name('products.store')
     ->middleware(['auth'])->can('admin-access');
 
-// Ver producto — cualquier usuario
 Route::get("/products/{product}", [ProductController::class, 'show'])
     ->name('products.show');
 
@@ -224,7 +222,6 @@ Route::delete('/deletePayment/{payment}', [PaymentController::class, 'destroy'])
     ->name('payments.delete')
     ->middleware(['auth'])->can('admin-access');
 
-// Checkout — usuario autenticado
 Route::post('/payments/pay/{order}', [StripeController::class, 'createCheckout'])
     ->name('payments.pay')
     ->middleware(['auth'])->can('create', Order::class);
@@ -289,12 +286,10 @@ Route::delete('/deleteOrderitem/{orderitem}', [OrderItemController::class, 'dest
     ->name('orderitems.delete')
     ->middleware(['auth'])->can('admin-access');
 
-// Carrito — usuario autenticado
 Route::get('/carrito', [OrderController::class, 'carrito'])
     ->name('orders.carrito')
     ->middleware(['auth'])->can('create', Order::class);
 
-// Favoritos — usuario autenticado
 Route::get('/favoritos', [UsersController::class, 'showFavorites'])
     ->name('users.favorites')
     ->middleware(['auth']);
@@ -307,7 +302,6 @@ Route::delete('/favoritos/{product}', [UsersController::class, 'removeFavorites'
     ->name('users.favorites.remove')
     ->middleware(['auth']);
 
-// Carrito — aumentar / disminuir cantidad
 Route::post('/cart/increase/{item}', [OrderController::class, 'increaseItem'])
     ->name('cart.increase')
     ->middleware(['auth'])->can('create', Order::class);
@@ -316,7 +310,6 @@ Route::post('/cart/decrease/{item}', [OrderController::class, 'decreaseItem'])
     ->name('cart.decrease')
     ->middleware(['auth'])->can('create', Order::class);
 
-//borrar cuando se implemente el login
 use App\Services\UsersService;
 Route::get('/forzar-login-admin', function () {
     $service = new UsersService();
@@ -332,12 +325,10 @@ Route::get('/forzar-login-user', function () {
     return "Ya estás logueado como User";
 });
 
-//ControlPanel — solo admin
 Route::get('/controlPanel', [ControlPanelController::class, 'index'])
     ->name('controlPanel.dashboard')
     ->middleware(['auth'])->can('admin-access');
 
-//Idiomas y traducciones
 Route::get('/lang/{locale}', function ($locale) {
     if (!in_array($locale, ['en', 'es'])) {
         abort(400);
