@@ -12,7 +12,7 @@
     @else
         <div class="row">
             @foreach ($products as $product)
-                @include('products.card', ['isFavoritesPage' => true])
+                @include('partials.product-card', ['isFavoritesPage' => true])
             @endforeach
         </div>
     @endif
