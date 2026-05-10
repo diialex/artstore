@@ -66,7 +66,7 @@
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-outline-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;" title="Eliminar de favoritos">
-                                <i class="bi bi-trash3 fs-5"></i>
+                                <i class="bi bi-heart-fill fs-5"></i>
                             </button>
                         </form>
                     @else

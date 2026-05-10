@@ -198,15 +198,8 @@
         </div>
     </div>
 
-    <!-- SCRIPTS DENTRO DEL BODY -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Inicializar dropdowns de Bootstrap
-        document.querySelectorAll('[data-bs-toggle="dropdown"]').forEach(element => {
-            new bootstrap.Dropdown(element);
-        });
-
-        // Script para agregar favoritos
+        // Script para agregar favoritos y que no se recargue la página
         document.querySelectorAll('.add-favorite-form').forEach(form => {
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -223,7 +216,6 @@
                     });
                     
                     if (response.ok) {
-                        // Cambiar icono a corazón lleno
                         button.innerHTML = '<i class="bi bi-heart-fill fs-5"></i>';
                         button.classList.add('text-danger');
                     } else {
