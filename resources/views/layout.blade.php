@@ -15,7 +15,7 @@
 
                 <!-- Center logo -->
                 <div>
-                    <img src="{{ asset('storage/media/images/logo.png') }}" alt="Logo Hanger" class="cursor-pointer" style="height: 70px; width: auto; object-fit: contain;">
+                    <img src="{{ asset('storage/media/images/HANGER.png') }}" alt="Logo Hanger" class="cursor-pointer" style="height: 70px; width: auto; object-fit: contain;">
                 </div>
 
                 <!-- Right section -->
@@ -199,18 +199,35 @@
     </div>
 
     <!-- SCRIPTS DENTRO DEL BODY -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        // Inicializar dropdowns de Bootstrap
+        document.querySelectorAll('[data-bs-toggle="dropdown"]').forEach(element => {
+            new bootstrap.Dropdown(element);
+        });
+
+        // Script para agregar favoritos
         document.querySelectorAll('.add-favorite-form').forEach(form => {
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const formData = new FormData(form);
+                const button = form.querySelector('button');
+                
                 try {
                     const response = await fetch(form.action, {
                         method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                        },
                         body: formData
                     });
+                    
                     if (response.ok) {
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        // Cambiar icono a corazón lleno
+                        button.innerHTML = '<i class="bi bi-heart-fill fs-5"></i>';
+                        button.classList.add('text-danger');
+                    } else {
+                        console.error('Error al agregar favorito');
                     }
                 } catch (error) {
                     console.error('Error:', error);

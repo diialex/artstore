@@ -3,13 +3,13 @@
     <a href="{{ route('products.show', $product) }}" class="text-decoration-none text-dark d-flex flex-column h-100">
         
         @if($product->image_url)
-            <img src="{{ asset('storage/' . $product->image_url) }}" 
-                 class="card-img-top border-bottom" 
-                 alt="{{ $product->title }}" 
-                 style="height: 350px; object-fit: cover;">
+            <img src="{{ asset($product->image_url) }}" 
+                         class="img-fluid w-100 object-fit-cover" 
+                         alt="{{ $product->title }}" 
+                         style="height: 250px;">
         @else
             <div class="card-img-top bg-light d-flex align-items-center justify-content-center text-muted border-bottom" 
-                 style="height: 350px;">
+                 style="height: 250px;">
                 <span><i class="bi bi-camera me-2"></i>Sin imagen</span>
             </div>
         @endif
