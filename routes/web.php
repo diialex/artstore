@@ -28,6 +28,11 @@ Route::get('home', function(){
     return view('auth.dashboard');
 })->middleware(['auth','verified'])->name('home'); //Es necesario verificar el email para acceder al dashboard (Protegido por el middleware 'verified')
 
+Route::get('login', function(){
+    return redirect()->intended('/')->with('openLogin', 'true');
+    })->name('login');
+    
+
 #USER CRUD
 
 Route::get('/users', [UsersController::class, 'index'])

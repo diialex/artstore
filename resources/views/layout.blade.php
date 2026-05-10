@@ -16,7 +16,7 @@
                     <img src="{{ asset('storage/media/images/logo.png') }}" alt="Logo Hanger" class="cursor-pointer" style="height: 70px; width: auto; object-fit: contain;">
                 </div>
 
-                <div class="col-4 ms-auto d-flex justify-content-end gap-2 gap-md-3 align-items-center z-3">
+                <div class="col-4 ms-auto d-flex justify-content-end gap-2 gap-md-3 align-items-center z-3 position-relative">
                     @auth
                         <div class="dropdown">
                             <a class="nav-link text-white dropdown-toggle" href="#" role="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
@@ -196,7 +196,6 @@
     </div>
 
     <!-- SCRIPTS DENTRO DEL BODY -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.querySelectorAll('.add-favorite-form').forEach(form => {
             form.addEventListener('submit', async (e) => {

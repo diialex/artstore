@@ -23,7 +23,7 @@ class Product extends Model
     // Relación 1:N con Tallas
     public function sizes()
     {
-        return $this->belongsTo(Size::class);
+        return $this->hasMany(Size::class);
     }
 
     // Esto te permite llamar a $product->total_stock en cualquier parte del código

@@ -35,54 +35,68 @@
                     <p class="fw-bold text-uppercase small tracking-wide mb-2">Descripción</p>
                     <p class="text-muted lh-lg">{{ $product->description }}</p>
                 </div>
+                @auth
+                    @if($product->stock <= 0)
+                    <form action="{{ route('orders.addProduct', $product) }}" method="POST" class="mt-5">
+                        @csrf
+                        
+                        <div class="mb-4">
+                            <label class="fw-bold text-uppercase small tracking-wide d-block mb-3">Selecciona tu talla</label>
+                            <div class="row g-2">
+                                @forelse($product->sizes as $size)
+                                    @if($size->stock > 0)
+                                        <div class="col-4">
+                                            <input type="radio" class="btn-check" name="size_id" id="size_{{ $size->id }}" value="{{ $size->id }}" required>
+                                            <label class="btn btn-outline-dark w-100 py-3 rounded-0 fw-bold text-uppercase" for="size_{{ $size->id }}">
+                                                {{ $size->size }}
+                                            </label>
+                                        </div>
+                                    @else
+                                        <div class="col-4">
+                                            <button type="button" class="btn btn-light w-100 py-3 rounded-0 text-muted disabled text-decoration-line-through">
+                                                {{ $size->size }}
+                                            </button>
+                                        </div>
+                                    @endif
+                                @empty
+                                    <div class="col-12">
+                                        <p class="text-muted italic small">Talla única / Stock general</p>
+                                    </div>
+                                @endforelse
 
-                <form action="{{ route('orders.addProduct', $product) }}" method="POST" class="mt-5">
-                    @csrf
-                    
-                    <div class="mb-4">
-                        <label class="fw-bold text-uppercase small tracking-wide d-block mb-3">Selecciona tu talla</label>
-                        <div class="row g-2">
-                            @forelse($product->sizes as $size)
-                                @if($size->stock > 0)
-                                    <div class="col-4">
-                                        <input type="radio" class="btn-check" name="size_id" id="size_{{ $size->id }}" value="{{ $size->id }}" required>
-                                        <label class="btn btn-outline-dark w-100 py-3 rounded-0 fw-bold text-uppercase" for="size_{{ $size->id }}">
-                                            {{ $size->size }}
-                                        </label>
-                                    </div>
-                                @else
-                                    <div class="col-4">
-                                        <button type="button" class="btn btn-light w-100 py-3 rounded-0 text-muted disabled text-decoration-line-through">
-                                            {{ $size->size }}
-                                        </button>
-                                    </div>
-                                @endif
-                            @empty
-                                <div class="col-12">
-                                    <p class="text-muted italic small">Talla única / Stock general</p>
+                                <div class="mb-2">
+                                    @foreach($product->categories as $category)
+                                        <span class="text-muted text-uppercase small tracking-widest me-2">{{ $category->name }}</span>
+                                    @endforeach
                                 </div>
-                            @endforelse
-
-                            <div class="mb-2">
-                                @foreach($product->categories as $category)
-                                    <span class="text-muted text-uppercase small tracking-widest me-2">{{ $category->name }}</span>
-                                @endforeach
                             </div>
                         </div>
+                        <button type="submit" class="btn btn-dark btn-lg py-3 rounded-pill fw-bold text-uppercase tracking-wide transition-transform hover-scale">
+                            <i class="bi bi-bag-plus me-2"></i> Añadir a la bolsa
+                        </button>
+                    </form>
+                    @else
+                    <div class="mb-4">
+                        <span>No hay productos disponibles</span>
+                        <div class="d-grid gap-2 pt-3">
+                            <a href="#" 
+                                class="btn btn-dark btn-lg py-3 rounded-pill fw-bold text-uppercase tracking-wide disabled" 
+                                tabindex="-1" 
+                                role="button" 
+                                aria-disabled="true">
+                                    Añadir a la bolsa
+                                </a>
+                        </div>
                     </div>
-
+                    @endif
+                @endauth
+                @guest
                     <div class="d-grid gap-2 pt-3">
-                        @guest
-                            <a href="{{ route('login') }}" class="btn btn-dark btn-lg py-3 rounded-pill fw-bold text-uppercase tracking-wide">
-                                Inicia sesión para comprar
-                            </a>
-                        @else
-                            <button type="submit" class="btn btn-dark btn-lg py-3 rounded-pill fw-bold text-uppercase tracking-wide transition-transform hover-scale">
-                                <i class="bi bi-bag-plus me-2"></i> Añadir a la bolsa
-                            </button>
-                        @endguest
+                        <a href="#" data-bs-toggle="offcanvas" data-bs-target="#iniciarSesion" class="btn btn-dark btn-lg py-3 rounded-pill fw-bold text-uppercase tracking-wide">
+                            Inicia sesión para comprar
+                        </a>
                     </div>
-                </form>
+                @endguest
 
                 <div class="mt-5 pt-4 border-top">
                     <div class="d-flex align-items-center mb-3">

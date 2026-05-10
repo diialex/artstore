@@ -10,45 +10,44 @@ class ProductsSeeder extends Seeder
 {
     public function run(): void
     {
-
-        $tallas=[Size::create([
-            'talla'=>'S',
-            'stock'=>'10'
-        ]),
-        Size::create([
-            'talla'=>'M',
-            'stock'=>'20'
-        ]),
-        Size::create([
-            'talla'=>'L',
-            'stock'=>'15'
-        ]),
-        Size::create([
-            'talla'=>'XL',
-            'stock'=>'10'
-        ])];
-
-        $product=Product::create([
+        // 1. Crear el primer producto
+        $product1 = Product::create([
             'title' => 'Jordan 1 Retro High OG "Chicago"',
             'description' => 'Zapatillas de baloncesto icónicas con diseño retro y tecnología de puntera.',
             'price' => 150.00,
             'stock' => 10,
-            'image_url' => 'storage\media\images\air-jordan-1-high-unc-toe-release.png'
-        ])->categories()->attach([2, 3, 4]);
+            'image_url' => 'storage/media/images/air-jordan-1-high-unc-toe-release.png'
+        ]);
+        // Adjuntar categorías por separado para no perder la instancia de $product1
+        $product1->categories()->associate(2);
+        $product1->categories()->associate(3);
+        $product1->categories()->associate(4);
 
-        foreach($tallas as $talla){
-            $product->sizes()->associate($talla);
-        }
+        // 2. Crear las tallas asociadas a este producto
+        $product1->sizes()->createMany([
+            ['size' => 'S', 'stock' => 10],
+            ['size' => 'M', 'stock' => 20],
+            ['size' => 'L', 'stock' => 15],
+            ['size' => 'XL', 'stock' => 10],
+        ]);
 
-        $product=Product::create([
+        // 3. Crear el segundo producto
+        $product2 = Product::create([
             'title' => 'Converse Chuck Taylor All Star',
             'description' => 'Zapatillas clásicas y versátiles, ideales para cualquier estilo de vida.',
             'price' => 120.00,
             'stock' => 15,
-            'image_url' => 'storage\media\images\daRealConverse.png'
-        ])->categories()->attach([1, 5]);
-        foreach($tallas as $talla){
-            $product->sizes()->associate($talla);
-        }
+            'image_url' => 'storage/media/images/daRealConverse.png'
+        ]);
+        $product2->categories()->associate(1);
+        $product2->categories()->associate(5);
+
+        // 4. Crear las tallas asociadas al segundo producto
+        $product2->sizes()->createMany([
+            ['size' => 'S', 'stock' => 10],
+            ['size' => 'M', 'stock' => 20],
+            ['size' => 'L', 'stock' => 15],
+            ['size' => 'XL', 'stock' => 10],
+        ]);
     }
 }
