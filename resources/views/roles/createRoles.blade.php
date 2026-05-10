@@ -5,7 +5,7 @@
 @section('content')
 
 <form action="{{ route('roles.store') }}" method="POST">
-@csrf {{-- Cláusula para obtener un token de formulario al enviarlo --}}
+@csrf
 <input type="text" name="name" placeholder="name" value="{{ old('name') }}" class="form-control mb-2" autofocus>
 @error('name') <div class="alert alert-danger"> No olvides rellenar el name
 </div> @enderror

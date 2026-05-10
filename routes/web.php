@@ -105,7 +105,7 @@ Route::delete('/deleteAddress/{address}', [AddressController::class, 'delete'])
     /*->can('delete', 'address')*/;
 
 Route::post('/addProduct/{product}', [OrderController::class, 'addProducttoOrder'])
-    ->name('orders.addProduct');
+    ->name('orders.addProduct')->middleware('auth');
 
 #CATEGORIES
 Route::get('/categories', [CategoryController::class, 'index'])
@@ -265,7 +265,7 @@ Route::delete('/deleteOrderitem/{orderitem}', [OrderItemController::class, 'dest
     /*->can('delete', 'orderitem')*/;
 
 Route::get('/carrito', [OrderController::class, 'carrito'])
-    ->name('orders.carrito');
+    ->name('orders.carrito')->middleware('auth');
 
 
 Route::get('/favoritos', [UsersController::class, 'showFavorites'])
@@ -276,8 +276,8 @@ Route::post('/favoritos/add', [UsersController::class, 'addFavorites'])
 
 Route::delete('/favoritos/{product}', [UsersController::class, 'removeFavorites'])
     ->name('users.favorites.remove');
-Route::post('/cart/increase/{item}', [OrderController::class, 'increaseItem'])->name('cart.increase');
-Route::post('/cart/decrease/{item}', [OrderController::class, 'decreaseItem'])->name('cart.decrease');
+Route::post('/cart/increase/{item}', [OrderController::class, 'increaseItem'])->name('cart.increase')->middleware('auth');
+Route::post('/cart/decrease/{item}', [OrderController::class, 'decreaseItem'])->name('cart.decrease')->middleware('auth');
 
 //borrar cuando se implemente el login
 use App\Services\UsersService;

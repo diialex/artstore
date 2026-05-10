@@ -4,8 +4,8 @@
 
 @section('content')
 
-    <a href="{{ route('users.create') }}" class="btn btn-primary mb-3">Crear usuarios</a>
-    <a href="{{ route('roles.create') }}" class="btn btn-secondary mb-3">Crear rol</a>
+    <a href="{{ route('users.create') }}" class="btn btn-primary mb-3">  @lang('messages.createuser')</a>
+    <a href="{{ route('roles.create') }}" class="btn btn-secondary mb-3">@lang('messages.createrole')</a>
 
     <div class="table-responsive">
         <table class="table table-striped table-hover">
