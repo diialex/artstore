@@ -13,7 +13,7 @@
                 </div>
 
                 <div>
-                    <img src="{{ asset('storage/media/images/logo.png') }}" alt="Logo Hanger" class="cursor-pointer" style="height: 70px; width: auto; object-fit: contain;">
+                    <img src="{{ asset('storage/media/images/HANGER.png') }}" alt="Logo Hanger" class="cursor-pointer" style="height: 70px; width: auto; object-fit: contain;">
                 </div>
 
                 <div class="col-4 ms-auto d-flex justify-content-end gap-2 gap-md-3 align-items-center z-3 position-relative">
@@ -195,19 +195,28 @@
         </div>
     </div>
 
-    <!-- SCRIPTS DENTRO DEL BODY -->
     <script>
+        // Script para agregar favoritos y que no se recargue la página
         document.querySelectorAll('.add-favorite-form').forEach(form => {
             form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const formData = new FormData(form);
+                const button = form.querySelector('button');
+                
                 try {
                     const response = await fetch(form.action, {
                         method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+                        },
                         body: formData
                     });
+                    
                     if (response.ok) {
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
+                        button.innerHTML = '<i class="bi bi-heart-fill fs-5"></i>';
+                        button.classList.add('text-danger');
+                    } else {
+                        console.error('Error al agregar favorito');
                     }
                 } catch (error) {
                     console.error('Error:', error);
