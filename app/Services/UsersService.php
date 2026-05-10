@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Models\Product;
 use App\Models\FavoriteList;
 use Illuminate\Database\Eloquent\Collection;
 use Exception;
@@ -57,24 +58,27 @@ class UsersService
     public function addFavorites($user_id ,$product_id ){
         $list = FavoriteList::firstOrCreate(['user_id' => $user_id]);
         $products_list= $list->products ?? [];
-
+        $product= Product::find($product_id);
         if (!in_array($product_id, $products_list)){
             $products_list[] = $product_id;
         }
 
         $list->products = $products_list;
         $list->save();
+        $product->favorite_count += 1;
+        $product->save();
     }
 
     public function removeFavorites($user_id, $product_id){
         $list = FavoriteList::where('user_id', $user_id)->first();
+        $product= Product::find($product_id);
         if ($list) {
-            $products_list = $list->products ?? [];
-            $products_list = array_filter($products_list, function($id) use ($product_id) {
-                return $id != $product_id;
-            });
-            $list->products = array_values($products_list);
+            $list->products = array_values(array_diff($list->products, [$product_id]));
             $list->save();
+            if ($product->favorite_count > 0) {
+                $product->favorite_count -= 1;
+                $product->save();
+            }
         }
     }
 

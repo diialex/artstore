@@ -1,15 +1,16 @@
 <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden producto-card">
     
     <a href="{{ route('products.show', $product) }}" class="text-decoration-none text-dark d-flex flex-column h-100">
+        
         @if($product->image_url)
-            <img src="{{ asset($product->image_url) }}" 
+            <img src="{{ asset('storage/' . $product->image_url) }}" 
                  class="card-img-top border-bottom" 
                  alt="{{ $product->title }}" 
                  style="height: 350px; object-fit: cover;">
         @else
             <div class="card-img-top bg-light d-flex align-items-center justify-content-center text-muted border-bottom" 
                  style="height: 350px;">
-                <span> Sin imagen</span>
+                <span><i class="bi bi-camera me-2"></i>@lang('messages.no_image')</span>
             </div>
         @endif
 
@@ -25,33 +26,58 @@
     </a>
     
     <div class="card-footer bg-white border-0 pt-0 pb-4 px-3 mt-auto">
+        
         @guest
-            <a href="#" data-bs-toggle="offcanvas" data-bs-target="#iniciarSesion" class="btn btn-outline-dark w-100 fw-bold rounded-pill">
-                <i class="bi bi-box-arrow-in-right me-2"></i>Inicia sesión
+            <a href="{{ route('login') }}" class="btn btn-outline-dark w-100 fw-bold rounded-pill">
+                <i class="bi bi-box-arrow-in-right me-2"></i>@lang('messages.login_to_buy')
             </a>
         @endguest
 
         @auth
-            <form action="{{ route('orders.addProduct', $product) }}" method="POST">
-                @csrf
-                <button type="submit" class="btn btn-dark w-100 fw-bold rounded-pill mb-2 py-2">
-                    <i class="bi bi-cart-plus me-2"></i>@lang('messages.add_to_cart')
-                </button>
-            </form>
-
-            @if(Auth::user()->role_id == 1) 
+            @if(auth()->user()->roles->contains('id', 1)) 
                 <div class="d-flex gap-2 mt-2 pt-2 border-top">
                     <a href="{{ route('products.edit', $product) }}" class="btn btn-outline-warning btn-sm flex-fill fw-bold rounded-pill">
-                         Editar
+                        <i class="bi bi-pencil me-1"></i> @lang('messages.edit_product')
                     </a>
                     
                     <form action="{{ route('products.delete', $product) }}" method="POST" class="flex-fill" onsubmit="return confirm('¿Estás seguro de que quieres aniquilar este producto?');">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-outline-danger btn-sm w-100 fw-bold rounded-pill">
-                             Borrar
+                            <i class="bi bi-trash3 me-1"></i> @lang('messages.delete_product')
                         </button>
                     </form>
+                </div>
+            @endif
+
+            @if(auth()->user()->roles->contains('id', 2))
+                <div class="d-flex gap-2 align-items-center">
+                    
+                    <form action="{{ route('orders.addProduct', $product) }}" method="POST" class="flex-fill m-0">
+                        @csrf
+                        <button type="submit" class="btn btn-dark w-100 fw-bold rounded-pill py-2 text-uppercase tracking-wide">
+                            <i class="bi bi-cart-plus me-2"></i>@lang('messages.add_to_cart')
+                        </button>
+                    </form>
+
+                    @if($isFavoritesPage ?? false)
+                        <form action="{{ route('users.favorites.remove', $product) }}" method="POST" class="m-0" onsubmit="return confirm('¿Eliminar de favoritos?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-outline-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;" title="Eliminar de favoritos">
+                                <i class="bi bi-trash3 fs-5"></i>
+                            </button>
+                        </form>
+                    @else
+                        <form action="{{ route('users.favorites.add') }}" method="POST" class="m-0 add-favorite-form">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <button type="submit" class="btn btn-outline-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;" title="Añadir a favoritos">
+                                <i class="bi bi-heart fs-5"></i>
+                            </button>
+                        </form>
+                    @endif
+
                 </div>
             @endif
         @endauth

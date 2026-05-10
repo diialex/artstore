@@ -23,7 +23,8 @@ class Product extends Model
     // Relación 1:N con Tallas
     public function sizes()
     {
-        return $this->hasMany(Size::class);
+    // CAMBIO: De belongsTo a hasMany
+    return $this->hasMany(Size::class, 'product_id'); 
     }
     
 }

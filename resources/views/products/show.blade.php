@@ -73,6 +73,17 @@
                                     </div>
                                 @endforelse
 
+                            {{-- Sección de Categorías --}}
+                            <div class="mt-2 border-top pt-3">
+                                @foreach($product->categories as $category)
+                                    <span class="text-muted text-uppercase small tracking-widest me-3" style="font-size: 0.7rem;">
+                                        <i class="bi bi-tag-fill me-1"></i>{{ $category->name }}
+                                    </span>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
                                 <div class="mb-2">
                                     @foreach($product->categories as $category)
                                         <span class="text-muted text-uppercase small tracking-widest me-2">{{ $category->name }}</span>

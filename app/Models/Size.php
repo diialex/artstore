@@ -14,6 +14,7 @@ class Size extends Model
     protected $touches = ['product'];
 
     protected $fillable = [
+        'id',
         'product_id',
         'size',
         'stock',
@@ -26,7 +27,7 @@ class Size extends Model
     // Relación con el producto
     public function product()
     {
-        return $this->belongsTo(Product::class);
+    return $this->belongsTo(Product::class);
     }
 
     protected static function booted()

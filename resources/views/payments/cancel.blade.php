@@ -1,2 +1,2 @@
 @extends('layout')
-    <div>PAGO NO REALIZADO</div>
+    <div>@lang('messages.payment_cancelled')</div>
