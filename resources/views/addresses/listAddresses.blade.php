@@ -28,7 +28,7 @@
                     <td>{{ $address->zip_code }}</td>
 
                     <td>
-                        <a href="{{ route('addresses.edit', $address->id) }}">actualizar dirección</a>
+                        <a class="btn btn-sm btn-info text-white" href="{{ route('addresses.edit', $address->id) }}">Actualizar dirección</a>
                         <form action="{{ route('addresses.delete', $address->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de borrar esta dirección?')">
                                 @csrf
                                 @method('DELETE')
