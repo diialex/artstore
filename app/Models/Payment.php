@@ -13,6 +13,10 @@ class Payment extends Model
         'shipping_address',
     ];
 
+    protected $hidden = [
+        'id'
+    ];
+
     protected $appends = ['amount'];  
 
     public const PAGINATE = 10; 

@@ -13,6 +13,7 @@ class Address extends Model
         'city',
         'zip_code'
     ];
+    
 
     protected $hidden = [
         'id',

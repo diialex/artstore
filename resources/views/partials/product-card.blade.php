@@ -10,7 +10,7 @@
         @else
             <div class="card-img-top bg-light d-flex align-items-center justify-content-center text-muted border-bottom" 
                  style="height: 250px;">
-                <span><i class="bi bi-camera me-2"></i>Sin imagen</span>
+                <span><i class="bi bi-camera me-2"></i>@lang('messages.no_image')</span>
             </div>
         @endif
 
@@ -28,8 +28,8 @@
     <div class="card-footer bg-white border-0 pt-0 pb-4 px-3 mt-auto">
         
         @guest
-            <a href="{{ route('login') }}" class="btn btn-outline-dark w-100 fw-bold rounded-pill">
-                <i class="bi bi-box-arrow-in-right me-2"></i>Inicia sesión
+            <a href="#" data-bs-toggle="offcanvas" data-bs-target="#iniciarSesion" class="btn btn-outline-dark w-100 fw-bold rounded-pill">
+                <i class="bi bi-box-arrow-in-right me-2"></i>@lang('messages.login_to_buy')
             </a>
         @endguest
 
@@ -37,14 +37,14 @@
             @if(auth()->user()->roles->contains('id', 1)) 
                 <div class="d-flex gap-2 mt-2 pt-2 border-top">
                     <a href="{{ route('products.edit', $product) }}" class="btn btn-outline-warning btn-sm flex-fill fw-bold rounded-pill">
-                        <i class="bi bi-pencil me-1"></i> Editar
+                        <i class="bi bi-pencil me-1"></i> @lang('messages.edit_product')
                     </a>
                     
                     <form action="{{ route('products.delete', $product) }}" method="POST" class="flex-fill" onsubmit="return confirm('¿Estás seguro de que quieres aniquilar este producto?');">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-outline-danger btn-sm w-100 fw-bold rounded-pill">
-                            <i class="bi bi-trash3 me-1"></i> Borrar
+                            <i class="bi bi-trash3 me-1"></i> @lang('messages.delete_product')
                         </button>
                     </form>
                 </div>
@@ -53,7 +53,6 @@
             @if(auth()->user()->roles->contains('id', 2))
                 <div class="d-flex gap-2 align-items-center">
                     
-                    {{-- Añadir a la Cesta --}}
                     <form action="{{ route('orders.addProduct', $product) }}" method="POST" class="flex-fill m-0">
                         @csrf
                         <button type="submit" class="btn btn-dark w-100 fw-bold rounded-pill py-2 text-uppercase tracking-wide">

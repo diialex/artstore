@@ -11,6 +11,10 @@ class Category extends Model
 
     protected $fillable = ['name', 'description', 'image'];
 
+    protected $hidden = [
+        'id',
+    ];
+
     // Relación N:M con Productos
     public function products()
     {

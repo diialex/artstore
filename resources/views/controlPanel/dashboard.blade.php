@@ -3,10 +3,10 @@
 @section('content')
 <div class="container-fluid mt-4">
     <div class="d-flex align-items-center mb-4">
-        <h1 class="h2 mb-0">Métricas</h1>
+        <h1 class="h2 mb-0">@lang('messages.metrics')</h1>
     </div>
     <div class="container">
-        <h2>Usuarios</h2>
+        <h2>@lang('messages.user')</h2>
         <hr class="border-1 opacity-50">
         <div class="row">
             <div class="col-6">

@@ -35,41 +35,43 @@
                     <p class="fw-bold text-uppercase small tracking-wide mb-2">Descripción</p>
                     <p class="text-muted lh-lg">{{ $product->description }}</p>
                 </div>
-
-                <form action="{{ route('orders.addProduct', $product) }}" method="POST" class="mt-5">
-                    @csrf
-                    <div class="mb-4">
-                        <label class="fw-bold text-uppercase small tracking-wide d-block mb-3">Selecciona tu talla</label>
+                @auth
+                    @if($product->stock > 0)
+                    <form action="{{ route('orders.addProduct', $product) }}" method="POST" class="mt-5">
+                        @csrf
                         
-                        <div class="row g-2">
-                            @if($product->sizes && $product->sizes->count() > 0)
-                                <div class="d-flex flex-wrap gap-2 mb-3">
-                                    @foreach($product->sizes as $size)
-                                        {{-- Input oculto que maneja la selección --}}
-                                        <input type="radio" class="btn-check" name="size_id" 
-                                            id="size_{{ $size->id }}" value="{{ $size->id }}" 
-                                            autocomplete="off" {{ $size->stock <= 0 ? 'disabled' : '' }} required>
-                                        
-                                        {{-- Label estilizado como botón --}}
-                                        <label class="btn btn-outline-primary btn-hover-scale d-flex flex-column align-items-center justify-content-center p-2" 
-                                            for="size_{{ $size->id }}" 
-                                            style="min-width: 70px; border-width: 2px; border-radius: 8px;">
-                                            
-                                            <span class="fw-bold">{{ $size->size }}</span>
-                                            
-                                            <small class="text-uppercase" style="font-size: 0.65rem; opacity: 0.8;">
-                                                {{ $size->stock }} ud.
-                                            </small>
-                                        </label>
-                                    @endforeach
-                                </div>
-                            @else
-                                <div class="col-12">
-                                    <span class="badge bg-light text-danger p-2 w-100 text-start">
-                                        <i class="bi bi-exclamation-triangle me-2"></i>No hay tallas disponibles para este producto
-                                    </span>
-                                </div>
-                            @endif
+                        <div class="mb-4">
+                            <label class="fw-bold text-uppercase small tracking-wide d-block mb-3">Selecciona tu talla</label>
+                            <style>
+                                .btn-check:checked + .btn-size-option {
+                                    background-color: var(--bs-primary) !important;
+                                    border-color: var(--bs-primary) !important;
+                                    color: white !important;
+                                }
+                            </style>
+                            <div class="row g-2">
+                                @forelse($product->sizes as $size)
+                                    @if($size->stock > 0)
+                                        <div class="col-3">
+                                            <input type="radio" class="btn-check" name="size_id" id="size_{{ $size->id }}" value="{{ $size->id }}" required>
+                                            <label class="btn btn-light border w-100 py-1 px-1 rounded-3 fw-bold text-uppercase transition-transform hover-scale btn-size-option" for="size_{{ $size->id }}">
+                                                <span class="d-block" style="font-size: 0.9rem;">{{ $size->size }}</span>
+                                                <small class="fw-normal text-nowrap" style="font-size: 0.65rem;">{{ $size->stock }} ud.</small>
+                                            </label>
+                                        </div>
+                                    @else
+                                        <div class="col-3">
+                                            <button type="button" class="btn btn-light border w-100 py-1 px-1 rounded-3 text-muted disabled text-decoration-line-through">
+                                                <span class="d-block" style="font-size: 0.9rem;">{{ $size->size }}</span>
+                                                <small class="fw-normal text-nowrap" style="font-size: 0.65rem;">Agotado</small>
+                                            </button>
+                                        </div>
+                                    @endif
+                                @empty
+                                    <div class="col-12">
+                                        <p class="text-muted italic small">Talla única / Stock general</p>
+                                    </div>
+                                @endforelse
 
                             {{-- Sección de Categorías --}}
                             <div class="mt-2 border-top pt-3">
@@ -82,18 +84,39 @@
                         </div>
                     </div>
 
-                    <div class="d-grid gap-2 pt-3">
-                        @guest
-                            <a href="{{ route('login') }}" class="btn btn-dark btn-lg py-3 rounded-pill fw-bold text-uppercase tracking-wide">
-                                Inicia sesión para comprar
-                            </a>
-                        @else
-                            <button type="submit" class="btn btn-dark btn-lg py-3 rounded-pill fw-bold text-uppercase tracking-wide transition-transform hover-scale">
-                                <i class="bi bi-bag-plus me-2"></i> Añadir a la bolsa
-                            </button>
-                        @endguest
+                                <div class="mb-2">
+                                    @foreach($product->categories as $category)
+                                        <span class="text-muted text-uppercase small tracking-widest me-2">{{ $category->name }}</span>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-dark btn-lg py-3 rounded-pill fw-bold text-uppercase tracking-wide transition-transform hover-scale">
+                            <i class="bi bi-bag-plus me-2"></i> Añadir a la bolsa
+                        </button>
+                    </form>
+                    @else
+                    <div class="mb-4">
+                        <span>No hay productos disponibles</span>
+                        <div class="d-grid gap-2 pt-3">
+                            <a href="#" 
+                                class="btn btn-dark btn-lg py-3 rounded-pill fw-bold text-uppercase tracking-wide disabled" 
+                                tabindex="-1" 
+                                role="button" 
+                                aria-disabled="true">
+                                    Añadir a la bolsa
+                                </a>
+                        </div>
                     </div>
-                </form>
+                    @endif
+                @endauth
+                @guest
+                    <div class="d-grid gap-2 pt-3">
+                        <a href="#" data-bs-toggle="offcanvas" data-bs-target="#iniciarSesion" class="btn btn-dark btn-lg py-3 rounded-pill fw-bold text-uppercase tracking-wide">
+                            Inicia sesión para comprar
+                        </a>
+                    </div>
+                @endguest
 
                 <div class="mt-5 pt-4 border-top">
                     <div class="d-flex align-items-center mb-3">

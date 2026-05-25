@@ -68,7 +68,7 @@ class FortifyServiceProvider extends ServiceProvider
         });
 
         Fortify::loginView(function () {
-            return view('auth.login');
+            return redirect()->route('login');
         });
 
         Fortify::resetPasswordView(function ($request) {

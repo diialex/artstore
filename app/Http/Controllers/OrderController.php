@@ -49,9 +49,13 @@ class OrderController extends Controller
     }
     public function addProducttoOrder(Request $request, Product $product)
     {
+        $request->validate([
+            'size_id' => 'required|exists:sizes,id',
+        ]);
+
+        $size_id = $request->size_id;
         $user = Auth::user();
  
-
 
         $order = Order::where('user_id', $user->id)
                       ->whereIn('status', ['pending', 'failed'])
@@ -65,7 +69,10 @@ class OrderController extends Controller
             $order->save();
         }
 
-        $item = $order->items()->where('product_id', $product->id)->first();
+        $item = $order->items()
+                      ->where('product_id', $product->id)
+                      ->where('size_id', $size_id)
+                      ->first();
         
         if ($item) {
             $item->quantity += 1;
@@ -76,6 +83,7 @@ class OrderController extends Controller
             $item->price = $product->price;
             $item->order()->associate($order);
             $item->product()->associate($product);
+            $item->size()->associate($size_id);
             $item->save();
         }
 
@@ -179,8 +187,11 @@ class OrderController extends Controller
 
     public function increaseItem(OrderItem $item)
     {
-        $item->quantity += 1;
-        $item->save();
+        if($item->size->stock>$item->quantity){
+            $item->quantity += 1;
+            $item->save();
+        }
+        
         
         $this->orderService->updateOrderTotal($item->order);
         

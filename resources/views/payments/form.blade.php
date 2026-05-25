@@ -7,29 +7,29 @@
                 @if($payment->exists) @method('PUT') @endif
 
                 <div class="form-group">
-                    <label>Orden ID</label>
+                    <label>@lang('messages.order_id')</label>
                     <input name="order_id" class="form-control" value="{{ old('order_id', $payment->order_id) }}" type="number">
                     @error('order_id') <div>{{ $message }}</div> @enderror
                 </div>
 
                 <div class="form-group">
-                    <label>Cantidad</label>
+                    <label>@lang('messages.amount')</label>
                     <input name="amount" class="form-control" value="{{ old('amount', $payment->amount) }}" type="number" step="0.01" readonly>
                     @error('amount') <div>{{ $message }}</div> @enderror
                 </div>
 
                 <div class="form-group">
-                    <label>Método de Pago</label>
+                    <label>@lang('messages.payment_method')</label>
                     <input name="payment_method" class="form-control" value="{{ old('payment_method', $payment->payment_method) }}">
                     @error('payment_method') <div>{{ $message }}</div> @enderror
                 </div>
 
                 <div class="form-group">
-                    <label>Estado</label>
+                    <label>@lang('messages.state')</label>
                     <select name="status" class="form-control">
-                        <option value="pending" @selected(old('status', $payment->status) === 'pending')>Pendiente</option>
-                        <option value="completed" @selected(old('status', $payment->status) === 'completed')>Completado</option>
-                        <option value="failed" @selected(old('status', $payment->status) === 'failed')>Fallido</option>
+                        <option value="pending" @selected(old('status', $payment->status) === 'pending')>@lang('messages.pending')</option>
+                        <option value="completed" @selected(old('status', $payment->status) === 'completed')>@lang('messages.completed')</option>
+                        <option value="cancelled" @selected(old('status', $payment->status) === 'cancelled')>@lang('messages.cancelled')</option>
                     </select>
                     @error('status') <div>{{ $message }}</div> @enderror
                 </div>

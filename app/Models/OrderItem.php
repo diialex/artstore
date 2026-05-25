@@ -7,10 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class OrderItem extends Model
 {
     protected $fillable = [
-        'order_id',
+        'id',
         'product_id',
         'quantity',
         'price'
+    ];
+
+    protected $hidden = [
+        'id'
     ];
 
     public function order()
@@ -21,5 +25,9 @@ class OrderItem extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function size(){
+        return $this->belongsTo(Size::class);
     }
 }

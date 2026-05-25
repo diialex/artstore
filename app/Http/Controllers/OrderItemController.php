@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\OrderItem\StoreOrderItemRequest;
 use App\Http\Requests\OrderItem\UpdateOrderItemRequest;
 use App\Services\OrderItemService;
+use App\Services\OrderService;
 use App\Models\OrderItem;
 use App\Models\Order;
 // use App\Models\Product;
@@ -87,7 +88,7 @@ class OrderItemController extends Controller
         
         $this->service->delete($id);
     
-        this->orderService->updateOrderTotal($order);
+        $this->orderService->updateOrderTotal($order);
         
         return redirect()->route('orders.carrito')->with('success', 'Artículo eliminado de la cesta.');
     }

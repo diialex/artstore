@@ -17,47 +17,46 @@
                 @section('title', 'Crear Producto')
 
                 <div class="form-group mb-3">
-                    <label class="fw-bold small text-uppercase">Título</label>
+                    <label class="fw-bold small text-uppercase">@lang('messages.title')</label>
                     <input name="title" class="form-control bg-light border-0" value="{{ old('title', $product->title) }}">
                     @error('title') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="form-group mb-3">
-                    <label class="fw-bold small text-uppercase">Descripción</label>
+                    <label class="fw-bold small text-uppercase">@lang('messages.description')</label>
                     <textarea name="description" class="form-control bg-light border-0">{{ old('description', $product->description) }}</textarea>
                     @error('description') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="form-group mb-3">
-                    <label class="fw-bold small text-uppercase">Imagen del Producto</label>
+                    <label class="fw-bold small text-uppercase">@lang('messages.image_product')</label>
                     <input type="file" name="image_url" class="form-control bg-light border-0" accept="image/*">
                     @error('image_url') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                     
                     @if($product->exists && $product->image_url)
                         <div class="mt-3 p-2 border rounded text-center">
-                            <small class="text-muted d-block mb-2">Imagen actual:</small>
-                            {{-- Corrección: Añadido 'storage/' para que lea del disco public --}}
+                            <small class="text-muted d-block mb-2">@lang('messages.act_image')</small>
                             <img src="{{ asset('storage/' . $product->image_url) }}" alt="{{ $product->title }}" class="img-fluid rounded" style="max-height: 120px;">
                         </div>
                     @endif
                 </div>
                 
                 <div class="form-group mb-3">
-                    <label class="fw-bold small text-uppercase">Precio (€)</label>
+                    <label class="fw-bold small text-uppercase">@lang('messages.price')</label>
                     <input type="number" step="0.01" name="price" class="form-control bg-light border-0" value="{{ old('price', $product->price) }}">
                     @error('price') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                 </div>
 
                 <div class="form-group mb-4">
-                    <label class="fw-bold small text-uppercase">Stock Total</label>
+                    <label class="fw-bold small text-uppercase">@lang('messages.stock')</label>
                     <input type="text" class="form-control border-0 bg-secondary bg-opacity-10 text-muted" value="{{ $product->exists ? $product->total_stock : 0 }} uds" readonly>
                     <div class="form-text text-muted small">
-                        * Calculado automáticamente sumando las tallas.
+                        @lang('messages.calculated_size')
                     </div>
                 </div>
 
                 <div class="form-group mb-4">
-                    <label class="fw-bold small text-uppercase mb-2">Categorías</label>
+                    <label class="fw-bold small text-uppercase mb-2">@lang('messages.categories')</label>
                     <div class="row g-2 bg-light p-3 rounded-3 border-0">
                         @foreach($categories as $category)
                             <div class="col-6 col-md-4">
@@ -77,7 +76,7 @@
                 <div class="form-group mb-4">
                     <label class="fw-bold small text-uppercase m-0 mb-2">Tallas y Stock</label>
                     <div class="form-text text-muted mb-3">
-                        Rellena el nombre y el stock. Deja en blanco las filas que no necesites.
+                        @lang('messages.fill_sizes')
                     </div>
                     
                     <div id="sizes-container">

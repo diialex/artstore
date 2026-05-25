@@ -4,14 +4,14 @@
 
 @section('content')
 
-    <a href="{{ route('roles.create') }}">Crear usuarios</a>
+    <a href="{{ route('roles.create') }}">@lang('messages.createuser')</a>
 
     <div class="table-responsive">
         <table class="table table-striped table-hover">
             <thead class="table-dark">
                 <tr>
-                    <th>Name</th>
-                    <th>Description</th>
+                    <th>@lang('messages.name')</th>
+                    <th>@lang('messages.description')</th>
                 </tr>
             </thead>
 
@@ -22,14 +22,14 @@
                         <td><strong>{{ $role->name }}</strong></td>
                         <td>{{ $role->description }}</td>
                         <td>
-                            <a href="{{ route('roles.edit', $role->id) }}">actualizar role</a>
+                            <a href="{{ route('roles.edit', $role->id) }}">@lang('messages.update_role')</a>
                         </td>
                         <td>
                             <form method="post" action="{{ route('roles.delete', $role->id) }}"
                                 onsubmit="return confirm('¿Estás seguro de borrar el rol {{ $role->name }}?')">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit">eliminar</button>
+                                <button type="submit">@lang('messages.eliminate')</button>
 
                             </form>
                         </td>
@@ -37,7 +37,7 @@
                 @empty
                     <tr>
                         <td colspan="7" class="text-center text-muted">
-                            No hay roles registrados
+                            @lang('messages.no_role_assigned')
                         </td>
                     </tr>
                 @endforelse

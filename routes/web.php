@@ -6,7 +6,6 @@ use App\Http\Controllers\StripeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 
-
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\HomeController;
@@ -17,290 +16,319 @@ use App\Http\Controllers\AddressController;
 use App\Http\Controllers\CategoryController;
 use App\Models\Role;
 use App\Models\Address;
+use App\Models\Product;
+use App\Models\Order;
+use App\Models\User;
 
-#VISTAS
+#VISTAS PÚBLICAS
 Route::get('/', [HomeController::class, 'index'])->name('home');
-Route::get('/paymentSuccess', [StripeController::class, 'successPayment' ])->name('payments.success');
-Route::get('/paymentError', [StripeController::class, 'cancelPayment' ])->name('payments.cancel');
+Route::get('/paymentSuccess', [StripeController::class, 'successPayment'])->name('payments.success');
+Route::get('/paymentError', [StripeController::class, 'cancelPayment'])->name('payments.cancel');
 
-
-Route::get('home', function(){
+Route::get('home', function () {
     return view('auth.dashboard');
-})->middleware(['auth','verified'])->name('home'); //Es necesario verificar el email para acceder al dashboard (Protegido por el middleware 'verified')
+})->middleware(['auth', 'verified'])->name('home');
 
-#USER CRUD
+Route::get('login', function () {
+    return redirect()->intended('/')->with('openLogin', 'true');
+})->name('login');
+
+
+#USER CRUD — solo admin puede gestionar usuarios desde el panel
 
 Route::get('/users', [UsersController::class, 'index'])
-    ->name('users.index');
+    ->name('users.index')
+    ->middleware(['auth'])->can('viewAny', User::class);
 
 Route::get('/users/create', [UsersController::class, 'create'])
-    ->name('users.create');
+    ->name('users.create')
+    ->middleware(['auth'])->can('create', User::class);
 
 Route::post('/users', [UsersController::class, 'store'])
-    ->name('users.store');
+    ->name('users.store')
+    ->middleware(['auth'])->can('create', User::class);
 
 Route::get("/users/{username}", [UsersController::class, 'show'])
-    ->name('users.show');
+    ->name('users.show')
+    ->middleware(['auth']);
 
 Route::get('/users/{username}/edit', [UsersController::class, 'edit'])
-    ->name('users.edit');
+    ->name('users.edit')
+    ->middleware(['auth']);
 
 Route::put('/users/{id}', [UsersController::class, 'update'])
-    ->name('users.update');
+    ->name('users.update')
+    ->middleware(['auth']);
 
 Route::delete('/users/{id}', [UsersController::class, 'delete'])
-    ->name('users.delete');
+    ->name('users.delete')
+    ->middleware(['auth'])->can('admin-access');
 
-#ROLE
+#ROLE — solo admin
 
 Route::get('/roles', [RolesController::class, 'index'])
-    ->name('roles.index');
-    /*->can('viewAny', Role::class);*/
+    ->name('roles.index')
+    ->middleware(['auth'])->can('admin-access');
 
 Route::get('/roles/create', [RolesController::class, 'create'])
-    ->name('roles.create');
+    ->name('roles.create')
+    ->middleware(['auth'])->can('admin-access');
 
 Route::post('/roles', [RolesController::class, 'store'])
-    ->name('roles.store');
+    ->name('roles.store')
+    ->middleware(['auth'])->can('admin-access');
 
 Route::get("/roles/{role}", [RolesController::class, 'show'])
-    ->name('roles.show');
+    ->name('roles.show')
+    ->middleware(['auth'])->can('admin-access');
 
 Route::get("/roles/{role}/edit", [RolesController::class, 'edit'])
-    ->name('roles.edit');
+    ->name('roles.edit')
+    ->middleware(['auth'])->can('admin-access');
 
 Route::put('/roles/{role}', [RolesController::class, 'update'])
-    ->name('roles.update');
+    ->name('roles.update')
+    ->middleware(['auth'])->can('admin-access');
 
 Route::delete('/roles/{role}', [RolesController::class, 'destroy'])
-    ->name('roles.delete');
+    ->name('roles.delete')
+    ->middleware(['auth'])->can('admin-access');
 
 #ADDRESS
 
 Route::get('/addresses', [AddressController::class, 'index'])
     ->name('addresses.index')
-    /*->can('viewAny', Address::class)*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::get('/addresses/create', [AddressController::class, 'create'])
     ->name('addresses.create')
-    /*->can('create', Address::class)*/;
+    ->middleware(['auth'])->can('create', Address::class);
 
 Route::post('/addresses', [AddressController::class, 'store'])
     ->name('addresses.store')
-    /*->can('create', Address::class)*/;
+    ->middleware(['auth'])->can('create', Address::class);
 
 Route::get("/addresses/user/{username}", [UsersController::class, 'showAddresses'])
-    ->name('addresses.show');
+    ->name('addresses.show')
+    ->middleware(['auth']);
 
 Route::get('/editAddress/{address}', [AddressController::class, 'edit'])
     ->name('addresses.edit')
-    /*->can('update', 'address')*/;
+    ->middleware(['auth'])->can('update', 'address');
 
 Route::put('/updateAddress/{address}', [AddressController::class, 'update'])
     ->name('addresses.update')
-    /*->can('update', 'address')*/;
+    ->middleware(['auth'])->can('update', 'address');
 
 Route::delete('/deleteAddress/{address}', [AddressController::class, 'delete'])
     ->name('addresses.delete')
-    /*->can('delete', 'address')*/;
+    ->middleware(['auth'])->can('delete', 'address');
 
 Route::post('/addProduct/{product}', [OrderController::class, 'addProducttoOrder'])
-    ->name('orders.addProduct');
+    ->name('orders.addProduct')
+    ->middleware(['auth'])->can('create', Order::class);
 
 #CATEGORIES
+
 Route::get('/categories', [CategoryController::class, 'index'])
     ->name('categories.index')
-    /*->can('viewAny', Category::class)*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::get('/categories/create', [CategoryController::class, 'create'])
     ->name('categories.create')
-    /*->can('create', Category::class)*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::post('/categories', [CategoryController::class, 'store'])
     ->name('categories.store')
-    /*->can('create', Category::class)*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::get("/categories/{category}", [CategoryController::class, 'show'])
     ->name('categories.show')
-    /*->can('view', 'category')*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::get('/editCategory/{category}', [CategoryController::class, 'edit'])
     ->name('categories.edit')
-    /*->can('update', 'category')*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::put('/updateCategory/{category}', [CategoryController::class, 'update'])
     ->name('categories.update')
-    /*->can('update', 'category')*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::delete('/deleteCategory/{category}', [CategoryController::class, 'destroy'])
     ->name('categories.delete')
-    /*->can('delete', 'category')*/;
+    ->middleware(['auth'])->can('admin-access');
 
+// Filtrado de productos por categoría — cualquier usuario autenticado
 Route::get('/categories/{category}/products', [ProductController::class, 'indexByCategory'])
-    ->name('categories.products');
-
+    ->name('categories.products')
+    ->middleware(['auth'])->can('viewAny', Product::class);
 
 #PRODUCTS
+
 Route::get('/products', [ProductController::class, 'index'])
     ->name('products.index')
-    /*->can('viewAny', Product::class)*/;
+    ->middleware(['auth'])->can('viewAny', Product::class);
 
 Route::get('/products/create', [ProductController::class, 'create'])
     ->name('products.create')
-    ->middleware('can:admin-access')
-    /*->can('create', Product::class)*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::post('/products', [ProductController::class, 'store'])
     ->name('products.store')
-    ->middleware('can:admin-access')
-    /*->can('create', Product::class)*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::get("/products/{product}", [ProductController::class, 'show'])
-    ->name('products.show')
-    /*->can('view', 'product')*/;
+    ->name('products.show');
 
 Route::get('/editProduct/{product}', [ProductController::class, 'edit'])
     ->name('products.edit')
-    ->middleware('can:admin-access')
-    /*->can('update', 'product')*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::put('/updateProduct/{product}', [ProductController::class, 'update'])
     ->name('products.update')
-    ->middleware('can:admin-access')
-    /*->can('update', 'product')*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::delete('/deleteProduct/{product}', [ProductController::class, 'destroy'])
     ->name('products.delete')
-    ->middleware('can:admin-access')
-    /*->can('delete', 'product')*/;
+    ->middleware(['auth'])->can('admin-access');
 
 #PAYMENTS
+
 Route::get('/payments', [PaymentController::class, 'index'])
     ->name('payments.index')
-    /*->can('viewAny', Payment::class)*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::get('/payments/create', [PaymentController::class, 'create'])
     ->name('payments.create')
-    /*->can('create', Payment::class)*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::post('/payments', [PaymentController::class, 'store'])
     ->name('payments.store')
-    /*->can('create', Payment::class)*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::get("/payments/{payment}", [PaymentController::class, 'show'])
     ->name('payments.show')
-    /*->can('view', 'payment')*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::get('/editPayment/{payment}', [PaymentController::class, 'edit'])
     ->name('payments.edit')
-    /*->can('update', 'payment')*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::put('/updatePayment/{payment}', [PaymentController::class, 'update'])
     ->name('payments.update')
-    /*->can('update', 'payment')*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::delete('/deletePayment/{payment}', [PaymentController::class, 'destroy'])
     ->name('payments.delete')
-    /*->can('delete', 'payment')*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::post('/payments/pay/{order}', [StripeController::class, 'createCheckout'])
-    ->name('payments.pay');
+    ->name('payments.pay')
+    ->middleware(['auth'])->can('create', Order::class);
 
 #ORDERS
+
 Route::get('/orders', [OrderController::class, 'index'])
     ->name('orders.index')
-    /*->can('viewAny', Order::class)*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::get('/orders/create', [OrderController::class, 'create'])
     ->name('orders.create')
-    /*->can('create', Order::class)*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::post('/orders', [OrderController::class, 'store'])
     ->name('orders.store')
-    /*->can('create', Order::class)*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::get("/orders/{order}", [OrderController::class, 'show'])
     ->name('orders.show')
-    /*->can('view', 'order')*/;
+    ->middleware(['auth']);
 
 Route::get('/editOrder/{order}', [OrderController::class, 'edit'])
     ->name('orders.edit')
-    /*->can('update', 'order')*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::put('/updateOrder/{order}', [OrderController::class, 'update'])
     ->name('orders.update')
-    /*->can('update', 'order')*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::delete('/deleteOrder/{order}', [OrderController::class, 'destroy'])
     ->name('orders.delete')
-    /*->can('delete', 'order')*/;
+    ->middleware(['auth'])->can('admin-access');
 
 #ORDER ITEMS
+
 Route::get('/orderitems', [OrderItemController::class, 'index'])
     ->name('orderitems.index')
-    /*->can('viewAny', OrderItem::class)*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::get('/orderitems/create', [OrderItemController::class, 'create'])
     ->name('orderitems.create')
-    /*->can('create', OrderItem::class)*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::post('/orderitems', [OrderItemController::class, 'store'])
     ->name('orderitems.store')
-    /*->can('create', OrderItem::class)*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::get("/orderitems/{orderitem}", [OrderItemController::class, 'show'])
     ->name('orderitems.show')
-    /*->can('view', 'orderitem')*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::get('/editOrderitem/{orderitem}', [OrderItemController::class, 'edit'])
     ->name('orderitems.edit')
-    /*->can('update', 'orderitem')*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::put('/updateOrderitem/{orderitem}', [OrderItemController::class, 'update'])
     ->name('orderitems.update')
-    /*->can('update', 'orderitem')*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::delete('/deleteOrderitem/{orderitem}', [OrderItemController::class, 'destroy'])
     ->name('orderitems.delete')
-    /*->can('delete', 'orderitem')*/;
+    ->middleware(['auth'])->can('admin-access');
 
 Route::get('/carrito', [OrderController::class, 'carrito'])
-    ->name('orders.carrito');
-
+    ->name('orders.carrito')
+    ->middleware(['auth'])->can('create', Order::class);
 
 Route::get('/favoritos', [UsersController::class, 'showFavorites'])
-    ->name('users.favorites');
+    ->name('users.favorites')
+    ->middleware(['auth']);
 
 Route::post('/favoritos/add', [UsersController::class, 'addFavorites'])
-    ->name('users.favorites.add');
+    ->name('users.favorites.add')
+    ->middleware(['auth']);
 
 Route::delete('/favoritos/{product}', [UsersController::class, 'removeFavorites'])
-    ->name('users.favorites.remove');
-Route::post('/cart/increase/{item}', [OrderController::class, 'increaseItem'])->name('cart.increase');
-Route::post('/cart/decrease/{item}', [OrderController::class, 'decreaseItem'])->name('cart.decrease');
+    ->name('users.favorites.remove')
+    ->middleware(['auth']);
 
-//borrar cuando se implemente el login
+Route::post('/cart/increase/{item}', [OrderController::class, 'increaseItem'])
+    ->name('cart.increase')
+    ->middleware(['auth'])->can('create', Order::class);
+
+Route::post('/cart/decrease/{item}', [OrderController::class, 'decreaseItem'])
+    ->name('cart.decrease')
+    ->middleware(['auth'])->can('create', Order::class);
+
 use App\Services\UsersService;
 Route::get('/forzar-login-admin', function () {
     $service = new UsersService();
-    $user = $service->get(1); 
+    $user = $service->get(1);
     Auth::login($user);
     return "Ya estás logueado como Admin";
 });
 
 Route::get('/forzar-login-user', function () {
     $service = new UsersService();
-    $user = $service->get(2); 
+    $user = $service->get(2);
     Auth::login($user);
     return "Ya estás logueado como User";
 });
 
-//ControlPanel
-
 Route::get('/controlPanel', [ControlPanelController::class, 'index'])
-    ->name('controlPanel.dashboard');
+    ->name('controlPanel.dashboard')
+    ->middleware(['auth'])->can('admin-access');
 
-//Idiomas y traducciones
 Route::get('/lang/{locale}', function ($locale) {
     if (!in_array($locale, ['en', 'es'])) {
         abort(400);
