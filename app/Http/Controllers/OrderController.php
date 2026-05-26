@@ -22,16 +22,22 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+   public function index()
     {
         $user = auth()->user();
-        if ($user->role_id == 1) { 
+
+        
+        if ($user->roles->contains('id', 1)) { 
+            
             $orders = Order::where('status', '!=', 'pending')
                         ->orderBy('created_at', 'desc')
                         ->get();
-            return view('admin.orders.index', compact('orders')); // Una vista de tabla/gestión
+                        
+            
+            return view('orders.index', compact('orders')); 
         }
 
+        
         $orders = Order::where('user_id', $user->id)
                     ->where('status', '!=', 'pending')
                     ->orderBy('created_at', 'desc')

@@ -64,16 +64,27 @@ class UsersController extends Controller
      * Display the specified resource.
      */
     public function show(string $username)
-    {
-        try {
-            $user = $this->userService->getUserByUsername($username);
-            $users = [$user];
-            return view('users.listUsers', compact('users'));
-        } catch (Exception $e) {
-            $msg = $e->getMessage();
-            return view('users.listUsers', compact('msg'));
+{
+    try {
+        
+        $user = $this->userService->getUserByUsername($username);
+        $authUser = auth()->user();
+
+        if ($authUser->roles->contains('id', 2) && $authUser->username !== $username) {
+            abort(403, 'Acceso denegado: No puedes ver el perfil de otro usuario.');
         }
+
+        if ($authUser->roles->contains('id', 1)) {
+            $users = [$user]; 
+            return view('users.listUsers', compact('users'));
+        }
+
+        return view('users.profile', compact('user'));
+
+    } catch (Exception $e) {
+        return redirect()->route('home')->with('error', 'No se pudo cargar el perfil: ' . $e->getMessage());
     }
+}
 
     public function show_by_username(string $username)
     {

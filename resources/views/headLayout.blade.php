@@ -7,7 +7,7 @@
     <link rel="icon" type="image/png" href="{{ asset('storage/media/images/HANG.png') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    @vite(['resources/css/app.scss', 'resources/js/app.js'])
+    @vite(['resources/css/app.scss','resources/css/tailwind.css' ,'resources/js/app.js'])
 
     <script>
         window.LaravelConfig = {
