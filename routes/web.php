@@ -118,7 +118,7 @@ Route::get("/addresses/user/{username}", [UsersController::class, 'showAddresses
 
 Route::get('/editAddress/{address}', [AddressController::class, 'edit'])
     ->name('addresses.edit')
-    ->middleware(['auth'])->can('update', 'address');
+    ->middleware(['auth']);
 
 Route::put('/updateAddress/{address}', [AddressController::class, 'update'])
     ->name('addresses.update')
@@ -126,7 +126,7 @@ Route::put('/updateAddress/{address}', [AddressController::class, 'update'])
 
 Route::delete('/deleteAddress/{address}', [AddressController::class, 'delete'])
     ->name('addresses.delete')
-    ->middleware(['auth'])->can('delete', 'address');
+    ->middleware(['auth']);
 
 Route::post('/addProduct/{product}', [OrderController::class, 'addProducttoOrder'])
     ->name('orders.addProduct')

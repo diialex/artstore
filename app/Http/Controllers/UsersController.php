@@ -119,17 +119,14 @@ class UsersController extends Controller
      */
     public function update(UpdateUsersRequest $request, string $id)
     {   
-    try {
-        $user = $this->userService->get($id);
+        try {
+            $user = $this->userService->get($id);
+            $authUser = auth()->user();
 
-        $user->username = $request->username;
-        $user->name     = $request->name;
-        $user->email    = $request->email;
-        $user->phone    = $request->phone;
-
-        if ($request->filled('password')) {
-            $user->password = User::encryptPassword($request->password);
-        }
+            // SEGURIDAD (IDOR): ¿es este usuario el dueño del perfil o un admin?
+            if ($authUser->roles->contains('id', 2) && $authUser->id !== $user->id) {
+                abort(403, 'No tienes permiso para modificar este perfil.');
+            }
 
             $user->username = $request->username;
             $user->name     = $request->name;
@@ -140,18 +137,24 @@ class UsersController extends Controller
                 $user->password = Hash::make($request->password);
             }
 
-            $this->userService->update($user, $request->role);
+            // toque de ciberseguridad ;) (Escalada de Privilegios): 
+            // Solo cogemos el rol del formulario si quien está ejecutando la acción es un ADMIN
+            $roleToUpdate = $authUser->roles->contains('id', 1) ? $request->role : null;
+            
+            
+            $this->userService->update($user, $roleToUpdate);
 
         } catch (\Throwable $e) {
-            dd([
-                'Mensaje' => $e->getMessage(),
-                'Archivo' => $e->getFile(),
-                'Linea'   => $e->getLine(),
-                'Datos_Enviados' => $request->all()
-            ]);
+            //  es mejor registrar en el Log y no hacer un dd() que detenga la app
+            \Log::error('Error actualizando usuario: ' . $e->getMessage());
+            return back()->with('error', 'Error al actualizar el perfil.');
         }
 
-        return redirect('/users')->with('msg', 'Usuario actualizado con éxito');
+        if ($authUser->roles->contains('id', 1)) {
+            return redirect('/users')->with('msg', 'Usuario actualizado con éxito');
+        } else {
+            return redirect()->route('users.show', $user->username)->with('msg', 'Perfil actualizado con éxito');
+        }
     }
 
     /**
@@ -175,6 +178,10 @@ class UsersController extends Controller
 
     public function showAddresses(string $username){
         $user = $this->userService->getUserByUsername($username);
+    $authUser = auth()->user();
+        
+        
+        
         $addresses = $user->addresses;
         return view('addresses.listAddresses', compact('addresses'));
     }
