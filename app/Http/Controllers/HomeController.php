@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\CategoryService;
 use App\Services\RolesService;
 use Database\Seeders\RolesSeeder;
 use Illuminate\View\View;
@@ -10,10 +11,11 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
 use File;
+use Cache;
 
 class HomeController extends Controller
 {
-    public function __construct(protected ProductService $productService)
+    public function __construct(protected ProductService $productService, protected CategoryService $categoryService)
     {
     }
 
@@ -21,9 +23,9 @@ class HomeController extends Controller
     {
         $categoryId = $request->input('category');
 
-        $products = $this->productService->getAll($categoryId);
+        $products = Cache::rememberForever("products:all", fn() => $this->productService->getAll());
 
-        $categories = Category::all();
+        $categories = Cache::rememberForever("categories:all", fn() => $this->categoryService->getAll());
 
         $carouselPath = storage_path('app/public/media/carrusel');
         $carouselImages = [];

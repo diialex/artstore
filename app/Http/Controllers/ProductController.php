@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\CategoryService;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use App\Services\ProductService;
 use App\Http\Requests\Product\CreateProductRequest; 
 use App\Http\Requests\Product\UpdateProductRequest; 
+use Cache;
+
 
 class ProductController extends Controller
 {
@@ -15,18 +18,24 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     
-    public function __construct(protected ProductService $productService)
+    public function __construct(protected ProductService $productService, protected CategoryService $categoryService)
     {
         $this->productService = $productService;
+        $this->categoryService = $categoryService;
     }
     
     public function index(Request $request)
     {
         $categoryId=$request->input('category');
+        
+        $categories = Cache::rememberForever("categories:all", fn() => $this->categoryService->getAll());
 
-        $products = $this->productService->getAll($categoryId);
-
-        $categories = Category::all(); 
+        if ($categoryId != nullOrEmptyString()){
+            $products = Cache::remember("products:{$categoryId}", 3600, fn() => $this->productService->getAll($categoryId));
+        }else{
+            $products = Cache::rememberForever("products:all", fn() => $this->productService->getAll());
+        }
+        
         return view('products.index', compact('products', 'categories', 'categoryId')); 
     }
 
@@ -71,7 +80,9 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-         $categories = Category::all();
+        $categories = Cache::rememberForever("categories:all", fn() => $this->categoryService->getAll());
+
+        Cache::forget('productos:all');
 
         return view('products.form', compact('product', 'categories'));
     }
@@ -83,6 +94,8 @@ class ProductController extends Controller
     {
         $this->productService->update($product, $request->validated());
 
+        Cache::forget('productos:all');
+
         return redirect()->route('products.index')->with('success', 'Producto actualizado correctamente');
     }
 
@@ -92,6 +105,8 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $this->productService->delete($product);
+
+        Cache::forget('productos:all');
 
         return redirect()->route('products.index')->with('success', 'Producto eliminado para siempre');
     }
