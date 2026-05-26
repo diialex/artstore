@@ -1,82 +1,98 @@
-<div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden producto-card">
+<div class="bg-white h-full border border-gray-100 shadow-sm rounded-2xl overflow-hidden flex flex-col transition-all duration-300 hover:-translate-y-1 hover:shadow-lg group">
     
-    <a href="{{ route('products.show', $product) }}" class="text-decoration-none text-dark d-flex flex-column h-100">
+    <a href="{{ route('products.show', $product) }}" class="flex flex-col h-full focus:outline-none">
         
-        @if($product->image_url)
-            <img src="{{ asset($product->image_url) }}" 
-                         class="img-fluid w-100 object-fit-cover" 
-                         alt="{{ $product->title }}" 
-                         style="height: 250px;">
-        @else
-            <div class="card-img-top bg-light d-flex align-items-center justify-content-center text-muted border-bottom" 
-                 style="height: 250px;">
-                <span><i class="bi bi-camera me-2"></i>@lang('messages.no_image')</span>
-            </div>
-        @endif
+        <div class="relative h-[250px] w-full bg-gray-50 overflow-hidden">
+            @if($product->image_url)
+                <img src="{{ asset($product->image_url) }}" 
+                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                     alt="{{ $product->title }}">
+            @else
+                <div class="w-full h-full flex items-center justify-center text-gray-400 border-b border-gray-100">
+                    <span class="flex items-center gap-2"><i class="bi bi-camera"></i>@lang('messages.no_image')</span>
+                </div>
+            @endif
+        </div>
 
-        <div class="card-body d-flex flex-column mt-2">
-            <h5 class="card-title fw-bold fs-4">{{ $product->title }}</h5>
-            <p class="card-text text-muted small flex-grow-1">{{ Str::limit($product->description, 80) }}</p>
+        <div class="p-5 flex flex-col flex-grow">
+            <h5 class="text-xl font-bold text-gray-900 mb-2 leading-tight group-hover:text-primary transition-colors">
+                {{ $product->title }}
+            </h5>
+            <p class="text-sm text-gray-500 flex-grow mb-4">
+                {{ Str::limit($product->description, 80) }}
+            </p>
             
-            <div class="d-flex justify-content-between align-items-center mt-3 mb-2">
-                <span class="fs-4 fw-bold text-dark">{{ number_format($product->price, 2) }} €</span>
-                <span class="badge bg-success rounded-pill px-3 py-2">Stock: {{ $product->total_stock ?? $product->stock ?? 0 }}</span>
+            <div class="flex justify-between items-center mt-auto">
+                <span class="text-xl font-black text-dark">{{ number_format($product->price, 2) }} €</span>
+                <span class="bg-success bg-opacity-20 text-green-800 text-xs font-bold px-3 py-1.5 rounded-full">
+                    Stock: {{ $product->total_stock ?? $product->stock ?? 0 }}
+                </span>
             </div>
         </div>
     </a>
     
-    <div class="card-footer bg-white border-0 pt-0 pb-4 px-3 mt-auto">
+    <div class="p-5 pt-0 bg-white mt-auto">
         
         @guest
-            <a href="#" data-bs-toggle="offcanvas" data-bs-target="#iniciarSesion" class="btn btn-outline-dark w-100 fw-bold rounded-pill">
-                <i class="bi bi-box-arrow-in-right me-2"></i>@lang('messages.login_to_buy')
+            <a href="#" data-bs-toggle="offcanvas" data-bs-target="#iniciarSesion" 
+               class="w-full inline-flex justify-center items-center px-4 py-2.5 border-2 border-dark text-dark font-bold rounded-full hover:bg-dark hover:text-white transition-colors">
+                <i class="bi bi-box-arrow-in-right mr-2"></i>@lang('messages.login_to_buy')
             </a>
         @endguest
 
         @auth
             @if(auth()->user()->roles->contains('id', 1)) 
-                <div class="d-flex gap-2 mt-2 pt-2 border-top">
-                    <a href="{{ route('products.edit', $product) }}" class="btn btn-outline-warning btn-sm flex-fill fw-bold rounded-pill">
-                        <i class="bi bi-pencil me-1"></i> @lang('messages.edit_product')
+                <div class="flex gap-2 mt-2 pt-4 border-t border-gray-100">
+                    <a href="{{ route('products.edit', $product) }}" class="flex-1 inline-flex justify-center items-center px-3 py-2 bg-amber-50 text-amber-700 border border-amber-200 rounded-full text-sm font-bold hover:bg-amber-100 transition-colors">
+                        <i class="bi bi-pencil mr-1"></i> @lang('messages.edit_product')
                     </a>
                     
-                    <form action="{{ route('products.delete', $product) }}" method="POST" class="flex-fill" onsubmit="return confirm('¿Estás seguro de que quieres aniquilar este producto?');">
+                    <form action="{{ route('products.delete', $product) }}" method="POST" class="flex-1 m-0" onsubmit="return confirm('¿Estás seguro de que quieres aniquilar este producto?');">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-outline-danger btn-sm w-100 fw-bold rounded-pill">
-                            <i class="bi bi-trash3 me-1"></i> @lang('messages.delete_product')
+                        <button type="submit" class="w-full inline-flex justify-center items-center px-3 py-2 bg-red-50 text-red-600 border border-red-200 rounded-full text-sm font-bold hover:bg-red-600 hover:text-white transition-colors">
+                            <i class="bi bi-trash3 mr-1"></i> @lang('messages.delete_product')
                         </button>
                     </form>
                 </div>
             @endif
 
             @if(auth()->user()->roles->contains('id', 2))
-                <div class="d-flex gap-2 align-items-center">
+                <div class="flex gap-2 items-center">
                     
-                    <form action="{{ route('orders.addProduct', $product) }}" method="POST" class="flex-fill m-0">
+                    <form action="{{ route('orders.addProduct', $product) }}" method="POST" class="flex-1 m-0">
                         @csrf
-                        <button type="submit" class="btn btn-dark w-100 fw-bold rounded-pill py-2 text-uppercase tracking-wide">
-                            <i class="bi bi-cart-plus me-2"></i>@lang('messages.add_to_cart')
+                        <button type="submit" class="w-full inline-flex justify-center items-center px-4 py-2.5 bg-dark text-white font-bold rounded-full uppercase tracking-wider text-sm hover:bg-opacity-90 hover:shadow-md transition-all">
+                            <i class="bi bi-cart-plus mr-2"></i>@lang('messages.add_to_cart')
                         </button>
                     </form>
 
-                    @if($isFavoritesPage ?? false)
-                        <form action="{{ route('users.favorites.remove', $product) }}" method="POST" class="m-0" onsubmit="return confirm('¿Eliminar de favoritos?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-outline-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;" title="Eliminar de favoritos">
-                                <i class="bi bi-heart-fill fs-5"></i>
-                            </button>
-                        </form>
-                    @else
-                        <form action="{{ route('users.favorites.add') }}" method="POST" class="m-0 add-favorite-form">
-                            @csrf
-                            <input type="hidden" name="product_id" value="{{ $product->id }}">
-                            <button type="submit" class="btn btn-outline-danger rounded-circle d-flex align-items-center justify-content-center" style="width: 44px; height: 44px;" title="Añadir a favoritos">
-                                <i class="bi bi-heart fs-5"></i>
-                            </button>
-                        </form>
-                    @endif
+                    @php
+                        $isFavorited = false;
+                        if (auth()->check()) {
+                            $favoriteList = auth()->user()->favoriteList;
+                            $savedProducts = $favoriteList ? $favoriteList->products : [];
+                            if (!empty($savedProducts)) {
+                                $isFavorited = collect($savedProducts)->contains(function ($item) use ($product) {
+                                    return is_array($item) ? ($item['id'] ?? null) == $product->id : $item == $product->id;
+                                });
+                            }
+                        }
+                    @endphp
+
+                    <form action="{{ $isFavorited ? route('users.favorites.remove', $product->id) : route('users.favorites.add') }}" method="POST" class="m-0 js-favorite-form">
+                        @csrf
+                        @if($isFavorited) @method('DELETE') @endif
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        
+                        <button type="submit" class="js-favorite-btn bg-transparent border-0 p-2 flex items-center justify-center transition-transform duration-300 hover:scale-125 focus:outline-none" title="Favoritos">
+                            @if($isFavorited)
+                                <i class="bi bi-heart-fill text-primary text-2xl drop-shadow-md animate-pulse icon-heart"></i>
+                            @else
+                                <i class="bi bi-heart text-gray-400 hover:text-primary text-2xl drop-shadow-sm transition-colors icon-heart"></i>
+                            @endif
+                        </button>
+                    </form>
 
                 </div>
             @endif
