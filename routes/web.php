@@ -288,7 +288,7 @@ Route::put('/updateOrderitem/{orderitem}', [OrderItemController::class, 'update'
 
 Route::delete('/deleteOrderitem/{orderitem}', [OrderItemController::class, 'destroy'])
     ->name('orderitems.delete')
-    ->middleware(['auth'])->can('admin-access');
+    ->middleware(['auth']);
 
 Route::get('/carrito', [OrderController::class, 'carrito'])
     ->name('orders.carrito')

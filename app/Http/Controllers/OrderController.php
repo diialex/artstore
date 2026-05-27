@@ -55,30 +55,34 @@ class OrderController extends Controller
     }
     public function addProducttoOrder(Request $request, Product $product)
     {
+        // este producto tiene tallas en la base de datos?
+        $hasSizes = $product->sizes()->exists();
+
         $request->validate([
-            'size_id' => 'required|exists:sizes,id',
+            // Si tiene tallas es obligatorio. Si no, permitimos null.
+            'size_id' => $hasSizes ? 'required|exists:sizes,id' : 'nullable', 
         ]);
 
         $size_id = $request->size_id;
         $user = Auth::user();
- 
 
         $order = Order::where('user_id', $user->id)
-                      ->whereIn('status', ['pending', 'failed'])
-                      ->first();
+                    ->whereIn('status', ['pending', 'failed'])
+                    ->first();
 
         if (!$order) {
             $order = new Order;
             $order->total_amount = 0;
-            $order->status = 'pending'; // Aseguramos que empiece como pendiente
+            $order->status = 'pending';
             $order->user()->associate($user);
             $order->save();
         }
 
+        // Buscamos si ya existe este producto con esta talla (o sin talla) en el carrito
         $item = $order->items()
-                      ->where('product_id', $product->id)
-                      ->where('size_id', $size_id)
-                      ->first();
+                    ->where('product_id', $product->id)
+                    ->where('size_id', $size_id)
+                    ->first();
         
         if ($item) {
             $item->quantity += 1;
@@ -89,11 +93,17 @@ class OrderController extends Controller
             $item->price = $product->price;
             $item->order()->associate($order);
             $item->product()->associate($product);
-            $item->size()->associate($size_id);
+            
+            // Solo asociamos la talla si realmente nos enviaron una
+            if ($size_id) {
+                $item->size()->associate($size_id);
+            }
+            
             $item->save();
         }
 
         $this->updateOrder($order);
+        
         return redirect()->route('orders.carrito')->with('success', 'Producto agregado exitosamente.');
     }
 
@@ -193,11 +203,12 @@ class OrderController extends Controller
 
     public function increaseItem(OrderItem $item)
     {
-        if($item->size->stock>$item->quantity){
+        $availableStock = $item->size ? $item->size->stock : $item->product->stock;
+
+        if($availableStock > $item->quantity){
             $item->quantity += 1;
             $item->save();
         }
-        
         
         $this->orderService->updateOrderTotal($item->order);
         

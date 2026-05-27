@@ -83,9 +83,13 @@ class OrderItemController extends Controller
      */
     public function destroy(int $id)
     {
-       $item = $this->service->find($id);
+        $item = $this->service->find($id);
         $order = $item->order; 
         
+        if($order->user_id !== auth()->id()) {
+            abort(403, 'No tienes permiso para modificar el carrito de otra persona >:(.');
+        }
+
         $this->service->delete($id);
     
         $this->orderService->updateOrderTotal($order);
