@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\CategoryService;
+use App\Services\GuestCartService;
+use App\Services\RedisService;
 use App\Services\RolesService;
 use Database\Seeders\RolesSeeder;
 use Illuminate\View\View;
@@ -10,20 +13,23 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Services\ProductService;
 use File;
+use Cache;
+use App\Constants\RedisConstants;
 
 class HomeController extends Controller
 {
-    public function __construct(protected ProductService $productService)
+    public function __construct(protected ProductService $productService, protected CategoryService $categoryService)
     {
     }
 
     public function index(Request $request): View
     {
+        
         $categoryId = $request->input('category');
 
-        $products = $this->productService->getAll($categoryId);
+        $products = RedisService::getProducts();
 
-        $categories = Category::all();
+        $categories = RedisService::getCategories();
 
         $carouselPath = storage_path('app/public/media/carrusel');
         $carouselImages = [];

@@ -45,23 +45,44 @@
                                 <span class="text-muted me-3">{{ number_format($item->price, 2) }} €</span>
                                 
                                 <div class="d-flex align-items-center border border-secondary rounded-pill px-2 py-1">
+                                    @auth
                                     <form action="{{ route('cart.decrease', $item) }}" method="POST" class="m-0">
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-link text-dark text-decoration-none px-2 shadow-none border-0">
                                             <i class="bi bi-dash-lg"></i>
                                         </button>
                                     </form>
-                                    
+                                    @else
+                                    <form action="{{ route('cart.guest.decrease') }}" method="POST" class="m-0">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $item->product_id }}">
+                                        <button type="submit" class="btn btn-sm btn-link text-dark text-decoration-none px-2 shadow-none border-0">
+                                            <i class="bi bi-dash-lg"></i>
+                                        </button>
+                                    </form>
+                                    @endauth
+
                                     <span class="mx-2 fw-bold text-center" style="min-width: 20px;">{{ $item->quantity }}</span>
-                                    
+
+                                    @auth
                                     <form action="{{ route('cart.increase', $item) }}" method="POST" class="m-0">
                                         @csrf
                                         <button type="submit" class="btn btn-sm btn-link text-dark text-decoration-none px-2 shadow-none border-0">
                                             <i class="bi bi-plus-lg"></i>
                                         </button>
                                     </form>
+                                    @else
+                                    <form action="{{ route('cart.guest.increase') }}" method="POST" class="m-0">
+                                        @csrf
+                                        <input type="hidden" name="product_id" value="{{ $item->product_id }}">
+                                        <button type="submit" class="btn btn-sm btn-link text-dark text-decoration-none px-2 shadow-none border-0">
+                                            <i class="bi bi-plus-lg"></i>
+                                        </button>
+                                    </form>
+                                    @endauth
                                 </div>
                             </div>
+                            @auth
                             <form action="{{ route('orderitems.delete', $item->id) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
@@ -69,6 +90,16 @@
                                     <i class="bi bi-trash3 me-1"></i> @lang('messages.eliminate')
                                 </button>
                             </form>
+                            @else
+                            <form action="{{ route('cart.guest.decrease') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $item->product_id }}">
+                                <input type="hidden" name="remove_all" value="1">
+                                <button type="submit" class="btn btn-link text-danger p-0 text-decoration-none small text-uppercase fw-bold tracking-wide">
+                                    <i class="bi bi-trash3 me-1"></i> @lang('messages.eliminate')
+                                </button>
+                            </form>
+                            @endauth
                         </div>
                         <div class="col-12 col-md-3 text-md-end mt-3 mt-md-0">
                             <span class="fs-4 fw-bold">{{ number_format($item->price * $item->quantity, 2) }} €</span>
@@ -96,25 +127,26 @@
 
                     <p class="small text-muted mb-4">@lang('messages.ivaincluded')</p>
                     
+                    @auth
                     <form method="post" action="{{ route('payments.pay', $order) }}">
                         @csrf
-                        
+
                         <style>
                             .seccion-nueva-dir, .seccion-guardada-dir { display: none; margin-top: 15px; }
-            
+
                             #modo_guardada:checked ~ .seccion-guardada-dir { display: block; }
                             #modo_nueva:checked ~ .seccion-nueva-dir { display: block; }
                         </style>
 
                         <div class="mb-4">
                             <label class="form-label small fw-bold text-uppercase tracking-wide mb-3 d-block">@lang('messages.sendaddress')</label>
-                            
+
                             @if(auth()->user()->addresses && auth()->user()->addresses->count() > 0)
                                 <input class="form-check-input border-dark shadow-none me-1" type="radio" name="address_mode" id="modo_guardada" value="saved" checked>
                                 <label class="form-check-label fw-bold me-4 cursor-pointer" for="modo_guardada">
                                     @lang('messages.savedaddresses')
                                 </label>
-                                
+
                                 <input class="form-check-input border-dark shadow-none me-1" type="radio" name="address_mode" id="modo_nueva" value="new" {{ old('address_mode') == 'new' ? 'checked' : '' }}>
                                 <label class="form-check-label fw-bold cursor-pointer" for="modo_nueva">
                                     @lang('messages.newaddress')
@@ -156,6 +188,11 @@
                             @lang('messages.tramit_pedido') <i class="bi bi-arrow-right ms-2"></i>
                         </button>
                     </form>
+                    @else
+                    <button type="button" data-bs-toggle="offcanvas" data-bs-target="#iniciarSesion" class="btn btn-dark w-100 py-3 rounded-pill fw-bold fs-5 text-uppercase tracking-wide btn-hover-scale mt-2">
+                        Inicia sesión para finalizar el pedido <i class="bi bi-arrow-right ms-2"></i>
+                    </button>
+                    @endauth
                     
                     <div class="text-center mt-4 text-muted small">
                         <i class="bi bi-shield-check me-1"></i> @lang('messages.savepay')

@@ -84,6 +84,7 @@
                             @endforeach
                         </div>
                     </div>
+                    @endif
 
                     <div class="js-size-warning hidden text-red-500 text-sm font-bold uppercase tracking-wider text-center mb-4">
                         <i class="bi bi-exclamation-triangle mr-1"></i> Por favor, selecciona una talla
