@@ -1,67 +1,104 @@
 @extends('layout')
 @section('title', 'Inicio')
 @section('content')
-    <main>
+    <main class="w-full">
         @if(!request('category'))
-            <div id="carouselExampleIndicators" class="carousel slide position-relative" data-bs-ride="carousel" data-bs-interval="6000" data-bs-pause="false">
-                <div class="position-absolute top-0 start-50 translate-middle-x" style="z-index: 10; margin-top: 20px;">
-                    <img src="{{ asset('storage/media/images/HG.png') }}" alt="Logo" style="max-height: 200px; width: auto; object-fit: contain;">
+            <div class="relative w-full h-[60vh] min-h-[400px] overflow-hidden js-hero-slider bg-dark">
+                <div class="absolute top-10 left-1/2 transform -translate-x-1/2 z-20 pointer-events-none">
+                    <img src="{{ asset('storage/media/images/HG.png') }}" alt="Logo" class="max-h-[200px] w-auto object-contain drop-shadow-2xl filter contrast-125">
                 </div>
                 
-                <div class="carousel-indicators">
+                <div class="relative w-full h-full">
                     @foreach($carouselImages as $index => $image)
-                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ $index }}" @if($index === 0) class="active" aria-current="true" @endif aria-label="Slide {{ $index + 1 }}"></button>
+                        <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out js-slide {{ $index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' }}">
+                            <img src="{{ asset($image) }}" class="w-full h-full object-cover object-center" alt="Slide {{ $index + 1 }}" />
+                            <div class="absolute inset-0 bg-black/20"></div> </div>
                     @endforeach
                 </div>
                 
-                <div class="carousel-inner">
+                <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20 flex gap-3">
                     @foreach($carouselImages as $index => $image)
-                        <div class="carousel-item @if($index === 0) active @endif">
-                            <img src="{{ asset($image) }}" class="d-block w-100 h-25 banner-img" alt="Carousel image {{ $index + 1 }}" />
-                        </div>
+                        <button type="button" class="w-12 h-1.5 rounded-full transition-all duration-300 js-slide-indicator {{ $index === 0 ? 'bg-white shadow-[0_0_10px_rgba(255,255,255,0.8)]' : 'bg-white/40 hover:bg-white/70' }}" data-slide="{{ $index }}" aria-label="Ir al slide {{ $index + 1 }}"></button>
                     @endforeach
                 </div>
             </div>
 
-            <div class="row g-4 m-0 px-2 px-md-5 mt-4">
-                <div class="col-12">
-                    <p class="d-none d-md-block display-5 mb-0 text-uppercase tracking-wide">@lang('messages.categories')</p>
-                    <hr class="border-dark border-2 opacity-100">
+            <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 mt-12 mb-8">
+                <div class="mb-8">
+                    <h2 class="text-3xl md:text-4xl font-black uppercase tracking-widest text-dark">@lang('messages.categories')</h2>
+                    <div class="h-1 w-full bg-dark mt-3"></div>
                 </div>
 
-                @foreach($categories as $category)
-                    <div class="col-12 col-sm-6 col-lg-4">
-                        <a href="{{ route('home', ['category' => $category->id]) }}" class="text-decoration-none">
-                            <div class="ratio ratio-1x1 position-relative overflow-hidden rounded-4 shadow-sm tarjeta-categoria" style="cursor: pointer;">
-                                <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" class="object-fit-cover w-100 h-100 transition-transform">
-                                <div class="position-absolute top-0 start-0 w-100 h-100 bg-dark opacity-50 transition-opacity hover-opacity-25"></div>
-                                <div class="position-absolute d-flex align-items-center justify-content-center text-white w-100 h-100">
-                                    <h3 class="fs-1 fw-bolder m-0 p-2 text-center text-uppercase tracking-wide">{{ $category->name }}</h3>
-                                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($categories as $category)
+                        <a href="{{ route('home', ['category' => $category->id]) }}" class="block group relative aspect-square rounded-2xl overflow-hidden shadow-sm cursor-pointer">
+                            <img src="{{ asset($category->image) }}" alt="{{ $category->name }}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105">
+                            
+                            <div class="absolute inset-0 bg-dark/50 transition-colors duration-500 group-hover:bg-dark/25"></div>
+                            
+                            <div class="absolute inset-0 flex items-center justify-center p-4">
+                                <h3 class="text-white text-3xl md:text-4xl font-black uppercase tracking-widest text-center drop-shadow-lg">{{ $category->name }}</h3>
                             </div>
                         </a>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
         @endif
 
-        <div class="row g-4 m-0 px-2 px-md-5 {{ request('category') ? 'mt-2' : 'mt-5' }}">
-            <div class="col-12">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 {{ request('category') ? 'mt-8' : 'mt-16' }} mb-20">
+            <div class="mb-8">
                 @php
                     $titulo = request('category') ? $categories->where('id', request('category'))->first()->name : trans('messages.all_products');
                 @endphp
-                <p class="d-block d-md-none display-6 mb-0 text-uppercase tracking-wide">{{ $titulo }}</p>
-                <p class="d-none d-md-block display-5 mb-0 text-uppercase tracking-wide">{{ $titulo }}</p>
-                <hr class="border-dark border-2 opacity-100">
+                <h2 class="text-3xl md:text-4xl font-black uppercase tracking-widest text-dark">{{ $titulo }}</h2>
+                <div class="h-1 w-full bg-dark mt-3"></div>
             </div>
 
-            @foreach($products as $product)
-                <div class="col-md-4 mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                @foreach($products as $product)
                     @include('partials.product-card', ['product' => $product])
-                </div>
-            @endforeach
+                @endforeach
+            </div>
         </div>
     </main>
 
     <script src="lib/own/videoHover.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const slides = document.querySelectorAll('.js-slide');
+            const indicators = document.querySelectorAll('.js-slide-indicator');
+            let currentSlide = 0;
+            let slideInterval;
+
+            if (slides.length > 1) {
+                function goToSlide(index) {
+                    slides[currentSlide].classList.remove('opacity-100', 'z-10');
+                    slides[currentSlide].classList.add('opacity-0', 'z-0');
+                    indicators[currentSlide].classList.remove('bg-white', 'shadow-[0_0_10px_rgba(255,255,255,0.8)]');
+                    indicators[currentSlide].classList.add('bg-white/40');
+
+                    currentSlide = index;
+
+                    slides[currentSlide].classList.remove('opacity-0', 'z-0');
+                    slides[currentSlide].classList.add('opacity-100', 'z-10');
+                    indicators[currentSlide].classList.remove('bg-white/40');
+                    indicators[currentSlide].classList.add('bg-white', 'shadow-[0_0_10px_rgba(255,255,255,0.8)]');
+                }
+
+                function nextSlide() {
+                    goToSlide((currentSlide + 1) % slides.length);
+                }
+
+                slideInterval = setInterval(nextSlide, 6000);
+
+                indicators.forEach((indicator, index) => {
+                    indicator.addEventListener('click', () => {
+                        clearInterval(slideInterval);
+                        goToSlide(index);
+                        slideInterval = setInterval(nextSlide, 6000); // Reiniciar temporizador
+                    });
+                });
+            }
+        });
+    </script>
 @endsection

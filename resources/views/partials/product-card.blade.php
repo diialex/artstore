@@ -36,10 +36,10 @@
     <div class="p-5 pt-0 bg-white mt-auto">
         
         @guest
-            <a href="#" data-bs-toggle="offcanvas" data-bs-target="#iniciarSesion" 
-               class="w-full inline-flex justify-center items-center px-4 py-2.5 border-2 border-dark text-dark font-bold rounded-full hover:bg-dark hover:text-white transition-colors">
+            <button type="button" onclick="toggleMenu('iniciarSesion')" 
+                    class="w-full inline-flex justify-center items-center px-4 py-2.5 border-2 border-[#212529] text-[#212529] font-bold rounded-full hover:bg-[#212529] hover:text-white transition-colors cursor-pointer">
                 <i class="bi bi-box-arrow-in-right mr-2"></i>@lang('messages.login_to_buy')
-            </a>
+            </button>
         @endguest
 
         @auth
