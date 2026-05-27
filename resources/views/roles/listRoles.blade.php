@@ -55,7 +55,7 @@
                                         <i class="bi bi-pencil"></i>
                                     </a>
                                     
-                                    <form method="post" action="{{ route('roles.delete', $role->id) }}" class="m-0" onsubmit="return confirm('¿Estás seguro de borrar el rol {{ uppercase($role->name) }}? Esto podría afectar a los usuarios que lo tengan asignado.');">
+                                    <form method="post" action="{{ route('roles.delete', $role->id) }}" class="m-0" onsubmit="return confirm('¿Estás seguro de borrar el rol {{ strtoupper($role->name) }}? Esto podría afectar a los usuarios que lo tengan asignado.');">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="w-9 h-9 flex items-center justify-center rounded-lg bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-colors" title="Borrar">
                                             <i class="bi bi-trash3"></i>

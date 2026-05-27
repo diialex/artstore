@@ -69,7 +69,7 @@
                             <input type="checkbox" name="roles[]" value="{{ $role->id }}" id="role_{{ $role->id }}"
                                    {{ (is_array(old('roles')) && in_array($role->id, old('roles'))) ? 'checked' : '' }}
                                    class="w-5 h-5 rounded border-gray-300 text-dark focus:ring-dark transition-all">
-                            <span class="text-sm font-bold text-gray-700 group-hover:text-dark transition-colors">{{ uppercase($role->name) }}</span>
+                            <span class="text-sm font-bold text-gray-700 group-hover:text-dark transition-colors">{{ strtoupper($role->name) }}</span>
                         </label>
                     @endforeach
                 </div>
