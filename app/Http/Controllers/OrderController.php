@@ -24,16 +24,22 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+   public function index()
     {
         $user = auth()->user();
-        if ($user->role_id == 1) { 
+
+        
+        if ($user->roles->contains('id', 1)) { 
+            
             $orders = Order::where('status', '!=', 'pending')
                         ->orderBy('created_at', 'desc')
                         ->get();
-            return view('admin.orders.index', compact('orders')); // Una vista de tabla/gestión
+                        
+            
+            return view('orders.index', compact('orders')); 
         }
 
+        
         $orders = Order::where('user_id', $user->id)
                     ->where('status', '!=', 'pending')
                     ->orderBy('created_at', 'desc')
@@ -51,47 +57,57 @@ class OrderController extends Controller
     }
     public function addProducttoOrder(Request $request, Product $product)
     {
+        // este producto tiene tallas en la base de datos?
+        $hasSizes = $product->sizes()->exists();
+
         $request->validate([
-            'size_id' => 'required|exists:sizes,id',
+            // Si tiene tallas es obligatorio. Si no, permitimos null.
+            'size_id' => $hasSizes ? 'required|exists:sizes,id' : 'nullable', 
         ]);
 
         if (Auth::guest()) {
             $this->guestCartService->addItem($product, 1, $request->size_id);
         } else {
             $size_id = $request->size_id;
-            $user = Auth::user();
+        $user = Auth::user();
 
-            $order = Order::where('user_id', $user->id)
-                        ->whereIn('status', ['pending', 'failed'])
-                        ->first();
+        $order = Order::where('user_id', $user->id)
+                    ->whereIn('status', ['pending', 'failed'])
+                    ->first();
 
-            if (!$order) {
-                $order = new Order;
-                $order->total_amount = 0;
-                $order->status = 'pending';
-                $order->user()->associate($user);
-                $order->save();
-            }
+        if (!$order) {
+            $order = new Order;
+            $order->total_amount = 0;
+            $order->status = 'pending';
+            $order->user()->associate($user);
+            $order->save();
+        }
 
-            $item = $order->items()
-                        ->where('product_id', $product->id)
-                        ->where('size_id', $size_id)
-                        ->first();
-
-            if ($item) {
-                $item->quantity += 1;
-                $item->save();
-            } else {
-                $item = new OrderItem;
-                $item->quantity = 1;
-                $item->price = $product->price;
-                $item->order()->associate($order);
-                $item->product()->associate($product);
+        // Buscamos si ya existe este producto con esta talla (o sin talla) en el carrito
+        $item = $order->items()
+                    ->where('product_id', $product->id)
+                    ->where('size_id', $size_id)
+                    ->first();
+        
+        if ($item) {
+            $item->quantity += 1;
+            $item->save();
+        } else {
+            $item = new OrderItem;
+            $item->quantity = 1;
+            $item->price = $product->price;
+            $item->order()->associate($order);
+            $item->product()->associate($product);
+            
+            // Solo asociamos la talla si realmente nos enviaron una
+            if ($size_id) {
                 $item->size()->associate($size_id);
-                $item->save();
             }
+            
+            $item->save();
+        }
 
-            $this->updateOrder($order);
+        $this->updateOrder($order);
         }
         
         return redirect()->route('orders.carrito')->with('success', 'Producto agregado exitosamente.');
@@ -229,11 +245,12 @@ class OrderController extends Controller
 
     public function increaseItem(OrderItem $item)
     {
-        if($item->size->stock>$item->quantity){
+        $availableStock = $item->size ? $item->size->stock : $item->product->stock;
+
+        if($availableStock > $item->quantity){
             $item->quantity += 1;
             $item->save();
         }
-        
         
         $this->orderService->updateOrderTotal($item->order);
         

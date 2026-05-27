@@ -13,7 +13,7 @@
                 </div>
 
                 <div>
-                    <img src="{{ asset('storage/media/images/logo.png') }}" alt="Logo Hanger" class="cursor-pointer" style="height: 70px; width: auto; object-fit: contain;">
+                    <img src="{{ asset('storage/media/images/HANGER.png') }}" alt="Logo Hanger" class="cursor-pointer" style="height: 70px; width: auto; object-fit: contain;">
                 </div>
 
                 <div class="col-4 ms-auto d-flex justify-content-end gap-2 gap-md-3 align-items-center z-3 position-relative">
@@ -195,25 +195,111 @@
         </div>
     </div>
 
-    <!-- SCRIPTS DENTRO DEL BODY -->
     <script>
-        document.querySelectorAll('.add-favorite-form').forEach(form => {
-            form.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const formData = new FormData(form);
-                try {
-                    const response = await fetch(form.action, {
-                        method: 'POST',
-                        body: formData
-                    });
-                    if (response.ok) {
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
+        document.addEventListener('DOMContentLoaded', function() {
+            //buscamos todos los formularios de favoritos en la pantalla
+            const favoriteForms = document.querySelectorAll('.js-favorite-form');
+
+            favoriteForms.forEach(form => {
+                form.addEventListener('submit', async function(e) {
+                    // evitamos que el formulario recargue la página
+                    e.preventDefault(); 
+
+                    const url = this.action;
+                    const formData = new FormData(this);
+                    const icon = this.querySelector('.icon-heart');
+                    const methodInput = this.querySelector('input[name="_method"]');
+
+                    try {
+                        const response = await fetch(url, {
+                            method: 'POST', // Siempre enviamos POST, Laravel lee el _method oculto
+                            body: formData,
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest' // Le decimos a Laravel que es una petición AJAX
+                            }
+                        });
+
+                        if (response.ok) {
+                            const isNowFavorited = icon.classList.contains('bi-heart'); 
+
+                            if (isNowFavorited) {
+                                icon.classList.remove('bi-heart', 'text-gray-400');
+                                icon.classList.add('bi-heart-fill', 'text-primary', 'animate-pulse');
+                                
+                                this.action = this.action.replace('add', 'remove/' + formData.get('product_id'));
+                                if (!methodInput) {
+                                    this.insertAdjacentHTML('beforeend', '<input type="hidden" name="_method" value="DELETE">');
+                                }
+                            } else {
+                                icon.classList.remove('bi-heart-fill', 'text-primary', 'animate-pulse');
+                                icon.classList.add('bi-heart', 'text-gray-400');
+                                
+                                this.action = this.action.replace(/remove\/\d+/, 'add');
+                                if (methodInput) methodInput.remove();
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error de red al procesar el favorito', error);
                     }
-                } catch (error) {
-                    console.error('Error:', error);
-                }
+                });
+            });
+            // --- 1. SCRIPT PARA PERMITIR DESMARCAR TALLAS (RADIO BUTTONS) ---
+            const sizeRadios = document.querySelectorAll('.js-size-radio');
+            let lastChecked = null;
+
+            sizeRadios.forEach(radio => {
+                radio.addEventListener('click', function(e) {
+                    if (lastChecked === this) {
+                        this.checked = false;
+                        lastChecked = null;
+                    } else {
+                        lastChecked = this;
+                    }
+                    
+                    // Ocultar el mensaje de error si el usuario marca una talla
+                    const form = this.closest('form');
+                    const warning = form.querySelector('.js-size-warning');
+                    if (warning && this.checked) {
+                        warning.classList.add('hidden');
+                    }
+                });
+            });
+
+            // --- 2. SCRIPT DE VALIDACIÓN AL AÑADIR AL CARRITO ---
+            const cartForms = document.querySelectorAll('.js-add-cart-form');
+
+            cartForms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    // Buscamos si el formulario tiene tallas
+                    const radios = this.querySelectorAll('input[name="size_id"]');
+                    
+                    if (radios.length > 0) {
+                        let isChecked = false;
+                        for (let i = 0; i < radios.length; i++) {
+                            if (radios[i].checked) {
+                                isChecked = true;
+                                break;
+                            }
+                        }
+                        
+                        // Si no hay ninguna talla marcada, frenamos el envío
+                        if (!isChecked) {
+                            e.preventDefault(); // Detiene la recarga de página
+                            
+                            const warning = this.querySelector('.js-size-warning');
+                            if (warning) {
+                                warning.classList.remove('hidden'); // Muestra el mensaje
+                                
+                                // Añadimos una pequeña animación limpia para llamar la atención
+                                warning.style.transform = 'scale(1.05)';
+                                setTimeout(() => warning.style.transform = 'scale(1)', 200);
+                            }
+                        }
+                    }
+                });
             });
         });
     </script>
+    
 </body>
 @endsection

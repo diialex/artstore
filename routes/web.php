@@ -64,6 +64,10 @@ Route::delete('/users/{id}', [UsersController::class, 'delete'])
     ->name('users.delete')
     ->middleware(['auth'])->can('admin-access');
 
+Route::get('/users/{username}', [UsersController::class, 'show'])
+    ->name('users.show')
+    ->middleware('auth');
+
 #ROLE — solo admin
 
 Route::get('/roles', [RolesController::class, 'index'])
@@ -114,7 +118,7 @@ Route::get("/addresses/user/{username}", [UsersController::class, 'showAddresses
 
 Route::get('/editAddress/{address}', [AddressController::class, 'edit'])
     ->name('addresses.edit')
-    ->middleware(['auth'])->can('update', 'address');
+    ->middleware(['auth']);
 
 Route::put('/updateAddress/{address}', [AddressController::class, 'update'])
     ->name('addresses.update')
@@ -122,7 +126,7 @@ Route::put('/updateAddress/{address}', [AddressController::class, 'update'])
 
 Route::delete('/deleteAddress/{address}', [AddressController::class, 'delete'])
     ->name('addresses.delete')
-    ->middleware(['auth'])->can('delete', 'address');
+    ->middleware(['auth']);
 
 Route::post('/addProduct/{product}', [OrderController::class, 'addProducttoOrder'])
     ->name('orders.addProduct')
@@ -230,7 +234,7 @@ Route::post('/payments/pay/{order}', [StripeController::class, 'createCheckout']
 
 Route::get('/orders', [OrderController::class, 'index'])
     ->name('orders.index')
-    ->middleware(['auth'])->can('admin-access');
+    ->middleware(['auth']);
 
 Route::get('/orders/create', [OrderController::class, 'create'])
     ->name('orders.create')

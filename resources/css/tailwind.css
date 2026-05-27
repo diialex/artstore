@@ -1,0 +1,15 @@
+/* resources/css/tailwind.css */
+@import "tailwindcss";
+
+/* Obligamos a Tailwind a buscar clases en todas las vistas de Laravel */
+@source "../views";
+
+@theme {
+  --color-primary: #7A3B4F;
+  --color-secondary: #3B7A41;
+  --color-dark: #3B2B30;
+  --color-light: #fdebf1;
+  --color-info: #A4CFAB;
+  --color-success: #99FFA3;
+  --color-body-bg: #fcf9fa;
+}

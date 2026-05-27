@@ -34,6 +34,15 @@ class UsersSeeder extends Seeder
             'phone'=>'222222222'
         ])->roles()->save(Role::find(2));
 
+        User::create([
+            'id'=> 4,
+            'name'=>'Ale R',
+            'username'=> 'aromdel',
+            'email'=>'aromdel@gmail.com',
+            'password'=>User::encryptPassword('aromdel'),
+            'phone'=>'444444444'
+        ])->roles()->save(Role::find(2));
+
         //admin user
         User::create([
             'id'=> 3,

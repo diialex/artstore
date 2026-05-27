@@ -5,7 +5,7 @@
         @if(!request('category'))
             <div id="carouselExampleIndicators" class="carousel slide position-relative" data-bs-ride="carousel" data-bs-interval="6000" data-bs-pause="false">
                 <div class="position-absolute top-0 start-50 translate-middle-x" style="z-index: 10; margin-top: 20px;">
-                    <img src="{{ asset('storage/media/images/logo_sinfondo.png') }}" alt="Logo" style="max-height: 200px; width: auto; object-fit: contain;">
+                    <img src="{{ asset('storage/media/images/HG.png') }}" alt="Logo" style="max-height: 200px; width: auto; object-fit: contain;">
                 </div>
                 
                 <div class="carousel-indicators">
