@@ -9,6 +9,7 @@ use App\Http\Controllers\RolesController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\StripeController;
 use App\Models\User;
@@ -83,6 +84,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/pedidos', 'index')->name('orders.index');
         Route::get('/pedidos/{order}', 'show')->name('orders.show');
     });
+    // ELIMINAR ÍTEMS DEL CARRITO 
+    Route::delete('/carrito/remove/{orderitem}', [OrderItemController::class, 'destroy'])->name('orderitems.delete');
 
     // PAGOS (Stripe)
     Route::controller(StripeController::class)->group(function () {
@@ -93,9 +96,9 @@ Route::middleware(['auth'])->group(function () {
 
     // CATÁLOGO PÚBLICO AUTENTICADO
     Route::controller(ProductController::class)->group(function () {
-        Route::get('/productos', 'index')->can('viewAny', Product::class)->name('products.index');
+        Route::get('/productos', 'index')->name('products.index');
         Route::get('/productos/{product}', 'show')->name('products.show');
-        Route::get('/categorias/{category}/productos', 'indexByCategory')->can('viewAny', Product::class)->name('categories.products');
+        Route::get('/categorias/{category}/productos', 'indexByCategory')->name('categories.products');
     });
 
 });
