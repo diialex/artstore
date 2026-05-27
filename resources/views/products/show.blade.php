@@ -35,8 +35,7 @@
                     <p class="fw-bold text-uppercase small tracking-wide mb-2">Descripción</p>
                     <p class="text-muted lh-lg">{{ $product->description }}</p>
                 </div>
-                @auth
-                    @if($product->stock > 0)
+                @if($product->stock > 0)
                     <form action="{{ route('orders.addProduct', $product) }}" method="POST" class="mt-5">
                         @csrf
                         
@@ -109,14 +108,6 @@
                         </div>
                     </div>
                     @endif
-                @endauth
-                @guest
-                    <div class="d-grid gap-2 pt-3">
-                        <a href="#" data-bs-toggle="offcanvas" data-bs-target="#iniciarSesion" class="btn btn-dark btn-lg py-3 rounded-pill fw-bold text-uppercase tracking-wide">
-                            Inicia sesión para comprar
-                        </a>
-                    </div>
-                @endguest
 
                 <div class="mt-5 pt-4 border-top">
                     <div class="d-flex align-items-center mb-3">

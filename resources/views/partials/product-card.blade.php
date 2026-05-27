@@ -27,19 +27,13 @@
     
     <div class="card-footer bg-white border-0 pt-0 pb-4 px-3 mt-auto">
         
-        @guest
-            <a href="#" data-bs-toggle="offcanvas" data-bs-target="#iniciarSesion" class="btn btn-outline-dark w-100 fw-bold rounded-pill">
-                <i class="bi bi-box-arrow-in-right me-2"></i>@lang('messages.login_to_buy')
-            </a>
-        @endguest
-
         @auth
-            @if(auth()->user()->roles->contains('id', 1)) 
+            @if(auth()->user()->roles->contains('id', 1))
                 <div class="d-flex gap-2 mt-2 pt-2 border-top">
                     <a href="{{ route('products.edit', $product) }}" class="btn btn-outline-warning btn-sm flex-fill fw-bold rounded-pill">
                         <i class="bi bi-pencil me-1"></i> @lang('messages.edit_product')
                     </a>
-                    
+
                     <form action="{{ route('products.delete', $product) }}" method="POST" class="flex-fill" onsubmit="return confirm('¿Estás seguro de que quieres aniquilar este producto?');">
                         @csrf
                         @method('DELETE')
@@ -51,15 +45,7 @@
             @endif
 
             @if(auth()->user()->roles->contains('id', 2))
-                <div class="d-flex gap-2 align-items-center">
-                    
-                    <form action="{{ route('orders.addProduct', $product) }}" method="POST" class="flex-fill m-0">
-                        @csrf
-                        <button type="submit" class="btn btn-dark w-100 fw-bold rounded-pill py-2 text-uppercase tracking-wide">
-                            <i class="bi bi-cart-plus me-2"></i>@lang('messages.add_to_cart')
-                        </button>
-                    </form>
-
+                <div class="d-flex gap-2 align-items-center justify-content-end">
                     @if($isFavoritesPage ?? false)
                         <form action="{{ route('users.favorites.remove', $product) }}" method="POST" class="m-0" onsubmit="return confirm('¿Eliminar de favoritos?');">
                             @csrf
@@ -77,7 +63,6 @@
                             </button>
                         </form>
                     @endif
-
                 </div>
             @endif
         @endauth

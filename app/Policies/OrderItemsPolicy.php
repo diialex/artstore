@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\OrderItem;
 use App\Models\User;
 
 class OrderItemsPolicy
@@ -40,8 +41,8 @@ class OrderItemsPolicy
     }
 
 
-    public function delete(User $user): bool
+    public function delete(User $user, OrderItem $item): bool
     {
-        return false;
+        return $user->id === $item->order->user_id;
     }
 }

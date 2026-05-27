@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Services\CategoryService;
+use App\Services\GuestCartService;
+use App\Services\RedisService;
 use App\Services\RolesService;
 use Database\Seeders\RolesSeeder;
 use Illuminate\View\View;
@@ -12,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Services\ProductService;
 use File;
 use Cache;
+use App\Constants\RedisConstants;
 
 class HomeController extends Controller
 {
@@ -21,11 +24,12 @@ class HomeController extends Controller
 
     public function index(Request $request): View
     {
+        
         $categoryId = $request->input('category');
 
-        $products = Cache::rememberForever("products:all", fn() => $this->productService->getAll());
+        $products = RedisService::getProducts();
 
-        $categories = Cache::rememberForever("categories:all", fn() => $this->categoryService->getAll());
+        $categories = RedisService::getCategories();
 
         $carouselPath = storage_path('app/public/media/carrusel');
         $carouselImages = [];

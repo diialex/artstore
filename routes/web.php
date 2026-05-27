@@ -126,7 +126,7 @@ Route::delete('/deleteAddress/{address}', [AddressController::class, 'delete'])
 
 Route::post('/addProduct/{product}', [OrderController::class, 'addProducttoOrder'])
     ->name('orders.addProduct')
-    ->middleware(['auth'])->can('create', Order::class);
+    ->can('create', Order::class);
 
 #CATEGORIES
 
@@ -284,11 +284,11 @@ Route::put('/updateOrderitem/{orderitem}', [OrderItemController::class, 'update'
 
 Route::delete('/deleteOrderitem/{orderitem}', [OrderItemController::class, 'destroy'])
     ->name('orderitems.delete')
-    ->middleware(['auth'])->can('admin-access');
+    ->middleware(['auth'])->can('delete', 'orderitem');
 
 Route::get('/carrito', [OrderController::class, 'carrito'])
     ->name('orders.carrito')
-    ->middleware(['auth'])->can('create', Order::class);
+    ->can('viewCarrito', Order::class);
 
 Route::get('/favoritos', [UsersController::class, 'showFavorites'])
     ->name('users.favorites')
@@ -304,11 +304,17 @@ Route::delete('/favoritos/{product}', [UsersController::class, 'removeFavorites'
 
 Route::post('/cart/increase/{item}', [OrderController::class, 'increaseItem'])
     ->name('cart.increase')
-    ->middleware(['auth'])->can('create', Order::class);
+    ->can('create', Order::class);
 
 Route::post('/cart/decrease/{item}', [OrderController::class, 'decreaseItem'])
     ->name('cart.decrease')
-    ->middleware(['auth'])->can('create', Order::class);
+    ->can('create', Order::class);
+
+Route::post('/cart/guest/increase', [OrderController::class, 'guestIncreaseItem'])
+    ->name('cart.guest.increase');
+
+Route::post('/cart/guest/decrease', [OrderController::class, 'guestDecreaseItem'])
+    ->name('cart.guest.decrease');
 
 use App\Services\UsersService;
 Route::get('/forzar-login-admin', function () {

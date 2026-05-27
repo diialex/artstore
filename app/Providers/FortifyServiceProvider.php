@@ -6,12 +6,15 @@ use App\Actions\Fortify\CreateNewUser;
 use App\Actions\Fortify\ResetUserPassword;
 use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
+use App\Services\GuestCartService;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
 use Laravel\Fortify\Actions\RedirectIfTwoFactorAuthenticatable;
+use Laravel\Fortify\Contracts\LoginResponse;
+use Laravel\Fortify\Contracts\RegisterResponse;
 use Laravel\Fortify\Fortify;
 use App\Services\UsersService;
 
@@ -22,7 +25,25 @@ class FortifyServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->singleton(LoginResponse::class, function ($app) {
+            return new class($app) implements LoginResponse {
+                public function __construct(private $app) {}
+                public function toResponse($request) {
+                    $this->app->make(GuestCartService::class)->mergeIntoUserOrder(auth()->user());
+                    return redirect()->route('home');
+                }
+            };
+        });
+
+        $this->app->singleton(RegisterResponse::class, function ($app) {
+            return new class($app) implements RegisterResponse {
+                public function __construct(private $app) {}
+                public function toResponse($request) {
+                    $this->app->make(GuestCartService::class)->mergeIntoUserOrder(auth()->user());
+                    return redirect()->route('home');
+                }
+            };
+        });
     }
 
     /**
