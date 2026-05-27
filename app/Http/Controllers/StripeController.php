@@ -9,10 +9,10 @@ use App\Services\AddressService;
 use App\Services\OrderItemService;
 use App\Services\OrderService;
 use App\Services\PaymentService;
+use App\Events\OrderCreated;
 use Stripe\StripeClient;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\OrderConfirmed; 
+use Illuminate\Support\Facades\Event; 
 
 class StripeController extends Controller {
 
@@ -115,17 +115,10 @@ class StripeController extends Controller {
                     $payment->update(['status' => 'completed']);
                 }
 
-                
+                // Disparar el evento OrderCreated para enviar la factura
+                Event::dispatch(new OrderCreated($order));
 
                 $customerEmail = $session->customer_details?->email ?? $order->user?->email;
-                
-                try {
-                    if ($customerEmail) {
-                        Mail::to($customerEmail)->send(new OrderConfirmed($order));
-                    }
-                } catch (\Exception $mailException) {
-                    \Illuminate\Support\Facades\Log::error('Mail sending failed: ' . $mailException->getMessage());
-                }
 
                 return redirect()->route('home', [
                     'customer_email' => $customerEmail,
