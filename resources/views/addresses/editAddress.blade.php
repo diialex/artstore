@@ -1,32 +1,83 @@
 @extends('layout')
 
-@section('title', 'Edit address')
+@section('title', 'Editar Dirección')
 
 @section('content')
-<form action="{{ route('addresses.update', $address->id) }}" method="POST">
-@csrf
-@method('PUT')
+<div class="min-h-screen bg-body-bg py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl mx-auto">
+        
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            
+            <div class="bg-primary px-6 py-6 border-b border-gray-200">
+                <h2 class="text-2xl font-bold text-white flex items-center gap-2">
+                    <i class="bi bi-pencil-square"></i> Editar Dirección
+                </h2>
+                <p class="text-light text-sm mt-1">Actualiza los datos de entrega de esta dirección.</p>
+            </div>
 
-<select name="user_id" class="form-control mb-2">
-    @foreach ($users as $user)
-        <option value="{{ $user->id }}" {{ $address->user_id == $user->id ? 'selected' : '' }}>
-            {{ $user->username }}
-        </option>
-    @endforeach
-</select>
-@error('user_id') <div class="alert alert-danger"> Selecciona un usuario </div> @enderror
+            <form action="{{ route('addresses.update', $address->id) }}" method="POST" class="p-6 sm:p-8 space-y-6">
+                @csrf
+                @method('PUT') <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Calle, número, piso y puerta</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="bi bi-signpost-split text-gray-400"></i>
+                        </div>
+                        <input type="text" name="street" value=" {{ old('street', $address->street) }}" autofocus
+                            class="w-full pl-10 rounded-lg border-gray-300 border px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all hover:border-gray-400">
+                    </div>
+                    @error('street') 
+                        <span class="text-red-500 text-xs mt-1 flex items-center gap-1">
+                            <i class="bi bi-exclamation-circle"></i> {{ $message }}
+                        </span> 
+                    @enderror
+                </div>
 
-<input type="text" name="street" placeholder="Calle" value="{{ $address->street }}" class="form-control mb-2" autofocus>
-@error('street') <div class="alert alert-danger"> Rellena la calle </div> @enderror
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Ciudad / Localidad</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="bi bi-building text-gray-400"></i>
+                            </div>
+                            <input type="text" name="city" value=" {{ old('city', $address->city) }}"
+                                class="w-full pl-10 rounded-lg border-gray-300 border px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all hover:border-gray-400">
+                        </div>
+                        @error('city') 
+                            <span class="text-red-500 text-xs mt-1 flex items-center gap-1">
+                                <i class="bi bi-exclamation-circle"></i> {{ $message }}
+                            </span> 
+                        @enderror
+                    </div>
 
-<input type="text" name="city" placeholder="Ciudad" value="{{ $address->city }}" class="form-control mb-2">
-@error('city') <div class="alert alert-danger"> Rellena la ciudad </div> @enderror
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Código Postal</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <i class="bi bi-mailbox text-gray-400"></i>
+                            </div>
+                            <input type="text" name="zip_code" value=" {{ old('zip_code', $address->zip_code) }}"
+                                class="w-full pl-10 rounded-lg border-gray-300 border px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all hover:border-gray-400">
+                        </div>
+                        @error('zip_code') 
+                            <span class="text-red-500 text-xs mt-1 flex items-center gap-1">
+                                <i class="bi bi-exclamation-circle"></i> {{ $message }}
+                            </span> 
+                        @enderror
+                    </div>
+                </div>
 
-<input type="text" name="zip_code" placeholder="Código Postal" value="{{ $address->zip_code }}" class="form-control mb-2">
-@error('zip_code') <div class="alert alert-danger"> Rellena el código postal </div> @enderror
-
-<button class="btn btn-primary btn-block" type="submit">
-Editar dirección
-</button>
-</form>
+                <div class="flex items-center justify-end gap-4 mt-8 pt-6 border-t border-gray-100">
+                    <button type="button" onclick="window.history.back();" class="px-6 py-2.5 text-gray-600 font-medium hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="px-6 py-2.5 bg-primary text-white font-medium rounded-lg hover:bg-opacity-90 hover:-translate-y-0.5 transition-all shadow-sm flex items-center gap-2">
+                        <i class="bi bi-arrow-repeat"></i> Actualizar Dirección
+                    </button>
+                </div>
+            </form>
+            
+        </div>
+    </div>
+</div>
 @endsection

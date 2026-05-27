@@ -76,16 +76,28 @@ class AddressController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        try {
-            $address = $this->service->get($id);
-            $users = $this->usersService->getAll();
-            return view('addresses.editAddress', compact('address', 'users'));
-        } catch (\Throwable $e) {
-            return view('addresses.listAddresses', ['addresses' => [], 'msg' => $e->getMessage()]);
+public function edit(string $id)
+{
+    try {
+        
+        $address = $this->service->get($id);
+        $authUser = auth()->user();
+
+        
+        if ($authUser->roles->contains('id', 2) && $address->user_id !== $authUser->id) {
+            abort(403, 'Acceso denegado: No puedes editar una dirección que no te pertenece.');
         }
+
+        
+        $users = $this->usersService->getAll();
+
+        return view('addresses.editAddress', compact('address', 'users'));
+
+    } catch (\Throwable $e) {
+        return redirect()->route('addresses.index')
+                         ->with('msg', 'No se pudo cargar la dirección: ' . $e->getMessage());
     }
+}
 
     /**
      * Update the specified resource in storage.
