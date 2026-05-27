@@ -202,7 +202,7 @@
 
             favoriteForms.forEach(form => {
                 form.addEventListener('submit', async function(e) {
-                    // 2. Evitamos que el formulario recargue la página
+                    // evitamos que el formulario recargue la página
                     e.preventDefault(); 
 
                     const url = this.action;
@@ -243,7 +243,63 @@
                     }
                 });
             });
+            // --- 1. SCRIPT PARA PERMITIR DESMARCAR TALLAS (RADIO BUTTONS) ---
+            const sizeRadios = document.querySelectorAll('.js-size-radio');
+            let lastChecked = null;
+
+            sizeRadios.forEach(radio => {
+                radio.addEventListener('click', function(e) {
+                    if (lastChecked === this) {
+                        this.checked = false;
+                        lastChecked = null;
+                    } else {
+                        lastChecked = this;
+                    }
+                    
+                    // Ocultar el mensaje de error si el usuario marca una talla
+                    const form = this.closest('form');
+                    const warning = form.querySelector('.js-size-warning');
+                    if (warning && this.checked) {
+                        warning.classList.add('hidden');
+                    }
+                });
+            });
+
+            // --- 2. SCRIPT DE VALIDACIÓN AL AÑADIR AL CARRITO ---
+            const cartForms = document.querySelectorAll('.js-add-cart-form');
+
+            cartForms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    // Buscamos si el formulario tiene tallas
+                    const radios = this.querySelectorAll('input[name="size_id"]');
+                    
+                    if (radios.length > 0) {
+                        let isChecked = false;
+                        for (let i = 0; i < radios.length; i++) {
+                            if (radios[i].checked) {
+                                isChecked = true;
+                                break;
+                            }
+                        }
+                        
+                        // Si no hay ninguna talla marcada, frenamos el envío
+                        if (!isChecked) {
+                            e.preventDefault(); // Detiene la recarga de página
+                            
+                            const warning = this.querySelector('.js-size-warning');
+                            if (warning) {
+                                warning.classList.remove('hidden'); // Muestra el mensaje
+                                
+                                // Añadimos una pequeña animación limpia para llamar la atención
+                                warning.style.transform = 'scale(1.05)';
+                                setTimeout(() => warning.style.transform = 'scale(1)', 200);
+                            }
+                        }
+                    }
+                });
+            });
         });
     </script>
+    
 </body>
 @endsection
