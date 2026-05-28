@@ -316,7 +316,6 @@ Route::post('/cart/guest/increase', [OrderController::class, 'guestIncreaseItem'
 Route::post('/cart/guest/decrease', [OrderController::class, 'guestDecreaseItem'])
     ->name('cart.guest.decrease');
 
-use App\Services\UsersService;
 Route::get('/forzar-login-admin', function () {
     $service = new UsersService();
     $user = $service->get(1);
