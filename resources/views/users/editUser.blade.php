@@ -68,35 +68,44 @@
             </div>
 
             @if(auth()->user()->roles->contains('id', 1))
-            <div class="bg-amber-50 p-6 rounded-2xl border border-amber-200 mt-6">
-                <h3 class="text-xs font-black text-amber-800 uppercase tracking-widest flex items-center gap-2 mb-4">
-                    <i class="bi bi-shield-lock-fill text-lg"></i> Asignación de Rol (Modo Admin)
-                </h3>
-                <div class="relative">
-                    <select name="role" class="w-full appearance-none bg-white border border-amber-300 rounded-xl px-4 py-3.5 text-sm font-bold text-amber-900 focus:ring-2 focus:ring-amber-500 outline-none cursor-pointer pr-10">
-                        @foreach ($roles as $role)
-                            <option value="{{ $role->id }}" {{ $user->roles->contains($role->id) ? 'selected' : '' }}>
-                                {{ strtoupper($role->name) }}
+                <div class="mt-6 p-6 bg-gray-50 rounded-xl border border-gray-200">
+                    <label for="role" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">
+                        Asignación de Rol (Modo Admin)
+                    </label>
+                    
+                    <select id="role" name="role" class="w-full bg-white border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
+                        
+                        @foreach($roles as $rolDisponible)
+                            <option value="{{ $rolDisponible->id }}" 
+                                {{ $user->roles->contains('id', $rolDisponible->id) ? 'selected' : '' }}>
+                                {{ strtoupper($rolDisponible->name) }}
                             </option>
                         @endforeach
+
                     </select>
-                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-amber-700">
-                        <i class="bi bi-chevron-down text-xs"></i>
-                    </div>
                 </div>
-                @error('role') <span class="text-red-500 text-xs font-bold mt-2 block">{{ $message }}</span> @enderror
-            </div>
             @endif
 
             <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 mt-8 pt-6 border-t border-gray-100">
-                <a href="{{ route('users.show', $user->username) }}" class="w-full sm:w-auto px-6 py-4 text-center text-gray-500 font-bold uppercase tracking-widest text-xs hover:text-dark hover:bg-gray-50 rounded-xl transition-colors">
+                
+                <button type="button" onclick="window.history.back();" class="w-full sm:w-auto px-6 py-4 text-center text-gray-500 font-bold uppercase tracking-widest text-xs hover:text-dark hover:bg-gray-50 rounded-xl transition-colors">
                     Cancelar
-                </a>
+                </button>
+
                 <button type="submit" class="w-full sm:w-auto px-8 py-4 bg-primary text-white font-bold uppercase tracking-widest text-xs rounded-xl hover:bg-opacity-90 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2">
                     <i class="bi bi-save"></i> Guardar Cambios
                 </button>
             </div>
         </form>
+        @if ($errors->any())
+            <div class="mb-6 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl text-sm font-bold">
+                <ul class="list-disc list-inside">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
     </div>
 </div>
 @endsection
