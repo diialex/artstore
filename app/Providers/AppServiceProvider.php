@@ -42,6 +42,12 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasRol('admin');
         });
 
+        // Acceso a la tienda: guests y usuarios con rol 'user'; deniega admins puros
+        Gate::define('store-access', function (?User $user) {
+            if (!$user) return true;
+            return $user->hasRol('user');
+        });
+
         // Registro de policies
         Gate::policy(Product::class, ProductsPolicy::class);
         Gate::policy(Order::class, OrdersPolicy::class);

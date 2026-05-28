@@ -11,7 +11,7 @@ class RedisService
     public function __construct(protected ProductService $productService, protected CategoryService $categoryService){
     }
     public static function getCategories(){
-        return Cache::rememberForever(RedisConstants::CATEGORIES_ALL, fn() => $this->categoryService->getAll());
+        return Cache::rememberForever(RedisConstants::CATEGORIES_ALL, fn() => app(CategoryService::class)->getAll());
     }
 
     public static function flushCategories(){
@@ -19,7 +19,7 @@ class RedisService
     }
 
     public static function getProducts(){
-        return Cache::rememberForever(RedisConstants::PRODUCTS_ALL, fn() => $this->productService->getAll());
+        return Cache::rememberForever(RedisConstants::PRODUCTS_ALL, fn() => app(ProductService::class)->getAll());
     }
 
     public static function flushProducts(){
@@ -27,7 +27,7 @@ class RedisService
     }
 
     public static function getProductsByCategory($category){
-        return Cache::remember(RedisConstants::PRODUCTS_BY_CATEGORY . $category, 3600, fn() => $this->productService->getAll($category));
+        return Cache::remember(RedisConstants::PRODUCTS_BY_CATEGORY . $category, 3600, fn() => app(ProductService::class)->getAll($category));
     }
 
     public static function flushProductsByCategory(){

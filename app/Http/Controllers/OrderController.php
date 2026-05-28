@@ -235,7 +235,26 @@ class OrderController extends Controller
 
     public function guestIncreaseItem(Request $request)
     {
-        $this->guestCartService->addOne((int) $request->product_id);
+        $productId = (int) $request->product_id;
+        $sizeId    = $request->size_id ? (int) $request->size_id : null;
+
+        $cart = $this->guestCartService->getCart();
+        $currentQuantity = 0;
+        foreach ($cart['items'] as $item) {
+            if ($item['product_id'] === $productId && $item['size_id'] === $sizeId) {
+                $currentQuantity = $item['quantity'];
+                break;
+            }
+        }
+
+        $availableStock = $sizeId
+            ? (Size::find($sizeId)?->stock ?? 0)
+            : (Product::find($productId)?->stock ?? 0);
+
+        if ($availableStock > $currentQuantity) {
+            $this->guestCartService->addOne($productId);
+        }
+
         return redirect()->route('orders.carrito');
     }
 

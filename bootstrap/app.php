@@ -23,4 +23,12 @@ return Application::configure(basePath: dirname(__DIR__))
             }
             return response()->view('errors.403', [], 403);
         });
+
+        $exceptions->render(function (\Illuminate\Auth\Access\AuthorizationException $e, \Illuminate\Http\Request $request) {
+            $user = $request->user();
+            if ($user && $user->hasRol('admin') && !$user->hasRol('user')) {
+                return redirect()->route('controlPanel.dashboard');
+            }
+            return response()->view('errors.403', [], 403);
+        });
     })->create();
