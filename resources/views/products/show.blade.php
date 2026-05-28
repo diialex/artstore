@@ -106,10 +106,9 @@
 
             @guest
                 <div class="mt-8">
-                    <a href="#" data-bs-toggle="offcanvas" data-bs-target="#iniciarSesion" 
-                       class="w-full flex justify-center items-center bg-dark text-white text-lg font-bold uppercase tracking-widest py-4 rounded-full hover:bg-opacity-90 transition-all">
-                        Inicia sesión para comprar
-                    </a>
+                    <button type="button" onclick="toggleMenu('iniciarSesion')" class="w-full inline-flex justify-center items-center px-4 py-2.5 border-2 border-[#212529] text-[#212529] font-bold rounded-full hover:bg-[#212529] hover:text-white transition-colors">
+                        <i class="bi bi-box-arrow-in-right mr-2"></i>@lang('messages.login_to_buy')
+                    </button>
                 </div>
             @endguest
 

@@ -14,12 +14,13 @@ class RolesController extends Controller
 
     public function __construct(protected RolesService $service){
     }
+    
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $roles =  $this->service->getAll();
+        $roles = $this->service->getAll();
         return view('roles.listRoles', compact('roles'));
     }
 
@@ -36,17 +37,19 @@ class RolesController extends Controller
      */
     public function store(StoreRolesRequest $request)
     {
-        try{
+        try {
             $newRole = new Role;
 
             $newRole->name = $request->name;
             $newRole->description = $request->description;
 
             $this->service->store($newRole);
-        }catch(\Throwable $e){
+            
+        } catch(\Throwable $e) {
             dd($e->getMessage());
         }
-        return redirect('/roles');
+        
+        return redirect()->route('roles.index')->with('msg', 'Rol creado con éxito');
     }
 
     /**
@@ -57,8 +60,8 @@ class RolesController extends Controller
         $role = $this->service->get($name);
         if(!$role){
             return view('roles.listRoles', [
-            'roles' => [], 
-            'msg' => "Role no encontrado"
+                'roles' => [], 
+                'msg' => "Rol no encontrado"
             ]);
         }
 
@@ -68,10 +71,10 @@ class RolesController extends Controller
 
     public function edit(string $colum)
     {
-        try{
+        try {
             $role = $this->service->get($colum);
             return view('roles.editRoles', compact('role'));
-        }catch(\Throwable $e){
+        } catch(\Throwable $e) {
             return view('roles.listRoles', ['roles' => [], 'msg' => $e->getMessage()]);
         }
     }
@@ -82,23 +85,23 @@ class RolesController extends Controller
     public function update(UpdateRolesRequest $request, string $colum)
     {
         try {
-        $role = $this->service->get($colum);
+            $role = $this->service->get($colum);
 
-        $role->name = $request->name;
-        $role->description = $request->description;
+            $role->name = $request->name;
+            $role->description = $request->description;
 
-        $this->service->update($role);
+            $this->service->update($role);
 
         } catch (\Throwable $e) {
             dd([
-            'Mensaje' => $e->getMessage(),
-            'Archivo' => $e->getFile(),
-            'Linea'   => $e->getLine(),
-            'Datos_Enviados' => $request->all()
-        ]);
+                'Mensaje' => $e->getMessage(),
+                'Archivo' => $e->getFile(),
+                'Linea'   => $e->getLine(),
+                'Datos_Enviados' => $request->all()
+            ]);
         }
 
-        return redirect('/roles')->with('msg', 'Role actualizado con éxito');
+        return redirect()->route('roles.index')->with('msg', 'Rol actualizado con éxito');
     }
 
     /**
@@ -107,17 +110,17 @@ class RolesController extends Controller
     public function destroy(string $colum)
     {
         try {
-            $user = $this->service->get($colum);
-            $this->service->delete($user);
+            $role = $this->service->get($colum);
+            $this->service->delete($role);
             
         } catch (\Throwable $e) {
-        dd([
-        'Mensaje' => $e->getMessage(),
-        'Archivo' => $e->getFile(),
-        'Linea'   => $e->getLine(),
-        ]);
+            dd([
+                'Mensaje' => $e->getMessage(),
+                'Archivo' => $e->getFile(),
+                'Linea'   => $e->getLine(),
+            ]);
         }
 
-        return redirect('/roles')->with('msg', 'Role eliminado con éxito');
+        return redirect()->route('roles.index')->with('msg', 'Rol eliminado con éxito');
     }
 }

@@ -35,6 +35,13 @@
     
     <div class="p-5 pt-0 bg-white mt-auto">
         
+        @guest
+            <button type="button" onclick="toggleMenu('iniciarSesion')" 
+                    class="w-full inline-flex justify-center items-center px-4 py-2.5 border-2 border-[#212529] text-[#212529] font-bold rounded-full hover:bg-[#212529] hover:text-white transition-colors cursor-pointer">
+                <i class="bi bi-box-arrow-in-right mr-2"></i>@lang('messages.login_to_buy')
+            </button>
+        @endguest
+
         @auth
             @if(auth()->user()->roles->contains('id', 1))
                 <div class="d-flex gap-2 mt-2 pt-2 border-top">

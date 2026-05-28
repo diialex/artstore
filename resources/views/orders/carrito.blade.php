@@ -1,86 +1,107 @@
 @extends('layout')
 @section('title', 'Carrito')
-@section('content')
 
 @section('content')
-<div class="container-fluid px-4 px-lg-5 mt-4 mb-5">
+<div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 mt-8 mb-20 w-full">
     
-    <h1 class="display-5 fw-bolder mb-5 text-uppercase tracking-wide">@lang('messages.yourcart')</h1>
+    <h1 class="text-3xl md:text-4xl font-black mb-10 text-dark tracking-widest uppercase">@lang('messages.yourcart')</h1>
 
     @if(!$order || $order->items->isEmpty())
-        <div class="text-center py-5">
-            <i class="bi bi-bag-x display-1 text-muted mb-4"></i>
-            <h3 class="fw-light">@lang('messages.empty_cart')</h3>
-            <p class="text-muted mb-4">@lang('messages.discover_products')</p>
-            <a href="{{ route('home') }}" class="btn btn-dark px-5 py-3 rounded-pill fw-bold text-uppercase tracking-wide">
+        <div class="flex flex-col items-center justify-center py-20 bg-gray-50 rounded-3xl border border-dashed border-gray-200">
+            <i class="bi bi-bag-x text-7xl text-gray-300 mb-6"></i>
+            <h3 class="text-2xl font-light text-dark mb-2">@lang('messages.empty_cart')</h3>
+            <p class="text-gray-500 mb-8">@lang('messages.discover_products')</p>
+            <a href="{{ route('home') }}" class="px-8 py-4 bg-dark text-white font-bold rounded-full uppercase tracking-widest text-sm hover:bg-opacity-90 transition-all shadow-md hover:shadow-lg active:scale-95">
                 @lang('messages.discover')
             </a>
         </div>
     @else
-        <div class="row g-5">
-            <div class="col-lg-8">
-                <div class="d-flex justify-content-between align-items-end border-bottom pb-3 mb-4">
-                    <span class="text-muted text-uppercase small fw-bold">@lang('messages.article')</span>
-                    <span class="text-muted text-uppercase small fw-bold">@lang('messages.subtot')</span>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
+            
+            <div class="lg:col-span-8">
+                <div class="flex justify-between items-end border-b border-gray-200 pb-4 mb-6">
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">@lang('messages.article')</span>
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-widest hidden sm:block">@lang('messages.subtot')</span>
                 </div>
 
-                @foreach($order->items as $item)
-                    <div class="row align-items-center mb-4 pb-4 border-bottom position-relative producto-cesta">
-                        <div class="col-4 col-md-3">
-                            @if($item->product->image_url)
-                                <img src="{{ asset($item->product->image_url) }}" 
-                                     class="img-fluid rounded-4 object-fit-cover shadow-sm" 
-                                     alt="{{ $item->product->title }}" style="aspect-ratio: 3/4;">
-                            @else
-                                <div class="bg-light rounded-4 d-flex align-items-center justify-content-center h-100" style="aspect-ratio: 3/4;">
-                                    <i class="bi bi-camera text-muted fs-3"></i>
-                                </div>
-                            @endif
-                        </div>
+                <div class="flex flex-col gap-6">
+                    @foreach($order->items as $item)
+                        <div class="flex flex-col sm:flex-row gap-6 py-4 border-b border-gray-100 group transition-colors hover:bg-gray-50/50 -mx-4 px-4 rounded-2xl">
+                            
+                            <div class="w-24 sm:w-32 shrink-0">
+                                @if($item->product->image_url)
+                                    <img src="{{ asset($item->product->image_url) }}" 
+                                         class="w-full aspect-[3/4] object-cover rounded-xl shadow-sm" 
+                                         alt="{{ $item->product->title }}">
+                                @else
+                                    <div class="w-full aspect-[3/4] bg-gray-100 rounded-xl flex items-center justify-center">
+                                        <i class="bi bi-camera text-gray-400 text-3xl"></i>
+                                    </div>
+                                @endif
+                            </div>
 
-                        <div class="col-8 col-md-6 d-flex flex-column h-100 justify-content-center">
-                            <h4 class="fw-bold fs-5 mb-1">{{ $item->product->title }}</h4>
-                            <h5 class="font-bold text-sm text-gray-500 mb-4">Talla: <span class="text-dark">{{ $item->size->size ?? 'Única' }}</span></h5>
-                            <div class="d-flex align-items-center mb-3">
-                                <span class="text-muted me-3">{{ number_format($item->price, 2) }} €</span>
+                            <div class="flex-1 flex flex-col justify-center">
+                                <div class="flex justify-between items-start mb-1">
+                                    <h4 class="font-bold text-lg text-dark">{{ $item->product->title }}</h4>
+                                    <span class="text-lg font-black text-dark sm:hidden">{{ number_format($item->price * $item->quantity, 2) }} €</span>
+                                </div>
                                 
-                                <div class="d-flex align-items-center border border-secondary rounded-pill px-2 py-1">
-                                    @auth
-                                    <form action="{{ route('cart.decrease', $item) }}" method="POST" class="m-0">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-link text-dark text-decoration-none px-2 shadow-none border-0">
-                                            <i class="bi bi-dash-lg"></i>
-                                        </button>
-                                    </form>
-                                    @else
-                                    <form action="{{ route('cart.guest.decrease') }}" method="POST" class="m-0">
-                                        @csrf
-                                        <input type="hidden" name="product_id" value="{{ $item->product_id }}">
-                                        <button type="submit" class="btn btn-sm btn-link text-dark text-decoration-none px-2 shadow-none border-0">
-                                            <i class="bi bi-dash-lg"></i>
-                                        </button>
-                                    </form>
-                                    @endauth
 
-                                    <span class="mx-2 fw-bold text-center" style="min-width: 20px;">{{ $item->quantity }}</span>
-
-                                    @auth
-                                    <form action="{{ route('cart.increase', $item) }}" method="POST" class="m-0">
-                                        @csrf
-                                        <button type="submit" class="btn btn-sm btn-link text-dark text-decoration-none px-2 shadow-none border-0">
-                                            <i class="bi bi-plus-lg"></i>
-                                        </button>
-                                    </form>
-                                    @else
-                                    <form action="{{ route('cart.guest.increase') }}" method="POST" class="m-0">
-                                        @csrf
-                                        <input type="hidden" name="product_id" value="{{ $item->product_id }}">
-                                        <button type="submit" class="btn btn-sm btn-link text-dark text-decoration-none px-2 shadow-none border-0">
-                                            <i class="bi bi-plus-lg"></i>
-                                        </button>
-                                    </form>
-                                    @endauth
+                               <h5 class="text-sm font-medium text-gray-500 mb-4">Talla: <span class="text-dark font-bold">{{ $item->size->size ?? 'Única' }}</span></h5>
+                                
+                                <div class="flex items-center gap-6 mb-4">
+                                    <span class="text-gray-500 font-medium">{{ number_format($item->price, 2) }} €</span>
+                                    
+                                    <div class="flex items-center border border-gray-200 rounded-full px-1 py-1 bg-white">
+                                        @auth
+                                        <form action="{{ route('cart.decrease', $item) }}" method="POST" class="m-0">
+                                            @csrf
+                                            <button type="submit" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-dark hover:bg-gray-100 rounded-full transition-colors focus:outline-none">
+                                                <i class="bi bi-dash-lg text-xs"></i>
+                                            </button>
+                                        </form>
+                                        @else
+                                        <form action="{{ route('cart.guest.decrease') }}" method="POST" class="m-0">
+                                            @csrf
+                                            <input type="hidden" name="product_id" value="{{ $item->product_id }}">
+                                            <button type="submit" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-dark hover:bg-gray-100 rounded-full transition-colors focus:outline-none">
+                                                <i class="bi bi-dash-lg text-xs"></i>
+                                            </button>
+                                        </form>
+                                        @endauth
+                                        
+                                        <span class="w-8 text-center font-bold text-sm">{{ $item->quantity }}</span>
+                                        
+                                        @auth
+                                        <form action="{{ route('cart.increase', $item) }}" method="POST" class="m-0">
+                                            @csrf
+                                            <button type="submit" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-dark hover:bg-gray-100 rounded-full transition-colors focus:outline-none">
+                                                <i class="bi bi-plus-lg text-xs"></i>
+                                            </button>
+                                        </form>
+                                        @else
+                                        <form action="{{ route('cart.guest.increase') }}" method="POST" class="m-0">
+                                            @csrf
+                                            <input type="hidden" name="product_id" value="{{ $item->product_id }}">
+                                            <button type="submit" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-dark hover:bg-gray-100 rounded-full transition-colors focus:outline-none">
+                                                <i class="bi bi-plus-lg text-xs"></i>
+                                            </button>
+                                        </form>
+                                        @endauth
+                                    </div>
                                 </div>
+
+                                <form action="{{ route('orderitems.delete', $item->id) }}" method="POST" class="mt-auto">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="text-red-500 hover:text-red-700 text-xs font-bold uppercase tracking-widest flex items-center gap-1 transition-colors focus:outline-none">
+                                        <i class="bi bi-trash3 text-sm"></i> @lang('messages.eliminate')
+                                    </button>
+                                </form>
+                            </div>
+
+                            <div class="hidden sm:flex flex-col justify-center items-end shrink-0 pl-4">
+                                <span class="text-xl font-black text-dark">{{ number_format($item->price * $item->quantity, 2) }} €</span>
                             </div>
                             @auth
                             <form action="{{ route('orderitems.delete', $item->id) }}" method="POST">
@@ -104,88 +125,95 @@
                         <div class="col-12 col-md-3 text-md-end mt-3 mt-md-0">
                             <span class="fs-4 fw-bold">{{ number_format($item->price * $item->quantity, 2) }} €</span>
                         </div>
-                    </div>
-                @endforeach
+                    @endforeach
+                </div>
             </div>
-            <div class="col-lg-4">
-                <div class="bg-light rounded-4 p-4 p-lg-5 sticky-top shadow-sm border border-secondary border-opacity-10" style="top: 120px; z-index: 1;">
-                    <h3 class="fs-4 fw-bold mb-4 text-uppercase border-bottom pb-3">@lang('messages.summary')</h3>
+
+            <div class="lg:col-span-4 relative">
+                <div class="bg-gray-50 rounded-3xl p-6 sm:p-8 sticky top-28 shadow-sm border border-gray-100">
+                    <h3 class="text-xl font-black mb-6 text-uppercase border-b border-gray-200 pb-4 text-dark tracking-wide">@lang('messages.summary')</h3>
                     
-                    <div class="d-flex justify-content-between mb-3 text-muted">
+                    <div class="flex justify-between mb-4 text-sm font-medium text-gray-600">
                         <span>@lang('messages.subArticle_total')</span>
                         <span>{{ number_format($order->total_amount, 2) }} €</span>
                     </div>
-                    <div class="d-flex justify-content-between mb-4 text-muted border-bottom pb-4">
+                    
+                    <div class="flex justify-between mb-6 text-sm font-medium text-gray-600 border-b border-gray-200 pb-6">
                         <span>@lang('messages.send_waste')</span>
-                        <span class="text-success">@lang('messages.free')</span>
+                        <span class="text-success font-bold uppercase tracking-wide">@lang('messages.free')</span>
                     </div>
                     
-                    <div class="d-flex justify-content-between mb-4">
-                        <span class="fs-5 fw-bolder text-uppercase">@lang('messages.total')</span>
-                        <span class="fs-3 fw-bolder">{{ number_format($order->total_amount, 2) }} €</span>
+                    <div class="flex justify-between items-end mb-2">
+                        <span class="text-lg font-black uppercase tracking-widest text-dark">@lang('messages.total')</span>
+                        <span class="text-3xl font-black text-dark">{{ number_format($order->total_amount, 2) }} €</span>
                     </div>
 
-                    <p class="small text-muted mb-4">@lang('messages.ivaincluded')</p>
+                    <p class="text-xs text-gray-400 mb-8 font-medium">@lang('messages.ivaincluded')</p>
                     
                     @auth
-                    <form method="post" action="{{ route('payments.pay', $order) }}">
+                    <form method="post" action="{{ route('payments.pay', $order) }}" class="flex flex-col gap-6">
                         @csrf
-
-                        <style>
-                            .seccion-nueva-dir, .seccion-guardada-dir { display: none; margin-top: 15px; }
-
-                            #modo_guardada:checked ~ .seccion-guardada-dir { display: block; }
-                            #modo_nueva:checked ~ .seccion-nueva-dir { display: block; }
-                        </style>
-
-                        <div class="mb-4">
-                            <label class="form-label small fw-bold text-uppercase tracking-wide mb-3 d-block">@lang('messages.sendaddress')</label>
-
+                        
+                        <div>
+                            <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">@lang('messages.sendaddress')</label>
+                            
                             @if(auth()->user()->addresses && auth()->user()->addresses->count() > 0)
-                                <input class="form-check-input border-dark shadow-none me-1" type="radio" name="address_mode" id="modo_guardada" value="saved" checked>
-                                <label class="form-check-label fw-bold me-4 cursor-pointer" for="modo_guardada">
-                                    @lang('messages.savedaddresses')
-                                </label>
+                                <div class="flex flex-col sm:flex-row gap-4 mb-4">
+                                    <label class="flex items-center gap-2 cursor-pointer group">
+                                        <input type="radio" name="address_mode" id="modo_guardada" value="saved" checked class="w-4 h-4 text-[#212529] focus:ring-[#212529] border-gray-300 js-address-toggle">
+                                        <span class="text-sm font-bold text-gray-700 group-hover:text-dark">@lang('messages.savedaddresses')</span>
+                                    </label>
+                                    
+                                    <label class="flex items-center gap-2 cursor-pointer group">
+                                        <input type="radio" name="address_mode" id="modo_nueva" value="new" {{ old('address_mode') == 'new' ? 'checked' : '' }} class="w-4 h-4 text-[#212529] focus:ring-[#212529] border-gray-300 js-address-toggle">
+                                        <span class="text-sm font-bold text-gray-700 group-hover:text-dark">@lang('messages.newaddress')</span>
+                                    </label>
+                                </div>
+                            @endif
 
-                                <input class="form-check-input border-dark shadow-none me-1" type="radio" name="address_mode" id="modo_nueva" value="new" {{ old('address_mode') == 'new' ? 'checked' : '' }}>
-                                <label class="form-check-label fw-bold cursor-pointer" for="modo_nueva">
-                                    @lang('messages.newaddress')
-                                </label>
-
-                                <div class="seccion-guardada-dir bg-white p-3 border rounded-3">
-                                    <select name="address_id" class="form-select border-dark bg-transparent shadow-none">
-                                        @foreach ($order->user->addresses as $address)
-                                            <option value="{{ $address->id }}">
-                                                {{ $address->street }}, {{ $address->city }} ({{ $address->zip_code }})
-                                            </option>
-                                        @endforeach
-                                    </select>
+                                <div id="seccion-guardada-dir" class="bg-white p-4 border border-gray-200 rounded-xl transition-all">
+                                    <div class="relative">
+                                        <select name="address_id" class="w-full appearance-none bg-transparent text-gray-700 text-sm font-medium focus:outline-none cursor-pointer pr-8">
+                                            @foreach ($order->user->addresses as $address)
+                                                <option value="{{ $address->id }}">
+                                                    {{ $address->street }}, {{ $address->city }} ({{ $address->zip_code }})
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center text-gray-500">
+                                            <i class="bi bi-chevron-down text-xs"></i>
+                                        </div>
+                                    </div>
                                 </div>
                             @else
                                 <input type="hidden" name="address_mode" id="modo_nueva" value="new">
-                                <div class="alert alert-secondary border-0 small py-2 mb-3">@lang('messages.noaddressesyet')</div>
+                                <div class="bg-blue-50 text-blue-800 border border-blue-100 p-3 rounded-lg text-xs font-bold mb-4 flex items-center gap-2">
+                                    <i class="bi bi-info-circle"></i> @lang('messages.noaddressesyet')
+                                </div>
                             @endif
 
-                            <div class="seccion-nueva-dir bg-white p-3 border rounded-3 {{ auth()->user()->addresses->count() == 0 ? 'd-block' : '' }}">
-                                <div class="row g-3">
-                                    <div class="col-12">
-                                        <input type="text" name="new_street" class="form-control border-dark bg-transparent shadow-none @error('new_street') is-invalid @enderror" placeholder="Calle y número" value="{{ old('new_street') }}">
-                                        @error('new_street') <span class="text-danger small">{{ $message }}</span> @enderror
+                            <div id="seccion-nueva-dir" class="bg-white p-4 border border-gray-200 rounded-xl transition-all mt-4 {{ (!auth()->user()->addresses || auth()->user()->addresses->count() == 0) ? 'block' : 'hidden' }}">
+                                <div class="flex flex-col gap-3">
+                                    <div>
+                                        <input type="text" name="new_street" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400" placeholder="Calle y número" value="{{ old('new_street') }}">
+                                        @error('new_street') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
                                     </div>
-                                    <div class="col-sm-8">
-                                        <input type="text" name="new_city" class="form-control border-dark bg-transparent shadow-none @error('new_city') is-invalid @enderror" placeholder="Ciudad" value="{{ old('new_city') }}">
-                                        @error('new_city') <span class="text-danger small">{{ $message }}</span> @enderror
-                                    </div>
-                                    <div class="col-sm-4">
-                                        <input type="text" name="new_zip_code" class="form-control border-dark bg-transparent shadow-none @error('new_zip_code') is-invalid @enderror" placeholder="C.P." value="{{ old('new_zip_code') }}">
-                                        @error('new_zip_code') <span class="text-danger small">{{ $message }}</span> @enderror
+                                    <div class="flex gap-3">
+                                        <div class="flex-1">
+                                            <input type="text" name="new_city" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400" placeholder="Ciudad" value="{{ old('new_city') }}">
+                                            @error('new_city') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
+                                        </div>
+                                        <div class="w-1/3">
+                                            <input type="text" name="new_zip_code" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400" placeholder="C.P." value="{{ old('new_zip_code') }}">
+                                            @error('new_zip_code') <span class="text-red-500 text-xs font-bold mt-1 block">{{ $message }}</span> @enderror
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-dark w-100 py-3 rounded-pill fw-bold fs-5 text-uppercase tracking-wide btn-hover-scale mt-2">
-                            @lang('messages.tramit_pedido') <i class="bi bi-arrow-right ms-2"></i>
+                        <button type="submit" class="w-full bg-[#212529] text-white py-4 rounded-full font-bold text-lg uppercase tracking-widest hover:bg-opacity-90 hover:shadow-lg transition-all active:scale-95 flex items-center justify-center gap-3 mt-2">
+                            @lang('messages.tramit_pedido') <i class="bi bi-arrow-right"></i>
                         </button>
                     </form>
                     @else
@@ -194,12 +222,40 @@
                     </button>
                     @endauth
                     
-                    <div class="text-center mt-4 text-muted small">
-                        <i class="bi bi-shield-check me-1"></i> @lang('messages.savepay')
+                    <div class="text-center mt-6 text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-1.5">
+                        <i class="bi bi-shield-lock-fill text-sm"></i> @lang('messages.savepay')
                     </div>
                 </div>
             </div>
         </div>
     @endif
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const toggles = document.querySelectorAll('.js-address-toggle');
+        const secGuardada = document.getElementById('seccion-guardada-dir');
+        const secNueva = document.getElementById('seccion-nueva-dir');
+
+        if(toggles.length > 0 && secGuardada && secNueva) {
+            function updateAddressView() {
+                const isNew = document.getElementById('modo_nueva').checked;
+                if(isNew) {
+                    secGuardada.classList.add('hidden');
+                    secNueva.classList.remove('hidden');
+                } else {
+                    secGuardada.classList.remove('hidden');
+                    secNueva.classList.add('hidden');
+                }
+            }
+
+            toggles.forEach(toggle => {
+                toggle.addEventListener('change', updateAddressView);
+            });
+
+            // Forzar vista inicial si hubo errores de validación
+            updateAddressView();
+        }
+    });
+</script>
 @endsection

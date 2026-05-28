@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Pagination\Paginator;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Order;
@@ -34,6 +35,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Paginator::useTailwind();
+
         // Gate de conveniencia para comprobar rol admin
         Gate::define('admin-access', function (User $user) {
             return $user->hasRol('admin');

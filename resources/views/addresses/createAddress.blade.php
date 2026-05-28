@@ -1,88 +1,76 @@
 @extends('layout')
-
-@section('title', 'Nueva Dirección')
+@section('title', 'Editar Dirección')
 
 @section('content')
-<div class="min-h-screen bg-body-bg py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-2xl mx-auto">
+<div class="flex justify-center items-center w-full py-12 px-4 sm:px-6 lg:px-8 mb-20">
+    
+    <div class="max-w-2xl w-full bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden transition-all">
         
-        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="px-8 pt-10 pb-6 text-center border-b border-gray-50">
+            <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-dark bg-opacity-5 mb-4 text-dark shadow-inner">
+                <i class="bi bi-pencil-square text-3xl"></i>
+            </div>
+            <h2 class="text-2xl font-black text-dark tracking-tight uppercase">Editar Dirección</h2>
+            <p class="text-sm text-gray-500 mt-2 font-medium">Actualiza los datos de entrega de esta ubicación.</p>
+        </div>
+
+        <form action="{{ route('addresses.update', $address->id) }}" method="POST" class="p-8 space-y-6">
+            @csrf
+            @method('PUT')
             
-            <div class="bg-primary px-6 py-6 border-b border-gray-200">
-                <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-                    <i class="bi bi-geo-alt"></i> Añadir Nueva Dirección
-                </h2>
-                <p class="text-light text-sm mt-1">Indica dónde quieres recibir tus próximos pedidos.</p>
+            <div>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Calle, número, piso y puerta</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <i class="bi bi-signpost-split text-gray-400"></i>
+                    </div>
+                    <input type="text" name="street" value="{{ old('street', $address->street) }}" autofocus
+                           class="w-full pl-12 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400">
+                </div>
+                @error('street') 
+                    <span class="text-red-500 text-xs font-bold mt-2 flex items-center gap-1"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> 
+                @enderror
             </div>
 
-            <form action="{{ route('addresses.store') }}" method="POST" class="p-6 sm:p-8 space-y-6">
-                @csrf
-
-                @if(request()->has('user_id'))
-                    <input type="hidden" name="user_id" value="{{ request('user_id') }}">
-                @endif
-
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Calle, número, piso y puerta</label>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Ciudad / Localidad</label>
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                            <i class="bi bi-signpost-split text-gray-400"></i>
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="bi bi-building text-gray-400"></i>
                         </div>
-                        <input type="text" name="street" value="{{ old('street') }}" autofocus placeholder=" Ej. Calle Mayor 12, 3ºB"
-                            class="w-full pl-10 rounded-lg border-gray-300 border px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all hover:border-gray-400">
+                        <input type="text" name="city" value="{{ old('city', $address->city) }}"
+                               class="w-full pl-12 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400">
                     </div>
-                    @error('street') 
-                        <span class="text-red-500 text-xs mt-1 flex items-center gap-1">
-                            <i class="bi bi-exclamation-circle"></i> Rellena la calle
-                        </span> 
+                    @error('city') 
+                        <span class="text-red-500 text-xs font-bold mt-2 flex items-center gap-1"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> 
                     @enderror
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Ciudad / Localidad</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="bi bi-building text-gray-400"></i>
-                            </div>
-                            <input type="text" name="city" value="{{ old('city') }}" placeholder=" Ej. Madrid"
-                                class="w-full pl-10 rounded-lg border-gray-300 border px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all hover:border-gray-400">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Código Postal</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <i class="bi bi-mailbox text-gray-400"></i>
                         </div>
-                        @error('city') 
-                            <span class="text-red-500 text-xs mt-1 flex items-center gap-1">
-                                <i class="bi bi-exclamation-circle"></i> Rellena la ciudad
-                            </span> 
-                        @enderror
+                        <input type="text" name="zip_code" value="{{ old('zip_code', $address->zip_code) }}"
+                               class="w-full pl-12 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400">
                     </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Código Postal</label>
-                        <div class="relative">
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <i class="bi bi-mailbox text-gray-400"></i>
-                            </div>
-                            <input type="text" name="zip_code" value="{{ old('zip_code') }}" placeholder=" Ej. 28001"
-                                class="w-full pl-10 rounded-lg border-gray-300 border px-4 py-2.5 focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all hover:border-gray-400">
-                        </div>
-                        @error('zip_code') 
-                            <span class="text-red-500 text-xs mt-1 flex items-center gap-1">
-                                <i class="bi bi-exclamation-circle"></i> Rellena el código postal
-                            </span> 
-                        @enderror
-                    </div>
+                    @error('zip_code') 
+                        <span class="text-red-500 text-xs font-bold mt-2 flex items-center gap-1"><i class="bi bi-exclamation-circle"></i> {{ $message }}</span> 
+                    @enderror
                 </div>
+            </div>
 
-                <div class="flex items-center justify-end gap-4 mt-8 pt-6 border-t border-gray-100">
-                    <button type="button" onclick="window.history.back();" class="px-6 py-2.5 text-gray-600 font-medium hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-colors">
-                        Cancelar
-                    </button>
-                    <button type="submit" class="px-6 py-2.5 bg-primary text-white font-medium rounded-lg hover:bg-opacity-90 hover:-translate-y-0.5 transition-all shadow-sm flex items-center gap-2">
-                        <i class="bi bi-save"></i> Guardar Dirección
-                    </button>
-                </div>
-            </form>
-            
-        </div>
+            <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 mt-8 pt-6 border-t border-gray-100">
+                <button type="button" onclick="window.history.back();" class="w-full sm:w-auto px-6 py-4 text-gray-500 font-bold uppercase tracking-widest text-xs hover:text-dark hover:bg-gray-50 rounded-xl transition-colors">
+                    Cancelar
+                </button>
+                <button type="submit" class="w-full sm:w-auto px-8 py-4 bg-primary text-white font-bold uppercase tracking-widest text-xs rounded-xl hover:bg-opacity-90 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2">
+                    <i class="bi bi-arrow-repeat"></i> Actualizar Dirección
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 @endsection

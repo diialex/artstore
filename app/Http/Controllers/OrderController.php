@@ -180,7 +180,13 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        //
+        if (auth()->user()->roles->contains('id', 2) && $order->user_id !== auth()->id()) {
+        abort(403);
+        }
+        $order->load(['items.product', 'items.size', 'address', 'user']);
+
+        // Devolvemos la vista que acabamos de crear pasándole el pedido
+        return view('orders.show', compact('order'));
     }
 
     /**

@@ -1,23 +1,42 @@
 @extends('adminLayout')
 
 @section('content')
-<div class="container-fluid mt-4">
-    <div class="d-flex align-items-center mb-4">
-        <h1 class="h2 mb-0">@lang('messages.metrics')</h1>
-    </div>
-    <div class="container">
-        <h2>@lang('messages.user')</h2>
-        <hr class="border-1 opacity-50">
-        <div class="row">
-            <div class="col-6">
-                {!! $usersRegisterThisYear->container() !!}
-            </div>
-            <div class="col-6">
-                {!! $ordersPerUser->container() !!}
-            </div>
+<div class="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 mb-10">
+    
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8 border-b border-gray-200 pb-6">
+        <div>
+            <h1 class="text-3xl font-black text-dark tracking-tight">@lang('messages.metrics')</h1>
+            <p class="text-sm text-gray-500 mt-1 font-medium">Panel general de estadísticas y rendimiento</p>
         </div>
     </div>
     
+    <div class="mb-10">
+        <h2 class="text-lg font-bold text-gray-800 uppercase tracking-widest mb-6 flex items-center gap-2">
+            <i class="bi bi-people-fill text-primary"></i> @lang('messages.user')
+        </h2>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+                <div class="mb-4">
+                    <h3 class="text-sm font-bold text-gray-600 uppercase tracking-wider">Registros (Este Año)</h3>
+                </div>
+                <div class="w-full relative h-[300px]">
+                    {!! $usersRegisterThisYear->container() !!}
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+                <div class="mb-4">
+                    <h3 class="text-sm font-bold text-gray-600 uppercase tracking-wider">Pedidos por Usuario</h3>
+                </div>
+                <div class="w-full relative h-[300px]">
+                    {!! $ordersPerUser->container() !!}
+                </div>
+            </div>
+            
+        </div>
+    </div>
 </div>
 
 <script src="{{ $usersRegisterThisYear->cdn() }}"></script>

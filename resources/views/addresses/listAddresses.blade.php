@@ -1,84 +1,85 @@
 @extends('layout')
-
 @section('title', 'Mis Direcciones')
 
 @section('content')
-<div class="min-h-screen bg-body-bg py-10 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-6xl mx-auto">
+<div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full mb-20">
+    
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <div class="flex items-center gap-3">
+            <a href="{{ route('users.show', auth()->user()->username) }}" class="text-gray-400 hover:text-dark transition-colors mr-2">
+                <i class="bi bi-arrow-left text-xl"></i>
+            </a>
+            <h2 class="text-3xl font-black text-dark tracking-tight uppercase">Mis Direcciones</h2>
+        </div>
+        <a href="{{ route('addresses.create', isset($userId) ? ['user_id' => $userId] : []) }}" 
+           class="inline-flex items-center gap-2 px-6 py-3 bg-dark text-white font-bold rounded-full hover:bg-opacity-90 transition-all shadow-sm active:scale-95">
+            <i class="bi bi-plus-lg"></i> Nueva dirección
+        </a>
+    </div>
+
+    @if (session('msg'))
+        <div class="bg-dark text-white p-4 rounded-xl text-sm font-bold mb-8 flex items-center justify-between shadow-lg js-alert">
+            <div class="flex items-center gap-3">
+                <i class="bi bi-check-circle-fill text-success text-lg"></i>
+                <span>{{ session('msg') }}</span>
+            </div>
+            <button onclick="this.closest('.js-alert').remove()" class="text-gray-400 hover:text-white transition-colors focus:outline-none">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+    @endif
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         
-        @if (session('msg'))
-            <div class="mb-8 bg-green-50 border-l-4 border-green-500 p-4 rounded-r-lg shadow-sm flex items-center justify-between animate__fadeInDown">
-                <div class="flex items-center text-green-800">
-                    <i class="bi bi-check-circle-fill mr-3 text-xl"></i>
-                    <p class="font-medium">{{ session('msg') }}</p>
+        @forelse($addresses as $address)
+            <div class="bg-white rounded-3xl shadow-sm border border-gray-100 p-8 flex flex-col justify-between hover:shadow-md transition-shadow group relative overflow-hidden">
+                
+                <div class="absolute top-0 right-0 w-24 h-24 bg-gray-50 rounded-bl-full -z-10 group-hover:bg-primary/5 transition-colors"></div>
+
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <span class="bg-gray-100 text-dark text-[0.65rem] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1.5">
+                            <i class="bi bi-house-door-fill"></i> Envío
+                        </span>
+                    </div>
+                    
+                    <h3 class="text-xl font-black text-dark mb-3 leading-tight uppercase">
+                        {{ $address->street }}
+                    </h3>
+                    <p class="text-gray-500 font-medium mb-1 flex items-center gap-2 text-sm">
+                        <i class="bi bi-building text-gray-400"></i> {{ $address->city }}
+                    </p>
+                    <p class="text-gray-500 font-medium flex items-center gap-2 text-sm">
+                        <i class="bi bi-mailbox text-gray-400"></i> C.P: {{ $address->zip_code }}
+                    </p>
+                </div>
+
+                <div class="flex items-center gap-3 mt-8 pt-6 border-t border-gray-100">
+                    <a href="{{ route('addresses.edit', $address->id) }}" class="flex-1 bg-gray-50 text-dark text-center py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-dark hover:text-white transition-colors">
+                        Editar
+                    </a>
+                    
+                    <form action="{{ route('addresses.delete', $address->id) }}" method="POST" class="flex-1 m-0" onsubmit="return confirm('¿Seguro que deseas eliminar esta dirección?');">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="w-full bg-red-50 text-red-600 text-center py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-red-600 hover:text-white transition-colors">
+                            Borrar
+                        </button>
+                    </form>
                 </div>
             </div>
-        @endif
-
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4 border-b border-gray-200 pb-4">
-            <h2 class="text-3xl font-bold text-dark flex items-center gap-3">
-                <i class="bi bi-geo-alt-fill text-primary"></i> Mis Direcciones
-            </h2>
-            <a href="{{ route('addresses.create', isset($userId) ? ['user_id' => $userId] : []) }}" 
-               class="inline-flex items-center justify-center bg-primary text-white px-6 py-2.5 rounded-full font-medium hover:bg-opacity-90 hover:shadow-md hover:-translate-y-0.5 transition-all">
-                <i class="bi bi-plus-lg mr-2"></i> Nueva dirección
-            </a>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             
-            @forelse($addresses as $address)
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col justify-between hover:border-primary hover:shadow-md transition-all group">
-                    <div>
-                        <div class="flex items-center justify-between mb-4">
-                            <span class="bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                                <i class="bi bi-house-door-fill mr-1"></i> Casa / Envío
-                            </span>
-                            <span class="text-xs text-gray-400 flex items-center gap-1">
-                                <i class="bi bi-person"></i> {{ $address->user->username ?? 'Sin usuario' }}
-                            </span>
-                        </div>
-                        
-                        <h3 class="text-xl font-bold text-gray-900 mb-2 leading-tight">
-                            {{ $address->street }}
-                        </h3>
-                        <p class="text-gray-600 mb-1 flex items-center gap-2">
-                            <i class="bi bi-building text-gray-400"></i> {{ $address->city }}
-                        </p>
-                        <p class="text-gray-500 font-medium flex items-center gap-2">
-                            <i class="bi bi-mailbox text-gray-400"></i> C.P: {{ $address->zip_code }}
-                        </p>
-                    </div>
+        @empty
+            <div class="col-span-1 md:col-span-2 lg:col-span-3 flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
+                <i class="bi bi-geo text-7xl text-gray-200 mb-6"></i>
+                <h3 class="text-2xl font-bold text-dark mb-2">Sin direcciones</h3>
+                <p class="text-gray-500 mb-8 max-w-md mx-auto text-center">Añade una dirección de envío para que tus futuros pedidos lleguen volando a la puerta de tu casa.</p>
+                <a href="{{ route('addresses.create', isset($userId) ? ['user_id' => $userId] : []) }}" class="px-8 py-4 bg-white text-dark border-2 border-dark font-bold rounded-full uppercase tracking-widest text-sm hover:bg-dark hover:text-white transition-all active:scale-95">
+                    Añadir mi primera dirección
+                </a>
+            </div>
+        @endforelse
 
-                    <div class="flex items-center gap-3 mt-6 pt-5 border-t border-gray-50">
-                        <a href="{{ route('addresses.edit', $address->id) }}" class="flex-1 bg-gray-50 text-gray-700 text-center py-2.5 rounded-xl font-medium hover:bg-blue-50 hover:text-blue-700 transition-colors border border-gray-100 hover:border-blue-200">
-                            <i class="bi bi-pencil-square mr-1"></i> Editar
-                        </a>
-                        
-                        <form action="{{ route('addresses.delete', $address->id) }}" method="POST" class="flex-1" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta dirección de envío?');">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="w-full bg-red-50 text-red-600 py-2.5 rounded-xl font-medium hover:bg-red-600 hover:text-white transition-colors border border-red-100 hover:border-red-600">
-                                <i class="bi bi-trash3 mr-1"></i> Borrar
-                            </button>
-                        </form>
-                    </div>
-                </div>
-                
-            @empty
-                <div class="col-span-1 md:col-span-2 lg:col-span-3 bg-white rounded-2xl p-12 text-center shadow-sm border border-gray-100">
-                    <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="bi bi-geo text-gray-300 text-4xl block"></i>
-                    </div>
-                    <h3 class="text-xl font-medium text-gray-900 mb-2">Aún no tienes direcciones guardadas</h3>
-                    <p class="text-gray-500 mb-6 max-w-md mx-auto">Añade una dirección de envío para que tus futuros pedidos lleguen volando a la puerta de tu casa.</p>
-                    <a href="{{ route('addresses.create', isset($userId) ? ['user_id' => $userId] : []) }}" class="inline-block bg-primary text-white px-8 py-3 rounded-full font-medium hover:bg-opacity-90 transition-all hover:shadow-lg">
-                        Añadir mi primera dirección
-                    </a>
-                </div>
-            @endforelse
-
-        </div>
     </div>
 </div>
 @endsection
