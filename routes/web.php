@@ -23,7 +23,7 @@ use App\Services\UsersService;
 | RUTAS PÚBLICAS (Sin autenticación)
 |--------------------------------------------------------------------------
 */
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home')->can('store-access');
 
 Route::get('/login', function () {
     return redirect()->intended('/')->with('openLogin', 'true');
@@ -123,10 +123,6 @@ Route::put('/updateAddress/{address}', [AddressController::class, 'update'])
 Route::delete('/deleteAddress/{address}', [AddressController::class, 'delete'])
     ->name('addresses.delete')
     ->middleware(['auth']);
-
-Route::post('/addProduct/{product}', [OrderController::class, 'addProducttoOrder'])
-    ->name('orders.addProduct')
-    ->can('create', Order::class);
 
 #CATEGORIES
 
@@ -288,7 +284,7 @@ Route::delete('/deleteOrderitem/{orderitem}', [OrderItemController::class, 'dest
 
 Route::get('/carrito', [OrderController::class, 'carrito'])
     ->name('orders.carrito')
-    ->can('viewCarrito', Order::class);
+    ->can('store-access');
 
 Route::get('/favoritos', [UsersController::class, 'showFavorites'])
     ->name('users.favorites')
@@ -311,10 +307,12 @@ Route::post('/cart/decrease/{item}', [OrderController::class, 'decreaseItem'])
     ->can('create', Order::class);
 
 Route::post('/cart/guest/increase', [OrderController::class, 'guestIncreaseItem'])
-    ->name('cart.guest.increase');
+    ->name('cart.guest.increase')
+    ->can('store-access');
 
 Route::post('/cart/guest/decrease', [OrderController::class, 'guestDecreaseItem'])
-    ->name('cart.guest.decrease');
+    ->name('cart.guest.decrease')
+    ->can('store-access');
 
 Route::get('/forzar-login-admin', function () {
     $service = new UsersService();
@@ -348,12 +346,17 @@ Route::get('/lang/{locale}', function ($locale) {
 })->name('lang.switch');
 
 
+// Añadir al carrito — accesible para guests y usuarios con rol user
+Route::post('/carrito/add/{product}', [OrderController::class, 'addProducttoOrder'])
+    ->name('orders.addProduct')
+    ->can('store-access');
+
 /*
 |--------------------------------------------------------------------------
 | RUTAS DE CLIENTE (Requieren Autenticación)
 |--------------------------------------------------------------------------
 */
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'can:store-access'])->group(function () {
 
     // Redirección de Dashboard/Home autenticado
     Route::get('/home', function () { return view('auth.dashboard'); })->middleware('verified');
@@ -381,8 +384,6 @@ Route::middleware(['auth'])->group(function () {
 
     // CARRITO Y PEDIDOS (Flujo de compra)
     Route::controller(OrderController::class)->group(function () {
-        Route::get('/carrito', 'carrito')->can('create', Order::class)->name('orders.carrito');
-        Route::post('/carrito/add/{product}', 'addProducttoOrder')->can('create', Order::class)->name('orders.addProduct');
         Route::post('/carrito/increase/{item}', 'increaseItem')->can('create', Order::class)->name('cart.increase');
         Route::post('/carrito/decrease/{item}', 'decreaseItem')->can('create', Order::class)->name('cart.decrease');
         
