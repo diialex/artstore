@@ -2,12 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\CategoryService;
+use App\Services\RedisService;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use App\Services\ProductService;
 use App\Http\Requests\Product\CreateProductRequest; 
 use App\Http\Requests\Product\UpdateProductRequest; 
+use Cache;
+use App\Constants\RedisConstants;
+
 
 class ProductController extends Controller
 {
@@ -15,18 +20,24 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     
-    public function __construct(protected ProductService $productService)
+    public function __construct(protected ProductService $productService, protected CategoryService $categoryService)
     {
         $this->productService = $productService;
+        $this->categoryService = $categoryService;
     }
     
     public function index(Request $request)
     {
         $categoryId=$request->input('category');
+        
+        $categories = RedisService::getCategories();
 
-        $products = $this->productService->getAll($categoryId);
-
-        $categories = Category::all(); 
+        if ($categoryId != nullOrEmptyString()){
+            $products = RedisService::getProducts();
+        }else{
+            $products = RedisService::getProductsByCategory($categoryId);
+        }
+        
         return view('products.index', compact('products', 'categories', 'categoryId')); 
     }
 
@@ -53,6 +64,9 @@ class ProductController extends Controller
         }
         $this->productService->create($data);
 
+        RedisService::flushProducts();
+        RedisService::flushProductsByCategory();
+
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
@@ -71,7 +85,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-         $categories = Category::all();
+        $categories = Cache::rememberForever(RedisConstants::CATEGORIES_ALL, fn() => $this->categoryService->getAll());
 
         return view('products.form', compact('product', 'categories'));
     }
@@ -83,6 +97,9 @@ class ProductController extends Controller
     {
         $this->productService->update($product, $request->validated());
 
+        RedisService::flushProducts();
+        RedisService::flushProductsByCategory();
+
         return redirect()->route('products.index')->with('success', 'Producto actualizado correctamente');
     }
 
@@ -92,6 +109,9 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         $this->productService->delete($product);
+
+        RedisService::flushProducts();
+        RedisService::flushProductsByCategory();
 
         return redirect()->route('products.index')->with('success', 'Producto eliminado para siempre');
     }

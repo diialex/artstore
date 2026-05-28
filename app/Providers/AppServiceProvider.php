@@ -8,6 +8,7 @@ use Illuminate\Pagination\Paginator;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Address;
 use App\Models\Role;
 use App\Policies\ProductsPolicy;
@@ -47,5 +48,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Address::class, AddressesPolicy::class);
         Gate::policy(User::class, UsersPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
+        Gate::policy(OrderItem::class, OrderItemsPolicy::class);
     }
 }
