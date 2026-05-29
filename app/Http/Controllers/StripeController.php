@@ -12,7 +12,8 @@ use App\Services\PaymentService;
 use Stripe\StripeClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\OrderConfirmed; 
+use App\Mail\OrderConfirmed;
+use App\Services\RedisService;
 
 class StripeController extends Controller {
 
@@ -104,10 +105,18 @@ class StripeController extends Controller {
             if ($session->payment_status === 'paid') {
 
                 foreach($order->items as $item) {
-                    $item->size->stock -= $item->quantity;
-                    $item->size->save();
+                    if ($item->size) {
+                        $item->size->stock -= $item->quantity;
+                        $item->size->save();
+                    } else {
+                        $item->product->stock -= $item->quantity;
+                        $item->product->save();
+                    }
                 }
-                
+
+                RedisService::flushProducts();
+                RedisService::flushProductsByCategory();
+
                 $order->update(['status' => 'completed']);
                 
                 $payment = $order->payments()->first();

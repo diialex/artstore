@@ -26,12 +26,16 @@
 
                 <div class="flex flex-col gap-6">
                     @foreach($order->items as $item)
-                        <div class="flex flex-col sm:flex-row gap-6 py-4 border-b border-gray-100 group transition-colors hover:bg-gray-50/50 -mx-4 px-4 rounded-2xl">
-                            
+                        @php
+                            $availableStock = $item->size ? $item->size->stock : $item->product->stock;
+                            $isUnavailable  = $availableStock <= 0 || $item->quantity > $availableStock;
+                        @endphp
+                        <div class="flex flex-col sm:flex-row gap-6 py-4 border-b border-gray-100 group transition-colors hover:bg-gray-50/50 -mx-4 px-4 rounded-2xl {{ $isUnavailable ? 'opacity-60' : '' }}">
+
                             <div class="w-24 sm:w-32 shrink-0">
                                 @if($item->product->image_url)
-                                    <img src="{{ asset($item->product->image_url) }}" 
-                                         class="w-full aspect-[3/4] object-cover rounded-xl shadow-sm" 
+                                    <img src="{{ asset($item->product->image_url) }}"
+                                         class="w-full aspect-[3/4] object-cover rounded-xl shadow-sm"
                                          alt="{{ $item->product->title }}">
                                 @else
                                     <div class="w-full aspect-[3/4] bg-gray-100 rounded-xl flex items-center justify-center">
@@ -45,31 +49,65 @@
                                     <h4 class="font-bold text-lg text-dark">{{ $item->product->title }}</h4>
                                     <span class="text-lg font-black text-dark sm:hidden">{{ number_format($item->price * $item->quantity, 2) }} €</span>
                                 </div>
-                                
+
                                 <h5 class="text-sm font-medium text-gray-500 mb-4">Talla: <span class="text-dark font-bold">{{ $item->size->size ?? 'Única' }}</span></h5>
-                                
+
                                 <div class="flex items-center gap-6 mb-4">
                                     <span class="text-gray-500 font-medium">{{ number_format($item->price, 2) }} €</span>
-                                    
+
+                                    @if($isUnavailable)
+                                        <span class="inline-flex items-center gap-1 bg-red-50 text-red-600 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border border-red-200">
+                                            <i class="bi bi-x-circle text-sm"></i> Agotado
+                                        </span>
+                                    @else
                                     <div class="flex items-center border border-gray-200 rounded-full px-1 py-1 bg-white">
+                                        @auth
                                         <form action="{{ route('cart.decrease', $item) }}" method="POST" class="m-0">
                                             @csrf
                                             <button type="submit" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-dark hover:bg-gray-100 rounded-full transition-colors focus:outline-none">
                                                 <i class="bi bi-dash-lg text-xs"></i>
                                             </button>
                                         </form>
-                                        
-                                        <span class="w-8 text-center font-bold text-sm">{{ $item->quantity }}</span>
-                                        
-                                        <form action="{{ route('cart.increase', $item) }}" method="POST" class="m-0">
+                                        @else
+                                        <form action="{{ route('cart.guest.decrease') }}" method="POST" class="m-0">
                                             @csrf
+                                            <input type="hidden" name="product_id" value="{{ $item->product_id }}">
                                             <button type="submit" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-dark hover:bg-gray-100 rounded-full transition-colors focus:outline-none">
-                                                <i class="bi bi-plus-lg text-xs"></i>
+                                                <i class="bi bi-dash-lg text-xs"></i>
                                             </button>
                                         </form>
+                                        @endauth
+
+                                        <span class="w-8 text-center font-bold text-sm">{{ $item->quantity }}</span>
+
+                                        @if($availableStock > $item->quantity)
+                                            @auth
+                                            <form action="{{ route('cart.increase', $item) }}" method="POST" class="m-0">
+                                                @csrf
+                                                <button type="submit" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-dark hover:bg-gray-100 rounded-full transition-colors focus:outline-none">
+                                                    <i class="bi bi-plus-lg text-xs"></i>
+                                                </button>
+                                            </form>
+                                            @else
+                                            <form action="{{ route('cart.guest.increase') }}" method="POST" class="m-0">
+                                                @csrf
+                                                <input type="hidden" name="product_id" value="{{ $item->product_id }}">
+                                                <input type="hidden" name="size_id" value="{{ $item->size_id }}">
+                                                <button type="submit" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:text-dark hover:bg-gray-100 rounded-full transition-colors focus:outline-none">
+                                                    <i class="bi bi-plus-lg text-xs"></i>
+                                                </button>
+                                            </form>
+                                            @endauth
+                                        @else
+                                            <span class="w-8 h-8 flex items-center justify-center text-gray-300 cursor-not-allowed">
+                                                <i class="bi bi-plus-lg text-xs"></i>
+                                            </span>
+                                        @endif
                                     </div>
+                                    @endif
                                 </div>
 
+                                @auth
                                 <form action="{{ route('orderitems.delete', $item->id) }}" method="POST" class="mt-auto">
                                     @csrf
                                     @method('DELETE')
@@ -77,6 +115,16 @@
                                         <i class="bi bi-trash3 text-sm"></i> @lang('messages.eliminate')
                                     </button>
                                 </form>
+                                @else
+                                <form action="{{ route('cart.guest.decrease') }}" method="POST" class="mt-auto">
+                                    @csrf
+                                    <input type="hidden" name="product_id" value="{{ $item->product_id }}">
+                                    <input type="hidden" name="remove_all" value="1">
+                                    <button type="submit" class="text-red-500 hover:text-red-700 text-xs font-bold uppercase tracking-widest flex items-center gap-1 transition-colors focus:outline-none">
+                                        <i class="bi bi-trash3 text-sm"></i> @lang('messages.eliminate')
+                                    </button>
+                                </form>
+                                @endauth
                             </div>
 
                             <div class="hidden sm:flex flex-col justify-center items-end shrink-0 pl-4">
@@ -108,6 +156,7 @@
 
                     <p class="text-xs text-gray-400 mb-8 font-medium">@lang('messages.ivaincluded')</p>
                     
+                    @auth
                     <form method="post" action="{{ route('payments.pay', $order) }}" class="flex flex-col gap-6">
                         @csrf
                         
@@ -172,6 +221,11 @@
                             @lang('messages.tramit_pedido') <i class="bi bi-arrow-right"></i>
                         </button>
                     </form>
+                    @else
+                    <button type="button" data-bs-toggle="offcanvas" data-bs-target="#iniciarSesion" class="btn btn-dark w-100 py-3 rounded-pill fw-bold fs-5 text-uppercase tracking-wide btn-hover-scale mt-2">
+                        Inicia sesión para finalizar el pedido <i class="bi bi-arrow-right ms-2"></i>
+                    </button>
+                    @endauth
                     
                     <div class="text-center mt-6 text-gray-400 text-xs font-bold uppercase tracking-widest flex items-center justify-center gap-1.5">
                         <i class="bi bi-shield-lock-fill text-sm"></i> @lang('messages.savepay')

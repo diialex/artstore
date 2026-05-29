@@ -81,19 +81,16 @@ class OrderItemController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(int $id)
+    public function destroy(OrderItem $orderitem)
     {
-        $item = $this->service->find($id);
-        $order = $item->order; 
-        
+        $order = $orderitem->order;
         if($order->user_id !== auth()->id()) {
             abort(403, 'No tienes permiso para modificar el carrito de otra persona >:(.');
         }
+        $orderitem->delete();
 
-        $this->service->delete($id);
-    
         $this->orderService->updateOrderTotal($order);
-        
+
         return redirect()->route('orders.carrito')->with('success', 'Artículo eliminado de la cesta.');
     }
 }

@@ -7,6 +7,8 @@ use App\Http\Requests\Order\StoreOrderRequest;
 use App\Http\Requests\Order\UpdateOrderRequest;
 use App\Models\OrderItem;
 use App\Models\Product;
+use App\Models\Size;
+use App\Services\GuestCartService;
 use App\Services\OrderService;
 use App\Mail\OrderConfirmed;
 use Illuminate\Http\Request;
@@ -15,7 +17,7 @@ use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
-    public function __construct(protected OrderService $orderService){
+    public function __construct(protected OrderService $orderService, protected GuestCartService $guestCartService){
         
     }
 
@@ -63,7 +65,10 @@ class OrderController extends Controller
             'size_id' => $hasSizes ? 'required|exists:sizes,id' : 'nullable', 
         ]);
 
-        $size_id = $request->size_id;
+        if (Auth::guest()) {
+            $this->guestCartService->addItem($product, 1, $request->size_id);
+        } else {
+            $size_id = $request->size_id;
         $user = Auth::user();
 
         $order = Order::where('user_id', $user->id)
@@ -103,19 +108,39 @@ class OrderController extends Controller
         }
 
         $this->updateOrder($order);
+        }
         
         return redirect()->route('orders.carrito')->with('success', 'Producto agregado exitosamente.');
     }
 
     public function carrito()
     {
+        if (Auth::guest()) {
+            $cartData = $this->guestCartService->getCart();
+            $order = (object) [
+                'items' => collect($cartData['items'])->map(function ($i) {
+                    $sizeId = $i['size_id'] ?? null;
+                    return (object) [
+                        'product_id' => $i['product_id'],
+                        'size_id'    => $sizeId,
+                        'product'    => Product::find($i['product_id']),
+                        'size'       => $sizeId ? Size::find($sizeId) : null,
+                        'price'      => $i['price'],
+                        'quantity'   => $i['quantity'],
+                    ];
+                }),
+                'total_amount' => $cartData['total_amount'],
+            ];
+            return view('orders.carrito', compact('order'));
+        }
+        
         $user_id = Auth::id();
         
         $order = Order::where('user_id', $user_id)
-                      ->where(function($query) {
-                          $query->where('status', 'pending')
-                                ->orWhere('status', 'failed');
-                      })->first();
+                    ->where(function($query) {
+                    $query->where('status', 'pending')
+                    ->orWhere('status', 'failed');
+                    })->first();
 
         if (!$order) {
             $order = new Order;
@@ -128,6 +153,7 @@ class OrderController extends Controller
         $order = $this->updateOrder($order);
         return view('orders.carrito', compact('order'));
     }
+        
 
     public function updateOrder(Order $order){
         $total = 0;
@@ -205,6 +231,41 @@ class OrderController extends Controller
         Mail::to($order->user->email)->send(new OrderConfirmed($order));
 
         return redirect()->route('home')->with('success_order', '¡Pedido realizado con éxito! Revisa tu email :).');
+    }
+
+    public function guestIncreaseItem(Request $request)
+    {
+        $productId = (int) $request->product_id;
+        $sizeId    = $request->size_id ? (int) $request->size_id : null;
+
+        $cart = $this->guestCartService->getCart();
+        $currentQuantity = 0;
+        foreach ($cart['items'] as $item) {
+            if ($item['product_id'] === $productId && $item['size_id'] === $sizeId) {
+                $currentQuantity = $item['quantity'];
+                break;
+            }
+        }
+
+        $availableStock = $sizeId
+            ? (Size::find($sizeId)?->stock ?? 0)
+            : (Product::find($productId)?->stock ?? 0);
+
+        if ($availableStock > $currentQuantity) {
+            $this->guestCartService->addOne($productId);
+        }
+
+        return redirect()->route('orders.carrito');
+    }
+
+    public function guestDecreaseItem(Request $request)
+    {
+        if ($request->remove_all) {
+            $this->guestCartService->removeItem((int) $request->product_id);
+        } else {
+            $this->guestCartService->removeOne((int) $request->product_id);
+        }
+        return redirect()->route('orders.carrito');
     }
 
     public function increaseItem(OrderItem $item)

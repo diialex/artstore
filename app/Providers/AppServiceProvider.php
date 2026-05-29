@@ -8,6 +8,7 @@ use Illuminate\Pagination\Paginator;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Address;
 use App\Models\Role;
 use App\Policies\ProductsPolicy;
@@ -41,11 +42,18 @@ class AppServiceProvider extends ServiceProvider
             return $user->hasRol('admin');
         });
 
+        // Acceso a la tienda: guests y usuarios con rol 'user'; deniega admins puros
+        Gate::define('store-access', function (?User $user) {
+            if (!$user) return true;
+            return $user->hasRol('user');
+        });
+
         // Registro de policies
         Gate::policy(Product::class, ProductsPolicy::class);
         Gate::policy(Order::class, OrdersPolicy::class);
         Gate::policy(Address::class, AddressesPolicy::class);
         Gate::policy(User::class, UsersPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
+        Gate::policy(OrderItem::class, OrderItemsPolicy::class);
     }
 }

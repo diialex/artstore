@@ -37,7 +37,6 @@
                 <p class="text-gray-600 leading-relaxed">{{ $product->description }}</p>
             </div>
 
-            @auth
                 @if($product->stock > 0 || $product->sizes->sum('stock') > 0)
                 <form action="{{ route('orders.addProduct', $product) }}" method="POST" class="mt-8 js-add-cart-form">
                     @csrf
@@ -100,16 +99,7 @@
                         @lang('message.out_of_stock')
                     </button>
                 </div>
-                @endif
-            @endauth
-
-            @guest
-                <div class="mt-8">
-                    <button type="button" onclick="toggleMenu('iniciarSesion')" class="w-full inline-flex justify-center items-center px-4 py-2.5 border-2 border-[#212529] text-[#212529] font-bold rounded-full hover:bg-[#212529] hover:text-white transition-colors">
-                        <i class="bi bi-box-arrow-in-right mr-2"></i>@lang('messages.login_to_buy')
-                    </button>
-                </div>
-            @endguest
+            @endif
 
             <div class="mt-12 pt-8 border-t border-gray-200 space-y-4">
                 <div class="flex items-center text-gray-600">

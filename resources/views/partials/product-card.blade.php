@@ -43,13 +43,13 @@
         @endguest
 
         @auth
-            @if(auth()->user()->roles->contains('id', 1)) 
-                <div class="flex gap-2 mt-2 pt-4 border-t border-gray-100">
-                    <a href="{{ route('products.edit', $product) }}" class="flex-1 inline-flex justify-center items-center px-3 py-2 bg-amber-50 text-amber-700 border border-amber-200 rounded-full text-sm font-bold hover:bg-amber-100 transition-colors">
-                        <i class="bi bi-pencil mr-1"></i> @lang('messages.edit_product')
+            @if(auth()->user()->roles->contains('id', 1))
+                <div class="d-flex gap-2 mt-2 pt-2 border-top">
+                    <a href="{{ route('products.edit', $product) }}" class="btn btn-outline-warning btn-sm flex-fill fw-bold rounded-pill">
+                        <i class="bi bi-pencil me-1"></i> @lang('messages.edit_product')
                     </a>
-                    
-                    <form action="{{ route('products.delete', $product) }}" method="POST" class="flex-1 m-0" onsubmit="return confirm('¿Estás seguro de que quieres aniquilar este producto?');">
+
+                    <form action="{{ route('products.delete', $product) }}" method="POST" class="flex-fill" onsubmit="return confirm('¿Estás seguro de que quieres aniquilar este producto?');">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="w-full inline-flex justify-center items-center px-3 py-2 bg-red-50 text-red-600 border border-red-200 rounded-full text-sm font-bold hover:bg-red-600 hover:text-white transition-colors">
@@ -60,6 +60,9 @@
             @endif
 
             @if(auth()->user()->roles->contains('id', 2))
+                <div class="d-flex gap-2 align-items-center justify-content-end">
+                    @if($isFavoritesPage ?? false)
+                        <form action="{{ route('users.favorites.remove', $product) }}" method="POST" class="m-0" onsubmit="return confirm('¿Eliminar de favoritos?');">
                 <div class="flex flex-col gap-2 w-full">
                     
                     <div class="flex gap-2 items-end">
@@ -130,6 +133,7 @@
                                 @endif
                             </button>
                         </form>
+                    @endif
                     </div>
                 </div>
             @endif
