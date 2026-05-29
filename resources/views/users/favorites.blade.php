@@ -16,7 +16,7 @@
         <div class="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm mt-4">
             <i class="bi bi-heart text-7xl text-gray-200 mb-6 block"></i>
             <h3 class="text-2xl font-bold text-dark mb-2">@lang('messages.no_favorites')</h3>
-            <p class="text-gray-500 mb-8 max-w-md mx-auto text-center font-medium">Explora nuestra colección y guarda los artículos que más te gusten.</p>
+            <p class="text-gray-500 mb-8 max-w-md mx-auto text-center font-medium">@lang('messages.xplore_msg')</p>
             <a href="{{ route('home') }}" class="px-8 py-4 bg-dark text-white font-bold rounded-full uppercase tracking-widest text-sm hover:bg-opacity-90 transition-all active:scale-95 shadow-md">
                 @lang('messages.store_go')
             </a>

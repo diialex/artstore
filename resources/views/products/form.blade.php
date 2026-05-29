@@ -1,5 +1,5 @@
 @extends('adminLayout') 
-@section('title', $product->exists ? 'Editar Producto' : 'Nuevo Producto')
+@section('title', $product->exists ? __('message.edit_product') : __('message.create_product'))
 
 @section('content')
 <div class="w-full max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 py-8 mb-20">
@@ -9,7 +9,7 @@
             <i class="bi bi-arrow-left text-xl"></i>
         </a>
         <h2 class="text-3xl font-black text-dark tracking-tight uppercase">
-            {{ $product->exists ? 'Editar Producto' : 'Crear Producto' }}
+            {{ $product->exists ? __('message.edit_product') : __('message.create_product') }}
         </h2>
     </div>
 
@@ -27,14 +27,14 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.price') (€)</label>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.price')</label>
                     <input type="number" step="0.01" name="price" value="{{ old('price', $product->price) }}" 
                            class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
                     @error('price') <span class="text-red-500 text-xs font-bold mt-2 block">{{ $message }}</span> @enderror
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.stock') Total</label>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.stock') </label>
                     <input type="text" value="{{ $product->exists ? $product->total_stock : 0 }} uds" readonly 
                            class="w-full bg-gray-100 border border-transparent text-gray-500 rounded-xl px-4 py-3.5 text-sm font-medium cursor-not-allowed">
                     <p class="text-[0.65rem] text-gray-400 mt-2">@lang('messages.calculated_size')</p>
@@ -61,7 +61,7 @@
                         <div class="shrink-0 w-32 h-32 rounded-2xl border border-gray-200 overflow-hidden relative group">
                             <img src="{{ asset('storage/' . $product->image_url) }}" alt="Actual" class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                                <span class="text-white text-[0.65rem] font-bold uppercase tracking-widest">Actual</span>
+                                <span class="text-white text-[0.65rem] font-bold uppercase tracking-widest">@lang('messages.actual')</span>
                             </div>
                         </div>
                     @endif
@@ -85,7 +85,7 @@
             
             <div class="border-t border-gray-100 pt-8">
                 <div class="flex justify-between items-end mb-4">
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest">Tallas y Stock</label>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest">@lang('messages.stock_size')</label>
                     <span class="text-[0.65rem] text-gray-400 font-bold uppercase">@lang('messages.fill_sizes')</span>
                 </div>
                 
@@ -118,7 +118,7 @@
 
             <div class="pt-6">
                 <button type="submit" class="w-full bg-dark text-white font-bold uppercase tracking-widest py-4 rounded-xl hover:bg-opacity-90 hover:shadow-lg transition-all active:scale-95 flex justify-center items-center gap-2">
-                    <i class="bi bi-save"></i> {{ $product->exists ? 'Actualizar Producto' : 'Guardar Producto' }}
+                    <i class="bi bi-save"></i> {{ $product->exists ? __('message.update_product') : __('message.save_product') }}
                 </button>
             </div>
         </form>

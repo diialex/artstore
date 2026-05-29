@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Detalle del Pedido')
+@section('title', __('message.orderdetails'))
 
 @section('content')
 <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full mb-20">
@@ -26,12 +26,12 @@
                         {{ $order->status }}
                     </span>
                 </h1>
-                <p class="text-sm text-gray-500 mt-1 font-medium">Realizado el {{ $order->created_at->format('d de F, Y \a \l\a\s H:i') }}</p>
+                <p class="text-sm text-gray-500 mt-1 font-medium">@lang('message.order_did') {{ $order->created_at->format('d de F, Y \a \l\a\s H:i') }}</p>
             </div>
         </div>
         
         <button onclick="window.print()" class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 text-gray-700 font-bold rounded-full hover:bg-gray-50 hover:text-dark transition-all active:scale-95 shadow-sm text-sm uppercase tracking-widest">
-            <i class="bi bi-printer"></i> Imprimir Recibo
+            <i class="bi bi-printer"></i> @lang('message.print_receipt')
         </button>
     </div>
 
@@ -40,7 +40,7 @@
         <div class="lg:col-span-8">
             <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-50 bg-gray-50/50 flex justify-between items-center">
-                    <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest">Artículos Comprados</h3>
+                    <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest">@lang('message.bought_articles')</h3>
                     <span class="text-xs font-bold text-gray-400">{{ $order->items->count() }} artículo(s)</span>
                 </div>
                 
@@ -61,8 +61,8 @@
                             <div class="flex-grow">
                                 <h4 class="font-bold text-dark text-lg mb-1">{{ $item->product->title }}</h4>
                                 <div class="flex flex-wrap gap-4 text-sm">
-                                    <span class="text-gray-500 font-medium">Talla: <span class="text-dark font-bold">{{ $item->size->size ?? 'Única' }}</span></span>
-                                    <span class="text-gray-500 font-medium">Cant: <span class="text-dark font-bold">{{ $item->quantity }}</span></span>
+                                    <span class="text-gray-500 font-medium">@lang('message.size'): <span class="text-dark font-bold">{{ $item->size->size ?? __('message.unique') }}</span></span>
+                                    <span class="text-gray-500 font-medium">@lang('message.amnt'): <span class="text-dark font-bold">{{ $item->quantity }}</span></span>
                                 </div>
                             </div>
 
@@ -89,13 +89,13 @@
                         <span>{{ number_format($order->total_amount, 2) }} €</span>
                     </div>
                     <div class="flex justify-between text-gray-600">
-                        <span>Gastos de envío</span>
-                        <span class="text-success font-bold uppercase tracking-wide">Gratis</span>
+                        <span>@lang('message.send_waste')</span>
+                        <span class="text-success font-bold uppercase tracking-wide">.@lang('message.free')</span>
                     </div>
                 </div>
                 
                 <div class="flex justify-between items-end pt-6 border-t border-gray-200">
-                    <span class="text-lg font-black uppercase tracking-widest text-dark">Total</span>
+                    <span class="text-lg font-black uppercase tracking-widest text-dark">@lang('message.total')</span>
                     <span class="text-3xl font-black text-dark">{{ number_format($order->total_amount, 2) }} €</span>
                 </div>
             </div>
@@ -106,7 +106,7 @@
                     <div class="w-10 h-10 bg-primary/10 text-primary rounded-full flex items-center justify-center">
                         <i class="bi bi-geo-alt-fill"></i>
                     </div>
-                    <h3 class="text-sm font-black text-dark uppercase tracking-widest">Dirección de Entrega</h3>
+                    <h3 class="text-sm font-black text-dark uppercase tracking-widest">@lang('message.sendaddress')</h3>
                 </div>
                 
                 <div class="text-sm font-medium text-gray-600 space-y-1 pl-13">

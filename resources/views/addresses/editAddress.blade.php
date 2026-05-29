@@ -10,15 +10,15 @@
             
             <div class="bg-primary px-6 py-6 border-b border-gray-200">
                 <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-                    <i class="bi bi-pencil-square"></i> Editar Dirección
+                    <i class="bi bi-pencil-square"></i> @lang('messages.edit_address')
                 </h2>
-                <p class="text-light text-sm mt-1">Actualiza los datos de entrega de esta dirección.</p>
+                <p class="text-light text-sm mt-1">@lang('messages.update_ubi_data')</p>
             </div>
 
             <form action="{{ route('addresses.update', $address->id) }}" method="POST" class="p-6 sm:p-8 space-y-6">
                 @csrf
                 @method('PUT') <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Calle, número, piso y puerta</label>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">@lang('messages.address_info')</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                             <i class="bi bi-signpost-split text-gray-400"></i>
@@ -35,7 +35,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Ciudad / Localidad</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">@lang('messages.city_local')</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="bi bi-building text-gray-400"></i>
@@ -51,7 +51,7 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Código Postal</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">@lang('messages.postal_code')</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <i class="bi bi-mailbox text-gray-400"></i>
@@ -72,7 +72,7 @@
                         Cancelar
                     </button>
                     <button type="submit" class="px-6 py-2.5 bg-primary text-white font-medium rounded-lg hover:bg-opacity-90 hover:-translate-y-0.5 transition-all shadow-sm flex items-center gap-2">
-                        <i class="bi bi-arrow-repeat"></i> Actualizar Dirección
+                        <i class="bi bi-arrow-repeat"></i> @lang('messages.update_address')
                     </button>
                 </div>
             </form>
