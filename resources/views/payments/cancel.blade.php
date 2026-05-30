@@ -13,16 +13,16 @@
         <h1 class="text-3xl font-black text-dark tracking-tight uppercase mb-4">@lang('messages.payment_cancelled')</h1>
         
         <p class="text-gray-500 mb-10 font-medium leading-relaxed">
-            No te preocupes, el proceso se ha interrumpido de forma segura y <strong>no se ha realizado ningún cargo</strong> en tu cuenta. Puedes volver a intentarlo cuando estés listo.
+            @lang('messages.cancel_msg1') <strong>@lang('messages.cancel_msg2')</strong> @lang('messages.cancel_msg3')
         </p>
         
         <div class="flex flex-col gap-4">
             <a href="{{ route('orders.carrito') }}" class="w-full flex justify-center items-center gap-2 bg-[#212529] text-white font-bold uppercase tracking-widest py-4 rounded-xl hover:bg-opacity-90 transition-all shadow-md active:scale-95">
-                <i class="bi bi-arrow-left text-lg"></i> Volver al carrito
+                <i class="bi bi-arrow-left text-lg"></i>@lang('messages.back_cart')
             </a>
             
             <a href="{{ route('home') }}" class="w-full flex justify-center items-center gap-2 bg-gray-50 text-gray-600 border border-gray-200 font-bold uppercase tracking-widest py-4 rounded-xl hover:bg-gray-100 hover:text-dark transition-all active:scale-95">
-                Ir al inicio
+                @lang('messages.init_go')
             </a>
         </div>
     </div>

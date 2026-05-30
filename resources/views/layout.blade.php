@@ -29,7 +29,7 @@
 
                             <div id="userDropdownMenu" class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl opacity-0 invisible transition-all duration-200 border border-gray-100 overflow-hidden z-[100] top-full origin-top-right transform scale-95">
                                 <div class="px-4 py-3 bg-gray-50 border-b border-gray-100">
-                                    <h6 class="text-xs font-bold text-gray-500 uppercase tracking-widest">Opciones de cuenta</h6>
+                                    <h6 class="text-xs font-bold text-gray-500 uppercase tracking-widest">@lang('messages.account_options')</h6>
                                 </div>
                                 
                                 <ul class="py-2 flex flex-col">
@@ -105,6 +105,10 @@
                         <a href="{{ route('lang.switch', 'es') }}" class="{{ app()->getLocale() == 'es' ? 'text-white' : 'text-gray-500 hover:text-white' }} transition-colors">ES</a>
                         <span class="text-gray-600">|</span>
                         <a href="{{ route('lang.switch', 'en') }}" class="{{ app()->getLocale() == 'en' ? 'text-white' : 'text-gray-500 hover:text-white' }} transition-colors">EN</a>
+                                               <span class="text-gray-600">|</span>
+                        <a href="{{ route('lang.switch', 'fr') }}" class="{{ app()->getLocale() == 'fr' ? 'text-white' : 'text-gray-500 hover:text-white' }} transition-colors">FR</a>
+                        <span class="text-gray-600">|</span>
+                        <a href="{{ route('lang.switch', 'en') }}" class="{{ app()->getLocale() == 'en' ? 'text-white' : 'text-gray-500 hover:text-white' }} transition-colors">IT</a>
                     </div>
                     <span class="text-sm font-bold text-gray-400">&copy; 2026 HANGER</span>
                 </div>

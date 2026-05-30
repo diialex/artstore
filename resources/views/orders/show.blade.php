@@ -81,11 +81,11 @@
         <div class="lg:col-span-4 space-y-6">
             
             <div class="bg-gray-50 rounded-3xl p-6 sm:p-8 border border-gray-100 shadow-sm">
-                <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest border-b border-gray-200 pb-4 mb-6">Resumen del Pago</h3>
+                <h3 class="text-sm font-black text-gray-400 uppercase tracking-widest border-b border-gray-200 pb-4 mb-6">@lang('messages.pay_summary')</h3>
                 
                 <div class="space-y-4 mb-6 text-sm font-medium">
                     <div class="flex justify-between text-gray-600">
-                        <span>Subtotal</span>
+                        <span>@lang('messages.subtot')</span>
                         <span>{{ number_format($order->total_amount, 2) }} €</span>
                     </div>
                     <div class="flex justify-between text-gray-600">

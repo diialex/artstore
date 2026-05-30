@@ -50,14 +50,14 @@
                                     <span class="text-lg font-black text-dark sm:hidden">{{ number_format($item->price * $item->quantity, 2) }} €</span>
                                 </div>
 
-                                <h5 class="text-sm font-medium text-gray-500 mb-4">Talla: <span class="text-dark font-bold">{{ $item->size->size ?? 'Única' }}</span></h5>
+                                <h5 class="text-sm font-medium text-gray-500 mb-4">@lang('messages.size'): <span class="text-dark font-bold">{{ $item->size->size ?? 'Única' }}</span></h5>
 
                                 <div class="flex items-center gap-6 mb-4">
                                     <span class="text-gray-500 font-medium">{{ number_format($item->price, 2) }} €</span>
 
                                     @if($isUnavailable)
                                         <span class="inline-flex items-center gap-1 bg-red-50 text-red-600 text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full border border-red-200">
-                                            <i class="bi bi-x-circle text-sm"></i> Agotado
+                                            <i class="bi bi-x-circle text-sm"></i> @lang('messages.out_of_stock')
                                         </span>
                                     @else
                                     <div class="flex items-center border border-gray-200 rounded-full px-1 py-1 bg-white">

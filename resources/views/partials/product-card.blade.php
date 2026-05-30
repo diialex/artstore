@@ -96,7 +96,7 @@
                             @endif
 
                             <div class="js-size-warning hidden text-red-500 text-xs font-bold uppercase tracking-wider text-center mt-[-4px]">
-                                <i class="bi bi-exclamation-triangle mr-1"></i> Selecciona talla
+                                <i class="bi bi-exclamation-triangle mr-1"></i> @lang('messages.select_size')
                             </div>
 
                             <button type="submit" class="w-full inline-flex justify-center items-center px-4 py-2 bg-[#212529] text-white font-bold rounded-full uppercase tracking-wider text-xs hover:bg-opacity-90 transition-colors">

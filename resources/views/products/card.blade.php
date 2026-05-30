@@ -7,7 +7,7 @@
         @else
             <div class="card-img-top bg-light d-flex align-items-center justify-content-center text-muted border-bottom"
                 style="height: 220px;">
-                <span>📸 Sin imagen</span>
+                <span>📸 @lang('messages.no_image')</span>
             </div>
         @endif
         <div class="card-body">
@@ -32,13 +32,13 @@
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-outline-danger btn-sm">
-                            🗑️ Borrar
+                            🗑️ @lang('messages.delete_product')
                         </button>
                         <!-- Usuario tiene rol 1 o 2 -->
 
                 @elseif (auth()->user()->roles->contains('id', 2))
                         <a href="{{ route('orders.carrito', $product) }}" class="btn btn-outline-warning btn-sm">
-                            🛒 Carrito
+                            🛒 @lang('messages.carrit')
                         </a>
                         @if($isFavoritesPage ?? false)
                             <form action="{{ route('users.favorites.remove', $product) }}" method="POST" style="display:inline;" onsubmit="return confirm('¿Eliminar de favoritos?');">
