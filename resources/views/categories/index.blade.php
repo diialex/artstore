@@ -6,11 +6,11 @@
     
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-            <h2 class="text-3xl font-black text-dark tracking-tight uppercase">Categorías</h2>
-            <p class="text-sm text-gray-500 mt-1 font-medium">Gestión de familias de productos</p>
+            <h2 class="text-3xl font-black text-dark tracking-tight uppercase">@lang('messages.categories')</h2>
+            <p class="text-sm text-gray-500 mt-1 font-medium">@lang('messages.manage_families')</p>
         </div>
         <a href="{{ route('categories.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-dark text-white font-bold rounded-full hover:bg-opacity-90 transition-all active:scale-95 shadow-sm">
-            <i class="bi bi-plus-lg text-lg"></i> Nueva Categoría
+            <i class="bi bi-plus-lg text-lg"></i>@lang('messages.new_category')
         </a>
     </div>
 
@@ -31,9 +31,9 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-100">
-                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap w-1/4">Nombre</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest w-2/4">Descripción</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap text-right w-1/4">Acciones</th>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap w-1/4">@lang('messages.name')</th>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest w-2/4">@lang('messages.description')</th>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap text-right w-1/4">@lang('messages.actions')</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
@@ -67,7 +67,7 @@
                             <td colspan="3" class="px-6 py-16 text-center">
                                 <div class="flex flex-col items-center justify-center">
                                     <i class="bi bi-tags text-5xl text-gray-200 mb-3"></i>
-                                    <p class="text-gray-500 font-medium">No hay categorías creadas todavía.</p>
+                                    <p class="text-gray-500 font-medium">@lang('messages.no_categories')</p>
                                 </div>
                             </td>
                         </tr>

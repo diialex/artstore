@@ -6,11 +6,11 @@
     
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-            <h2 class="text-3xl font-black text-dark tracking-tight uppercase">Roles y Permisos</h2>
-            <p class="text-sm text-gray-500 mt-1 font-medium">Gestiona los niveles de acceso al sistema</p>
+            <h2 class="text-3xl font-black text-dark tracking-tight uppercase">@lang('messages.rols_permissions')</h2>
+            <p class="text-sm text-gray-500 mt-1 font-medium">@lang('messages.lvl_access_mangment')</p>
         </div>
         <a href="{{ route('roles.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-dark text-white font-bold rounded-full hover:bg-opacity-90 transition-all active:scale-95 shadow-sm">
-            <i class="bi bi-shield-plus text-lg"></i> Crear Rol
+            <i class="bi bi-shield-plus text-lg"></i> @lang('messages.createrole')
         </a>
     </div>
 

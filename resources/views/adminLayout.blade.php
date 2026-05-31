@@ -27,20 +27,20 @@
                             <i class="bi bi-chevron-down text-xs transition-transform duration-200" id="adminDropdownIcon"></i>
                         </button>
 
-                        <div id="adminDropdownMenu" class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl opacity-0 invisible -translate-y-2 transition-all duration-200 ease-out border border-gray-100 overflow-hidden z-[100] top-full origin-top-right">
+                        <div id="adminDropdownMenu" class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl opacity-0 invisible transition-all duration-200 border border-gray-100 overflow-hidden z-[100] top-full origin-top-right transform ">
                             <div class="px-4 py-3 bg-gray-50 border-b border-gray-100">
-                                <h6 class="text-xs font-bold text-gray-500 uppercase tracking-widest">Opciones de cuenta</h6>
+                                <h6 class="text-xs font-bold text-gray-500 uppercase tracking-widest">@lang('messages.account_options')</h6>
                             </div>
                             
                             <ul class="py-2 flex flex-col">
                                 @if (auth()->user()->roles->contains('id', 1))
-                                    <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="{{ route('controlPanel.dashboard') }}"><i class="bi bi-person-gear text-lg"></i>Panel administrador</a></li>
+                                    <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="{{ route('controlPanel.dashboard') }}"><i class="bi bi-person-gear text-lg"></i>@lang('messages.admin_panel')</a></li>
                                 @endif
                                 
                                 @if(auth()->user()->roles->contains('id', 2))
-                                    <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="{{ route('users.show', auth()->user()->username) }}"><i class="bi bi-person text-lg"></i>Mi Perfil</a></li>
-                                    <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="{{ route('orders.index') }}"><i class="bi bi-bag text-lg"></i>Mis Pedidos</a></li>
-                                    <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="/favoritos"><i class="bi bi-heart text-lg"></i>Favoritos</a></li>
+                                    <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="{{ route('users.show', auth()->user()->username) }}"><i class="bi bi-person text-lg"></i>@lang('messages.my_profile')</a></li>
+                                    <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="{{ route('orders.index') }}"><i class="bi bi-bag text-lg"></i>@lang('messages.my_orders')</a></li>
+                                    <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="/favoritos"><i class="bi bi-heart text-lg"></i>@lang('messages.favorites')</a></li>
                                 @endif
                             </ul>
                             
@@ -48,7 +48,7 @@
                                 <form method="POST" action="{{ route('logout') }}" class="m-0">
                                     @csrf
                                     <button type="submit" class="w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 transition-colors flex items-center gap-3 text-sm font-bold">
-                                        <i class="bi bi-box-arrow-right text-lg"></i>Cerrar sesión
+                                        <i class="bi bi-box-arrow-right text-lg"></i>@lang('messages.logout')
                                     </button>
                                 </form>
                             </div>
@@ -62,55 +62,70 @@
     <div id="adminOverlay" class="fixed inset-0 bg-black/50 z-[60] hidden opacity-0 transition-opacity duration-300" onclick="closeAdminMenu()"></div>
 
     <div id="menuLateral" class="fixed inset-y-0 left-0 w-80 bg-white text-dark z-[70] transform -translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
-        <div class="flex justify-between items-center p-6 border-b border-gray-100 bg-gray-50">
-            <h5 class="text-sm font-black uppercase tracking-widest text-primary">Administración</h5>
-            <button onclick="closeAdminMenu()" class="text-gray-400 hover:text-dark transition-colors"><i class="bi bi-x-lg text-xl"></i></button>
+        
+        <!-- Cabecera del panel -->
+        <div class="flex justify-between items-center p-6 bg-gray-50 border-b border-gray-100">
+            <div class="flex items-center gap-3">
+                <i class="bi bi-list-nested text-primary text-xl"></i>
+                <h5 class="text-sm font-black uppercase tracking-widest text-primary">Menu</h5>
+            </div>
+            <button onclick="toggleMenu('menuLateral')" class="text-gray-400 hover:text-red-500 transition-colors bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-200">
+                <i class="bi bi-x-lg text-sm"></i>
+            </button>
         </div>
         
-        <div class="overflow-y-auto flex-grow">
-            <ul class="flex flex-col">
-                <li>
-                    <a href="{{ route('controlPanel.dashboard') }}" class="flex items-center gap-3 px-6 py-4 border-b border-gray-100 transition-colors {{ request()->routeIs('controlPanel.dashboard') ? 'bg-light text-primary font-bold' : 'text-gray-700 hover:bg-gray-50' }}">
-                        <i class="bi {{ request()->routeIs('controlPanel.dashboard') ? 'bi-bar-chart-line-fill' : 'bi-bar-chart-line' }} text-lg"></i> Dashboard
-                    </a>
-                </li>
+        <!-- Contenido principal con scroll -->
+        <div class="p-6 overflow-y-auto flex-grow flex flex-col gap-6 hide-scrollbar">
+            
+            <!-- Enlace de Inicio destacado -->
+            <div>
+                <a href="{{ route('home') }}" class="group flex items-center gap-4 px-4 py-3 rounded-xl {{ !request('category') ? 'bg-primary text-white shadow-md' : 'bg-gray-50 text-gray-700 hover:bg-light hover:text-primary' }} transition-all">
+                    <i class="bi bi-house-door{{ !request('category') ? '-fill' : '' }} text-lg"></i>
+                    <span class="font-bold text-sm tracking-wide">@lang('messages.start')</span>
+                </a>
+            </div>
 
-                <li>
-                    <button onclick="toggleAdminAccordion('submenuUsuarios', 'chevronUsuarios')" class="w-full flex justify-between items-center px-6 py-4 border-b border-gray-100 text-gray-700 hover:bg-gray-50 transition-colors focus:outline-none {{ request()->routeIs('users.*') || request()->routeIs('roles.*') ? 'bg-gray-50' : '' }}">
-                        <span class="flex items-center gap-3 {{ request()->routeIs('users.*') || request()->routeIs('roles.*') ? 'text-primary font-bold' : '' }}">
-                            <i class="bi {{ request()->routeIs('users.*') || request()->routeIs('roles.*') ? 'bi-people-fill' : 'bi-people' }} text-lg"></i> Usuarios
-                        </span>
-                        <i id="chevronUsuarios" class="bi bi-chevron-down text-xs transition-transform duration-300 {{ request()->routeIs('users.*') || request()->routeIs('roles.*') ? 'rotate-180' : '' }}"></i>
-                    </button>
-                    <div id="submenuUsuarios" class="bg-gray-50 overflow-hidden transition-all duration-300 {{ request()->routeIs('users.*') || request()->routeIs('roles.*') ? 'max-h-40 border-b border-gray-100' : 'max-h-0' }}">
-                        <ul class="py-2 px-6 flex flex-col gap-1">
-                            <li><a href="{{ route('users.index') }}" class="flex items-center gap-3 py-2 text-sm {{ request()->routeIs('users.*') ? 'text-primary font-bold' : 'text-gray-600 hover:text-dark' }}"><i class="bi {{ request()->routeIs('users.*') ? 'bi-person-fill' : 'bi-person' }}"></i> Lista de Usuarios</a></li>
-                            <li><a href="{{ route('roles.index') }}" class="flex items-center gap-3 py-2 text-sm {{ request()->routeIs('roles.*') ? 'text-primary font-bold' : 'text-gray-600 hover:text-dark' }}"><i class="bi {{ request()->routeIs('roles.*') ? 'bi-shield-lock-fill' : 'bi-shield-lock' }}"></i> Roles y Permisos</a></li>
-                        </ul>
-                    </div>
-                </li>
+            <div class="w-full h-px bg-gray-100"></div>
 
-                <li>
-                    <button onclick="toggleAdminAccordion('submenuCatalogo', 'chevronCatalogo')" class="w-full flex justify-between items-center px-6 py-4 border-b border-gray-100 text-gray-700 hover:bg-gray-50 transition-colors focus:outline-none {{ request()->routeIs('products.*') || request()->routeIs('categories.*') ? 'bg-gray-50' : '' }}">
-                        <span class="flex items-center gap-3 {{ request()->routeIs('products.*') || request()->routeIs('categories.*') ? 'text-primary font-bold' : '' }}">
-                            <i class="bi {{ request()->routeIs('products.*') || request()->routeIs('categories.*') ? 'bi-box2-heart-fill' : 'bi-box2-heart' }} text-lg"></i> Catálogo
-                        </span>
-                        <i id="chevronCatalogo" class="bi bi-chevron-down text-xs transition-transform duration-300 {{ request()->routeIs('products.*') || request()->routeIs('categories.*') ? 'rotate-180' : '' }}"></i>
-                    </button>
-                    <div id="submenuCatalogo" class="bg-gray-50 overflow-hidden transition-all duration-300 {{ request()->routeIs('products.*') || request()->routeIs('categories.*') ? 'max-h-40 border-b border-gray-100' : 'max-h-0' }}">
-                        <ul class="py-2 px-6 flex flex-col gap-1">
-                            <li><a href="{{ route('products.index') }}" class="flex items-center gap-3 py-2 text-sm {{ request()->routeIs('products.*') ? 'text-primary font-bold' : 'text-gray-600 hover:text-dark' }}"><i class="bi {{ request()->routeIs('products.*') ? 'bi-box-fill' : 'bi-box' }}"></i> Productos</a></li>
-                            <li><a href="{{ route('categories.index') }}" class="flex items-center gap-3 py-2 text-sm {{ request()->routeIs('categories.*') ? 'text-primary font-bold' : 'text-gray-600 hover:text-dark' }}"><i class="bi {{ request()->routeIs('categories.*') ? 'bi-tags-fill' : 'bi-tags' }}"></i> Categorías</a></li>
-                        </ul>
-                    </div>
-                </li>
+            <!-- Sección de Categorías -->
+            <div>
+                <h6 class="text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-4 px-2 flex items-center gap-2">
+                    <i class="bi bi-collection"></i> @lang('messages.collections')
+                </h6>
+                <ul class="flex flex-col gap-1">
+                    @foreach(App\Models\Category::all() as $cat)
+                        <li>
+                            <a href="{{ route('home', ['category' => $cat->id]) }}" 
+                            class="flex items-center justify-between px-4 py-2.5 rounded-lg {{ request('category') == $cat->id ? 'bg-light text-primary font-bold' : 'text-gray-600 hover:bg-gray-50 hover:text-dark font-medium' }} transition-colors text-sm group">
+                                <div class="flex items-center gap-3">
+                                    <!-- Indicador visual de categoría activa -->
+                                    <div class="w-1.5 h-1.5 rounded-full {{ request('category') == $cat->id ? 'bg-primary shadow-[0_0_8px_rgba(103,22,70,0.6)]' : 'bg-transparent group-hover:bg-gray-300' }} transition-all"></div>
+                                    {{ $cat->name }}
+                                </div>
+                                @if(request('category') == $cat->id)
+                                    <i class="bi bi-chevron-right text-xs"></i>
+                                @endif
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
 
-                <li>
-                    <a href="{{ route('orders.index') }}" class="flex items-center gap-3 px-6 py-4 border-b border-gray-100 transition-colors {{ request()->routeIs('orders.*') ? 'bg-light text-primary font-bold' : 'text-gray-700 hover:bg-gray-50' }}">
-                        <i class="bi {{ request()->routeIs('orders.*') ? 'bi-bag-fill' : 'bi-bag' }} text-lg"></i> Pedidos
-                    </a>
-                </li>
-            </ul>
+            <!-- Banner de confianza (Envío gratis) -->
+            <div class="mt-auto pt-6">
+                <div class="bg-light rounded-xl p-5 text-center border border-primary/10 transition-colors hover:border-primary/30 cursor-default">
+                    <i class="bi bi-box-seam text-primary text-2xl mb-2 block"></i>
+                    <h6 class="text-sm font-bold text-dark mb-1">@lang('messages.send_free_waste')</h6>
+                    <p class="text-xs text-gray-500">@lang('messages.free_giveback')</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer del panel con Redes Sociales -->
+        <div class="p-6 border-t border-gray-100 bg-gray-50 flex justify-center gap-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-primary shadow-sm transition-all"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-primary shadow-sm transition-all"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-primary shadow-sm transition-all"><i class="bi bi-envelope"></i></a>
         </div>
     </div>
 
@@ -118,24 +133,55 @@
         @yield('content')
     </main>
 
-    <footer class="bg-dark text-white pt-12 pb-6 mt-auto w-full shadow-[0_-10px_20px_rgba(0,0,0,0.1)]">
+    <footer class="bg-[#3B2B30] text-[#fdebf1] pt-10 pb-6 mt-16 w-full shadow-[0_-10px_20px_rgba(0,0,0,0.1)]">
         <div class="max-w-[1400px] mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="flex flex-wrap justify-center md:justify-start gap-4 text-sm">
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">@lang('messages.terms_conditions_purchase')</a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">@lang('messages.terms_conditions_hanger')</a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">@lang('messages.privacy_policy')</a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">@lang('messages.cookie_policy')</a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">@lang('messages.privacy_management')</a>
-                </div>
-                <div class="flex items-center gap-4">
-                    <div class="text-xs font-bold tracking-widest flex items-center gap-2">
-                        <a href="{{ route('lang.switch', 'es') }}" class="{{ app()->getLocale() == 'es' ? 'text-white' : 'text-gray-500 hover:text-white' }} transition-colors">ES</a>
-                        <span class="text-gray-600">|</span>
-                        <a href="{{ route('lang.switch', 'en') }}" class="{{ app()->getLocale() == 'en' ? 'text-white' : 'text-gray-500 hover:text-white' }} transition-colors">EN</a>
+            
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
+                
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <h2 class="text-2xl font-black tracking-widest text-white">HANGER</h2>
+                    <div class="hidden md:block w-px h-6 bg-gray-600"></div>
+                    <div class="flex gap-5">
+                        <a href="#" class="text-gray-300 hover:text-white hover:scale-110 transition-transform"><i class="bi bi-instagram text-lg"></i></a>
+                        <a href="#" class="text-gray-300 hover:text-white hover:scale-110 transition-transform"><i class="bi bi-twitter-x text-lg"></i></a>
+                        <a href="#" class="text-gray-300 hover:text-white hover:scale-110 transition-transform"><i class="bi bi-envelope text-lg"></i></a>
                     </div>
-                    <span class="text-sm font-bold text-gray-400">&copy; 2026 HANGER</span>
                 </div>
+
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('lang.switch', 'es') }}" class="px-3 py-1.5 rounded-md border {{ app()->getLocale() == 'es' ? 'border-light bg-light text-dark font-black shadow-sm' : 'border-gray-500 text-gray-300 hover:border-white hover:text-white font-medium' }} transition-colors text-xs tracking-widest uppercase">ES</a>
+                    <a href="{{ route('lang.switch', 'en') }}" class="px-3 py-1.5 rounded-md border {{ app()->getLocale() == 'en' ? 'border-light bg-light text-dark font-black shadow-sm' : 'border-gray-500 text-gray-300 hover:border-white hover:text-white font-medium' }} transition-colors text-xs tracking-widest uppercase">EN</a>
+                    <a href="{{ route('lang.switch', 'fr') }}" class="px-3 py-1.5 rounded-md border {{ app()->getLocale() == 'fr' ? 'border-light bg-light text-dark font-black shadow-sm' : 'border-gray-500 text-gray-300 hover:border-white hover:text-white font-medium' }} transition-colors text-xs tracking-widest uppercase">FR</a>
+                    <a href="{{ route('lang.switch', 'it') }}" class="px-3 py-1.5 rounded-md border {{ app()->getLocale() == 'it' ? 'border-light bg-light text-dark font-black shadow-sm' : 'border-gray-500 text-gray-300 hover:border-white hover:text-white font-medium' }} transition-colors text-xs tracking-widest uppercase">IT</a>
+                </div>
+                
+            </div>
+
+            <div class="w-full h-px bg-gray-600/50 mb-6"></div>
+
+            <div class="flex flex-col lg:flex-row justify-between items-center gap-6 text-xs text-gray-300">
+                
+                <div class="flex flex-wrap justify-center lg:justify-start gap-x-4 gap-y-2 font-medium">
+                    <a href="#" class="hover:text-white transition-colors">@lang('messages.terms_conditions_purchase')</a>
+                    <span class="text-gray-500 hidden md:inline">|</span>
+                    <a href="#" class="hover:text-white transition-colors">@lang('messages.terms_conditions_hanger')</a>
+                    <span class="text-gray-500 hidden md:inline">|</span>
+                    <a href="#" class="hover:text-white transition-colors">@lang('messages.privacy_policy')</a>
+                    <span class="text-gray-500 hidden md:inline">|</span>
+                    <a href="#" class="hover:text-white transition-colors">@lang('messages.cookie_policy')</a>
+                    <span class="text-gray-500 hidden md:inline">|</span>
+                    <a href="#" class="hover:text-white transition-colors">@lang('messages.privacy_management')</a>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+                    <div class="flex items-center gap-3 text-lg text-light opacity-80">
+                        <i class="bi bi-credit-card" title="Tarjeta de Crédito"></i>
+                        <i class="bi bi-paypal" title="PayPal"></i>
+                        <i class="bi bi-apple" title="Apple Pay"></i>
+                    </div>
+                    <span class="font-bold tracking-wider">&copy; {{ date('Y') }} HANGER.</span>
+                </div>
+                
             </div>
         </div>
     </footer>

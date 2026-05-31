@@ -10,8 +10,8 @@
             <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-dark bg-opacity-5 mb-4 text-dark shadow-inner">
                 <i class="bi bi-pencil-square text-3xl"></i>
             </div>
-            <h2 class="text-2xl font-black text-dark tracking-tight uppercase">Editar Dirección</h2>
-            <p class="text-sm text-gray-500 mt-2 font-medium">Actualiza los datos de entrega de esta ubicación.</p>
+            <h2 class="text-2xl font-black text-dark tracking-tight uppercase">@lang('messages.edit_address')</h2>
+            <p class="text-sm text-gray-500 mt-2 font-medium">@lang('messages.update_ubi_data')</p>
         </div>
 
         <form action="{{ route('addresses.update', $address->id) }}" method="POST" class="p-8 space-y-6">
@@ -19,7 +19,7 @@
             @method('PUT')
             
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Calle, número, piso y puerta</label>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.addess_info')</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <i class="bi bi-signpost-split text-gray-400"></i>
@@ -34,7 +34,7 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Ciudad / Localidad</label>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.city_local')</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <i class="bi bi-building text-gray-400"></i>
@@ -48,7 +48,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Código Postal</label>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.postal_code')</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <i class="bi bi-mailbox text-gray-400"></i>
@@ -64,10 +64,10 @@
 
             <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 mt-8 pt-6 border-t border-gray-100">
                 <button type="button" onclick="window.history.back();" class="w-full sm:w-auto px-6 py-4 text-gray-500 font-bold uppercase tracking-widest text-xs hover:text-dark hover:bg-gray-50 rounded-xl transition-colors">
-                    Cancelar
+                    @lang('messages.cancel')
                 </button>
                 <button type="submit" class="w-full sm:w-auto px-8 py-4 bg-primary text-white font-bold uppercase tracking-widest text-xs rounded-xl hover:bg-opacity-90 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2">
-                    <i class="bi bi-arrow-repeat"></i> Actualizar Dirección
+                    <i class="bi bi-arrow-repeat"></i> @lang('update_address')
                 </button>
             </div>
         </form>

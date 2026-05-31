@@ -4,7 +4,7 @@
 <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
     
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
-        <h2 class="text-3xl font-black text-dark tracking-tight">Mis Pedidos</h2>
+        <h2 class="text-3xl font-black text-dark tracking-tight">@lang('messages.orders')</h2>
         @if(auth()->user()->roles->contains('id', 1))
             <a href="{{ route('orders.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-dark text-white font-bold rounded-full hover:bg-opacity-90 transition-all shadow-sm">
                 <i class="bi bi-plus-lg"></i> @lang('messages.neworder')
@@ -28,7 +28,7 @@
         <div class="flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm mt-4">
             <i class="bi bi-bag-x text-7xl text-gray-200 mb-6"></i>
             <h3 class="text-2xl font-bold text-dark mb-2">@lang('messages.no_orders')</h3>
-            <p class="text-gray-500 mb-8">Aún no has realizado ninguna compra.</p>
+            <p class="text-gray-500 mb-8">@lang('messages.nopurchaseyet')</p>
             <a href="{{ route('home') }}" class="px-8 py-4 bg-white text-dark border-2 border-dark font-bold rounded-full uppercase tracking-widest text-sm hover:bg-dark hover:text-white transition-all">
                 @lang('messages.store_go')
             </a>

@@ -9,7 +9,7 @@
                 <i class="bi bi-shield-lock text-3xl"></i>
             </div>
             <h2 class="text-2xl font-black text-dark tracking-tight uppercase">@lang('messages.createnewpass')</h2>
-            <p class="text-sm text-gray-500 mt-2 font-medium">Introduce y confirma tu nueva contraseña de acceso.</p>
+            <p class="text-sm text-gray-500 mt-2 font-medium">@lang('messages.intro_new_passmsg')</p>
         </div>
 
         <form method="POST" action="{{ route('password.update') }}" class="p-8 space-y-5">
@@ -17,7 +17,7 @@
             <input type="hidden" name="token" value="{{ request()->route('token') }}">
             
             <div>
-                <label for="email" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Email</label>
+                <label for="email" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.lit_email')</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <i class="bi bi-envelope text-gray-400"></i>

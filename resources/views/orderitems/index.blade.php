@@ -5,18 +5,18 @@
                 <div class="alert alert-success my-2">{{ session('success') }}</div>
             @endif
 
-            <a href="{{ route('orderitems.create') }}" class="btn btn-primary">Nueva Orden</a>
+            <a href="{{ route('orderitems.create') }}" class="btn btn-primary">@lang('messages.new_user_order')</a>
         </div>
 
         <div class="col-12 mt-4">
             <ul>
                 @foreach($orderitems as $orderitem)
                     <li class="mb-2">
-                        <strong>Orden #{{ $orderitem->id }}</strong> - ${{ $orderitem->total_amount }} ({{ $orderitem->status }})
-                        <a href="{{ route('orderitems.edit', $orderitem) }}" class="btn btn-warning">Editar</a>
+                        <strong>Order #{{ $orderitem->id }}</strong> - ${{ $orderitem->total_amount }} ({{ $orderitem->status }})
+                        <a href="{{ route('orderitems.edit', $orderitem) }}" class="btn btn-warning">@lang('messages.edit')</a>
                         <form method="POST" action="{{ route('orderitems.delete', $orderitem) }}" style="display:inline;">
                             @csrf @method('DELETE')
-                            <button class="btn btn-danger">Eliminar</button>
+                            <button class="btn btn-danger">@lang('messages.eliminate')</button>
                         </form>
                     </li>
                 @endforeach

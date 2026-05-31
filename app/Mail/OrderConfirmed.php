@@ -9,6 +9,7 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
 
 class OrderConfirmed extends Mailable
 {
@@ -28,7 +29,7 @@ class OrderConfirmed extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Order Confirmed',
+            subject: 'Factura de tu pedido',
         );
     }
 
@@ -37,8 +38,20 @@ class OrderConfirmed extends Mailable
      */
     public function content(): Content
     {
+        $invoiceLines = DB::table('order_invoice_lines')
+            ->where('order_id', $this->order->id)
+            ->orderBy('line_id')
+            ->get();
+
+        $invoice = $invoiceLines->first();
+
         return new Content(
             view: 'emails.order_confirmed',
+            with: [
+                'invoice' => $invoice,
+                'invoiceLines' => $invoiceLines,
+                'order' => $this->order,
+            ],
         );
     }
 

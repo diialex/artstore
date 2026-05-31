@@ -6,8 +6,8 @@
     
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
-            <h2 class="text-3xl font-black text-dark tracking-tight uppercase">Usuarios</h2>
-            <p class="text-sm text-gray-500 mt-1 font-medium">Gestión de clientes y personal</p>
+            <h2 class="text-3xl font-black text-dark tracking-tight uppercase">@lang('messages.users')</h2>
+            <p class="text-sm text-gray-500 mt-1 font-medium">@lang('messages.clients_mngment_personal')</p>
         </div>
         <div class="flex flex-wrap gap-3">
             <a href="{{ route('roles.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-white border border-gray-200 text-gray-600 font-bold rounded-full hover:bg-gray-50 hover:text-dark transition-all active:scale-95 shadow-sm">
@@ -36,11 +36,11 @@
             <table class="w-full text-left border-collapse">
                 <thead>
                     <tr class="bg-gray-50 border-b border-gray-100">
-                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Usuario</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Contacto</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap hidden md:table-cell">Teléfono</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">Roles</th>
-                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap text-right">Acciones</th>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">@lang('messages.user')</th>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">@lang('messages.contact')</th>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap hidden md:table-cell">@lang('messages.phone')</th>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap">@lang('messages.roles')</th>
+                        <th class="px-6 py-4 text-xs font-bold text-gray-400 uppercase tracking-widest whitespace-nowrap text-right">@lang('messages.actions')</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
@@ -67,7 +67,7 @@
                                         </span>
                                     @empty
                                         <span class="inline-flex items-center px-2.5 py-1 rounded-md bg-gray-100 text-gray-500 text-[0.65rem] font-bold uppercase tracking-widest">
-                                            Sin roles
+                                            @lang('messages.no_roles')
                                         </span>
                                     @endforelse
                                 </div>
@@ -97,7 +97,7 @@
                             <td colspan="5" class="px-6 py-16 text-center">
                                 <div class="flex flex-col items-center justify-center">
                                     <i class="bi bi-people text-5xl text-gray-200 mb-3"></i>
-                                    <p class="text-gray-500 font-medium">No hay usuarios registrados en el sistema.</p>
+                                    <p class="text-gray-500 font-medium">@lang('messages.no_users_registeres')</p>
                                 </div>
                             </td>
                         </tr>

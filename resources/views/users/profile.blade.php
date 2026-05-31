@@ -39,8 +39,8 @@
                             <i class="bi bi-pencil-square text-2xl"></i>
                         </div>
                         <div>
-                            <p class="font-bold text-dark text-lg">Editar Perfil</p>
-                            <p class="text-xs text-gray-500 font-medium mt-0.5">Actualiza tus datos personales</p>
+                            <p class="font-bold text-dark text-lg">@lang('messages.edit_profile')</p>
+                            <p class="text-xs text-gray-500 font-medium mt-0.5">@lang('messages.update_profile')</p>
                         </div>
                     </a>
 
@@ -51,7 +51,7 @@
                         </div>
                         <div>
                             <p class="font-bold text-dark text-lg">@lang('messages.orders')</p>
-                            <p class="text-xs text-gray-500 font-medium mt-0.5">Revisa tu historial de compras</p>
+                            <p class="text-xs text-gray-500 font-medium mt-0.5">@lang('messages.watch_buy_history')</p>
                         </div>
                     </a>
 
@@ -61,8 +61,8 @@
                             <i class="bi bi-geo-alt text-2xl"></i>
                         </div>
                         <div>
-                            <p class="font-bold text-dark text-lg">Mis Direcciones</p>
-                            <p class="text-xs text-gray-500 font-medium mt-0.5">Gestiona dónde enviamos tu ropa</p>
+                            <p class="font-bold text-dark text-lg">@lang('messages.my_addresses')</p>
+                            <p class="text-xs text-gray-500 font-medium mt-0.5">@lang('messages.whereto_msg')</p>
                         </div>
                     </a>
                 </div>

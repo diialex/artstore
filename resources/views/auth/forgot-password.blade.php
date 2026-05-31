@@ -9,7 +9,7 @@
             <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-amber-50 mb-4 text-amber-500 shadow-inner">
                 <i class="bi bi-key text-3xl"></i>
             </div>
-            <h2 class="text-2xl font-black text-dark tracking-tight">Recuperar Contraseña</h2>
+            <h2 class="text-2xl font-black text-dark tracking-tight">@lang('messages.restore_password')</h2>
         </div>
 
         <div class="px-8 py-8">
@@ -22,7 +22,7 @@
             @endif
 
             <p class="text-sm text-gray-500 mb-8 text-center leading-relaxed">
-                ¿Olvidaste tu contraseña? No hay problema. Déjanos tu email y te enviaremos un enlace para que puedas elegir una nueva.
+                @lang('messages.forgot_msg_psg')
             </p>
 
             <form method="POST" action="{{ route('password.email') }}" class="flex flex-col gap-5">
@@ -36,12 +36,12 @@
                 </div>
 
                 <button type="submit" class="w-full mt-2 bg-dark text-white font-bold uppercase tracking-widest py-4 rounded-xl hover:bg-opacity-90 hover:shadow-lg transition-all active:scale-95 flex justify-center items-center gap-2">
-                    <i class="bi bi-envelope-paper"></i> Enviar enlace
+                    <i class="bi bi-envelope-paper"></i> @lang('messages.send_link')
                 </button>
                 
                 <div class="mt-6 text-center">
                     <a href="{{ route('login') }}" class="text-xs font-bold text-gray-400 hover:text-primary transition-colors uppercase tracking-widest flex items-center justify-center gap-1">
-                        <i class="bi bi-arrow-left"></i> Volver al login
+                        <i class="bi bi-arrow-left"></i> @lang('messages.back_login')
                     </a>
                 </div>
             </form>

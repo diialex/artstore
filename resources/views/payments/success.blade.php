@@ -10,19 +10,19 @@
             <i class="bi bi-check-circle-fill text-7xl text-green-500 drop-shadow-sm"></i>
         </div>
         
-        <h1 class="text-3xl font-black text-dark tracking-tight uppercase mb-4">¡Pago Completado!</h1>
+        <h1 class="text-3xl font-black text-dark tracking-tight uppercase mb-4">@lang('messages.payment_cancelled')</h1>
         
         <p class="text-gray-500 mb-10 font-medium leading-relaxed">
-            Tu pedido se ha procesado correctamente. En breve recibirás un correo electrónico con la confirmación y los detalles de tu envío. ¡Gracias por confiar en Hanger!
+            @lang('messages.pay_msg')
         </p>
         
         <div class="flex flex-col gap-4">
             <a href="{{ route('orders.index') }}" class="w-full flex justify-center items-center gap-2 bg-[#212529] text-white font-bold uppercase tracking-widest py-4 rounded-xl hover:bg-opacity-90 transition-all shadow-md active:scale-95">
-                <i class="bi bi-box-seam text-lg"></i> Ver mis pedidos
+                <i class="bi bi-box-seam text-lg"></i> @lang('messages.see_myorders')
             </a>
             
             <a href="{{ route('home') }}" class="w-full flex justify-center items-center gap-2 bg-gray-50 text-gray-600 border border-gray-200 font-bold uppercase tracking-widest py-4 rounded-xl hover:bg-gray-100 hover:text-dark transition-all active:scale-95">
-                Seguir comprando
+                @lang('messages.keep_buying')
             </a>
         </div>
     </div>
