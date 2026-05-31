@@ -36,9 +36,19 @@
     <div class="p-5 pt-0 bg-white mt-auto">
         <div class="flex gap-2 items-end">
 
-            <a href="{{ route('products.show', $product) }}" class="flex-1 inline-flex justify-center items-center px-4 py-2 bg-[#212529] text-white font-bold rounded-full uppercase tracking-wider text-xs hover:bg-opacity-90 transition-colors no-underline">
-                <i class="bi bi-cart-plus mr-2 text-sm"></i>@lang('messages.add_to_cart')
-            </a>
+            @php
+                $totalStock = ($product->total_stock ?? $product->stock ?? 0);
+            @endphp
+
+            @if($totalStock > 0)
+                <a href="{{ route('products.show', $product) }}" class="flex-1 inline-flex justify-center items-center px-4 py-2 bg-[#212529] text-white font-bold rounded-full uppercase tracking-wider text-xs hover:bg-opacity-90 transition-colors no-underline">
+                    <i class="bi bi-cart-plus mr-2 text-sm"></i>@lang('messages.add_to_cart')
+                </a>
+            @else
+                <button type="button" onclick="toggleMenu('iniciarSesion')" class="flex-1 inline-flex justify-center items-center px-4 py-2 bg-amber-100 text-amber-700 font-bold rounded-full uppercase tracking-wider text-xs hover:bg-amber-200 transition-colors cursor-pointer border border-amber-300">
+                    <i class="bi bi-bookmark mr-2 text-sm"></i>@lang('messages.reserve')
+                </button>
+            @endif
 
             @auth
                 @php

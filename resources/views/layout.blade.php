@@ -243,14 +243,9 @@
             @guest
                 <h4 class="text-2xl font-black text-center mb-6 text-primary">@lang('messages.welcome')</h4>
                 
-                @if ($errors->any())
-                    <div class="bg-red-50 text-red-600 text-sm font-bold p-3 rounded-lg border border-red-200 mb-6 text-center">
-                        @lang('messages.wrong_credentials')
-                    </div>
-                @endif
-                
-                <form method="POST" action="{{ route('login') }}" class="flex flex-col gap-4">
+                <form id="loginForm" method="POST" action="{{ route('login') }}" class="flex flex-col gap-4">
                     @csrf
+                    <div id="loginErrorMessage"></div>
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2" for="userCredential">@lang('messages.email_user')</label>
                         <input id="userCredential" type="text" name="userCredential" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" required autofocus />
@@ -304,7 +299,7 @@
     </div>
 
     <script>
-       // --- 1. SCRIPT GESTOR DE MENÚS LATERALES (OFFCANVAS) ---
+       // SCRIPT GESTOR DE MENÚS LATERALES
         function toggleMenu(menuId) {
             const menu = document.getElementById(menuId);
             const overlay = document.getElementById('overlay');
@@ -338,7 +333,7 @@
             }
         }
 
-        // --- 2. SCRIPT DEL MENÚ DESPLEGABLE DEL USUARIO ---
+        // SCRIPT DEL MENÚ DESPLEGABLE DEL USUARIO
         function toggleDropdown(event) {
             if(event) event.stopPropagation(); // Evita que el clic cierre el menú inmediatamente
             
@@ -358,7 +353,7 @@
             }
         }
 
-        // --- 3. CERRAR TODO HACIENDO CLIC FUERA ---
+        // CERRAR TODO HACIENDO CLIC FUERA
         function closeAllMenus() {
             // Cerrar Offcanvas si están abiertos
             ['menuLateral', 'iniciarSesion'].forEach(id => {
@@ -383,8 +378,48 @@
             }
         });
 
-        // SCRIPTS QUE SÍ NECESITAN ESPERAR AL DOM (Favoritos, Tallas y Carrito)
+        // SCRIPTS QUE SÍ NECESITAN ESPERAR AL DOM (Favoritos, Tallas, Carrito y Login)
         document.addEventListener('DOMContentLoaded', function() {
+            // Login (usuario no loggeado en bbdd error)
+            const loginForm = document.getElementById('loginForm');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async function(e) {
+                    e.preventDefault();
+                    
+                    const formData = new FormData(this);
+                    const errorMessage = document.getElementById('loginErrorMessage');
+                    const userCredentialInput = document.getElementById('userCredential');
+                    const passwordInput = document.getElementById('password');
+                    
+                    try {
+                        const response = await fetch(this.action, {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            }
+                        });
+                        
+                        if (response.ok) {
+                            // Login exitoso, redirigir a home
+                            window.location.href = '{{ route("home") }}';
+                        } else if (response.status === 422) {
+                            // Error de validación (credenciales incorrectas)
+                            errorMessage.innerHTML = '<div class="bg-red-50 text-red-600 text-sm font-bold p-3 rounded-lg border border-red-200 mb-6 text-center">@lang("messages.wrong_credentials")</div>';
+                            // Limpiar campos
+                            userCredentialInput.value = '';
+                            passwordInput.value = '';
+                            userCredentialInput.focus();
+                        } else {
+                            // Otro tipo de error
+                            errorMessage.innerHTML = '<div class="bg-red-50 text-red-600 text-sm font-bold p-3 rounded-lg border border-red-200 mb-6 text-center">Error al iniciar sesión. Intenta de nuevo.</div>';
+                        }
+                    } catch (error) {
+                        console.error('Error de red al iniciar sesión:', error);
+                        errorMessage.innerHTML = '<div class="bg-red-50 text-red-600 text-sm font-bold p-3 rounded-lg border border-red-200 mb-6 text-center">Error de conexión. Intenta de nuevo.</div>';
+                    }
+                });
+            }
             // Favoritos
             const favoriteForms = document.querySelectorAll('.js-favorite-form');
             favoriteForms.forEach(form => {
