@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
+use App\Mail\WelcomeMail;
+use App\Services\UsersService;
 
 class CreateNewUser implements CreatesNewUsers
 {
@@ -43,10 +45,7 @@ class CreateNewUser implements CreatesNewUsers
                 $this->usersService->update($user, [$userRole->id]);
         }
 
-        Mail::raw('¡Hola ' . $user->name . '! Gracias por registrarte en nuestra tienda. Tu cuenta ha sido creada con éxito ya puedes descubrir las últimas novedades y colecciones.', function ($message) use ($user) {
-            $message->to($user->email)
-                    ->subject('¡Bienvenido a Hanger! :)');
-        });
+        Mail::to($user->email)->send(new WelcomeMail($user));
 
         return $user;
     }

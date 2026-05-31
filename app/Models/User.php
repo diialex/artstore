@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Notifications\QueuedResetPassword;
 use App\Models\Role;
 use App\Models\FavoriteList;
 use Hash;
@@ -81,5 +82,13 @@ class User extends Authenticatable
 
     public function decryptPassword(string $password): bool{
         return Hash::check($password, $this->password);
+    }
+
+    /**
+     * Envia la notificacion de reseteo de contrasena encolada en Redis.
+     */
+    public function sendPasswordResetNotification($token): void
+    {
+        $this->notify(new QueuedResetPassword($token));
     }
 }
