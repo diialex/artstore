@@ -1,9 +1,9 @@
 @extends('layout')
-@section('title', $order->id ? __('message.editorder') : __message.neworder')
+@section('title', $order->id ? __('message.editorder') : __('message.neworder'))
 @section('content')
     <div class="row m-4">
         <div class="col-6">
-            <h3>{{ $order->id ? __('message.editorder') : __message.neworder' }}</h3>
+            <h3>{{ $order->id ? __('message.editorder') : __('message.neworder') }}</h3>
 
             <form action="{{ $order->id ? route('orders.update', $order) : route('orders.store') }}" method="POST">
                 @csrf
