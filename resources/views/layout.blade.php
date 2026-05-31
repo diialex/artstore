@@ -11,7 +11,7 @@
                         <i class="bi bi-list text-3xl"></i>
                     </button>
                     <a href="{{ route('home') }}" class="text-white hover:text-light transition-colors flex items-center">
-                        <i class="bi bi-shop text-2xl"></i>
+                        <i class="bi {{ request()->routeIs('home') ? 'bi-house-door-fill' : 'bi-house-door' }} text-2xl"></i>
                     </a>
                 </div>
 
@@ -27,7 +27,7 @@
                                 <i class="bi bi-chevron-down text-xs transition-transform duration-200" id="dropdownIcon"></i>
                             </button>
 
-                            <div id="userDropdownMenu" class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl opacity-0 invisible transition-all duration-200 border border-gray-100 overflow-hidden z-[100] top-full origin-top-right transform scale-95">
+                            <div id="userDropdownMenu" class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl opacity-0 invisible -translate-y-2 transition-all duration-200 ease-out border border-gray-100 overflow-hidden z-[100] top-full origin-top-right">
                                 <div class="px-4 py-3 bg-gray-50 border-b border-gray-100">
                                     <h6 class="text-xs font-bold text-gray-500 uppercase tracking-widest">Opciones de cuenta</h6>
                                 </div>
@@ -60,12 +60,12 @@
                         </div>
                     @else
                         <button type="button" class="text-white hover:text-light transition-colors" onclick="toggleMenu('iniciarSesion')">
-                            <i class="bi bi-person text-3xl"></i>
+                            <i id="loginNavIcon" class="bi bi-person text-3xl"></i>
                         </button>
                     @endauth
                     
-                    <a href="{{ route('orders.carrito') }}" class="text-white hover:text-light transition-colors relative flex items-center group">
-                        <i class="bi bi-bag text-2xl group-hover:scale-110 transition-transform"></i>
+                    <a href="{{ route('orders.carrito') }}" class="text-white relative flex items-center">
+                        <i class="bi {{ request()->routeIs('orders.carrito') ? 'bi-cart-fill' : 'bi-cart' }} text-2xl"></i>
                         @php
                             $cartCount = 0;
                             if(auth()->check()) {
@@ -85,7 +85,31 @@
             </div>
         </nav>
     </header>
-    
+
+    @if(session('success') || session('error'))
+        @php $isError = (bool) session('error'); @endphp
+        <div id="cartToast" class="fixed top-24 right-4 z-[80] flex items-center gap-3 bg-white border border-gray-100 shadow-xl rounded-2xl px-5 py-4 max-w-sm transition-all duration-300 translate-x-6 opacity-0">
+            <span class="flex items-center justify-center h-9 w-9 rounded-full shrink-0 {{ $isError ? 'bg-red-100 text-red-600' : 'bg-success bg-opacity-20 text-green-700' }}">
+                <i class="bi {{ $isError ? 'bi-exclamation-lg' : 'bi-check-lg' }} text-lg"></i>
+            </span>
+            <p class="text-sm font-bold text-dark">{{ session('error') ?? session('success') }}</p>
+            <button type="button" onclick="document.getElementById('cartToast').remove()" class="ml-2 text-gray-400 shrink-0">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <script>
+            (function () {
+                const toast = document.getElementById('cartToast');
+                if (!toast) return;
+                requestAnimationFrame(() => toast.classList.remove('translate-x-6', 'opacity-0'));
+                setTimeout(() => {
+                    toast.classList.add('translate-x-6', 'opacity-0');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3500);
+            })();
+        </script>
+    @endif
+
     <main class="w-full flex-grow">
         @yield('content')
     </main>
@@ -117,12 +141,12 @@
     <div id="menuLateral" class="fixed inset-y-0 left-0 w-80 bg-light text-dark z-[70] transform -translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
         <div class="flex justify-between items-center p-6 border-b border-gray-200">
             <h5 class="text-sm font-black uppercase tracking-widest text-primary">@lang('messages.categories')</h5>
-            <button onclick="toggleMenu('menuLateral')" class="text-gray-400 hover:text-dark transition-colors"><i class="bi bi-x-lg text-xl"></i></button>
+            <button onclick="toggleMenu('menuLateral')" class="text-gray-400 transition-colors"><i class="bi bi-x-lg text-xl"></i></button>
         </div>
         <div class="p-6 overflow-y-auto flex-grow">
             <ul class="flex flex-col gap-2">
                 <li class="pb-4 mb-4 border-b border-gray-200">
-                    <a href="{{ route('home') }}" class="text-lg {{ !request('category') ? 'font-black text-primary' : 'font-medium text-dark hover:text-primary' }} transition-colors">
+                    <a href="{{ route('home') }}" class="text-lg {{ !request('category') ? 'font-black text-primary' : 'font-medium text-dark' }} transition-colors">
                         @lang('messages.start')
                     </a>
                 </li>
@@ -134,7 +158,7 @@
                 @foreach(App\Models\Category::all() as $cat)
                     <li>
                         <a href="{{ route('home', ['category' => $cat->id]) }}" 
-                           class="block py-2 pl-3 border-l-2 {{ request('category') == $cat->id ? 'border-primary text-primary font-bold' : 'border-transparent text-gray-600 hover:border-gray-300 hover:text-dark' }} transition-all text-sm">
+                           class="block py-2 pl-3 border-l-2 {{ request('category') == $cat->id ? 'border-primary text-primary font-bold' : 'border-transparent text-gray-600' }} transition-all text-sm">
                             {{ $cat->name }}
                         </a>
                     </li>
@@ -145,7 +169,7 @@
 
     <div id="iniciarSesion" class="fixed inset-y-0 right-0 w-96 bg-white text-dark z-[70] transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
         <div class="flex justify-start p-6">
-            <button onclick="toggleMenu('iniciarSesion')" class="text-gray-400 hover:text-dark transition-colors"><i class="bi bi-x-lg text-xl"></i></button>
+            <button onclick="toggleMenu('iniciarSesion')" class="text-gray-400 transition-colors"><i class="bi bi-x-lg text-xl"></i></button>
         </div>
         
         <div class="px-8 pb-8 overflow-y-auto">
@@ -170,17 +194,17 @@
                         <input id="password" type="password" name="password" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="••••••••" required />
                     </div>
                     
-                    <button type="submit" class="w-full bg-primary text-white font-bold uppercase tracking-widest py-4 rounded-lg hover:bg-opacity-90 transition-all mt-4 shadow-md active:scale-95">
+                    <button type="submit" class="w-full bg-primary text-white font-bold uppercase tracking-widest py-4 rounded-lg transition-all mt-4 shadow-md active:scale-95">
                         Login
                     </button>
                     
                     <div class="text-center mt-2">
-                        <a href="{{ route('password.request') }}" class="text-xs text-gray-500 hover:text-primary transition-colors">@lang('messages.forgot_password')</a>
+                        <a href="{{ route('password.request') }}" class="text-xs text-gray-500 transition-colors">@lang('messages.forgot_password')</a>
                     </div>
 
                     <div class="mt-8 pt-6 border-t border-gray-100 text-center">
                         <p class="text-sm text-gray-500 mb-4">@lang('messages.no_account')</p>
-                        <a href="{{ route('register') }}" class="block w-full bg-white text-primary border-2 border-primary font-bold uppercase tracking-widest py-3 rounded-lg hover:bg-light transition-all">
+                        <a href="{{ route('register') }}" class="block w-full bg-white text-primary border-2 border-primary font-bold uppercase tracking-widest py-3 rounded-lg transition-all">
                             @lang('messages.register')
                         </a>
                     </div>
@@ -197,13 +221,13 @@
                     
                     <div class="w-full h-px bg-gray-100 mb-8"></div>
                     
-                    <a href="{{ route('home') }}" class="w-full bg-dark text-white font-bold text-center py-4 rounded-xl hover:bg-opacity-90 transition-all mb-4">
+                    <a href="{{ route('home') }}" class="w-full bg-dark text-white font-bold text-center py-4 rounded-xl transition-all mb-4">
                         @lang('messages.mypanel')
                     </a>
                     
                     <form method="POST" action="{{ route('logout') }}" class="w-full">
                         @csrf
-                        <button type="submit" class="w-full bg-red-50 text-red-600 font-bold py-4 rounded-xl hover:bg-red-600 hover:text-white border border-red-100 transition-all">
+                        <button type="submit" class="w-full bg-red-50 text-red-600 font-bold py-4 rounded-xl border border-red-100 transition-all">
                             @lang('messages.logout')
                         </button>
                     </form>
@@ -222,22 +246,28 @@
             const isLeft = menuId === 'menuLateral';
             const hideClass = isLeft ? '-translate-x-full' : 'translate-x-full';
             
+            const loginIcon = menuId === 'iniciarSesion' ? document.getElementById('loginNavIcon') : null;
+
             if (menu.classList.contains(hideClass)) {
                 // ABRIR
                 menu.classList.remove(hideClass);
                 menu.classList.add('translate-x-0'); // <- Esto soluciona que se quede pillado fuera
-                
+
                 overlay.classList.remove('hidden');
                 setTimeout(() => overlay.classList.remove('opacity-0'), 10);
-                document.body.style.overflow = 'hidden'; 
+                document.body.style.overflow = 'hidden';
+
+                if (loginIcon) loginIcon.classList.replace('bi-person', 'bi-person-fill');
             } else {
                 // CERRAR
                 menu.classList.remove('translate-x-0');
                 menu.classList.add(hideClass);
-                
+
                 overlay.classList.add('opacity-0');
-                setTimeout(() => overlay.classList.add('hidden'), 300); 
-                document.body.style.overflow = ''; 
+                setTimeout(() => overlay.classList.add('hidden'), 300);
+                document.body.style.overflow = '';
+
+                if (loginIcon) loginIcon.classList.replace('bi-person-fill', 'bi-person');
             }
         }
 
@@ -250,13 +280,13 @@
             
             if (menu.classList.contains('invisible')) {
                 // Abrir
-                menu.classList.remove('invisible', 'opacity-0', 'scale-95');
-                menu.classList.add('visible', 'opacity-100', 'scale-100');
+                menu.classList.remove('invisible', 'opacity-0', '-translate-y-2');
+                menu.classList.add('visible', 'opacity-100', 'translate-y-0');
                 icon.classList.add('rotate-180'); // Giramos la flechita
             } else {
                 // Cerrar
-                menu.classList.remove('visible', 'opacity-100', 'scale-100');
-                menu.classList.add('invisible', 'opacity-0', 'scale-95');
+                menu.classList.remove('visible', 'opacity-100', 'translate-y-0');
+                menu.classList.add('invisible', 'opacity-0', '-translate-y-2');
                 icon.classList.remove('rotate-180');
             }
         }
@@ -310,14 +340,14 @@
                             if (isNowFavorited) {
                                 icon.classList.remove('bi-heart', 'text-gray-400');
                                 icon.classList.add('bi-heart-fill', 'text-primary', 'animate-pulse');
-                                this.action = this.action.replace('add', 'remove/' + formData.get('product_id'));
+                                this.action = this.action.replace(/\/add$/, '/' + formData.get('product_id'));
                                 if (!methodInput) {
                                     this.insertAdjacentHTML('beforeend', '<input type="hidden" name="_method" value="DELETE">');
                                 }
                             } else {
                                 icon.classList.remove('bi-heart-fill', 'text-primary', 'animate-pulse');
                                 icon.classList.add('bi-heart', 'text-gray-400');
-                                this.action = this.action.replace(/remove\/\d+/, 'add');
+                                this.action = this.action.replace(/\/\d+$/, '/add');
                                 if (methodInput) methodInput.remove();
                             }
                         }

@@ -110,7 +110,7 @@ class OrderController extends Controller
         $this->updateOrder($order);
         }
         
-        return redirect()->route('orders.carrito')->with('success', 'Producto agregado exitosamente.');
+        return redirect()->back()->with('success', 'Producto añadido al carrito.');
     }
 
     public function carrito()

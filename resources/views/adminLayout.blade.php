@@ -27,7 +27,7 @@
                             <i class="bi bi-chevron-down text-xs transition-transform duration-200" id="adminDropdownIcon"></i>
                         </button>
 
-                        <div id="adminDropdownMenu" class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl opacity-0 invisible transition-all duration-200 border border-gray-100 overflow-hidden z-[100] top-full origin-top-right transform scale-95">
+                        <div id="adminDropdownMenu" class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl opacity-0 invisible -translate-y-2 transition-all duration-200 ease-out border border-gray-100 overflow-hidden z-[100] top-full origin-top-right">
                             <div class="px-4 py-3 bg-gray-50 border-b border-gray-100">
                                 <h6 class="text-xs font-bold text-gray-500 uppercase tracking-widest">Opciones de cuenta</h6>
                             </div>
@@ -192,12 +192,12 @@
             const icon = document.getElementById('adminDropdownIcon');
             
             if (menu.classList.contains('invisible')) {
-                menu.classList.remove('invisible', 'opacity-0', 'scale-95');
-                menu.classList.add('visible', 'opacity-100', 'scale-100');
-                icon.classList.add('rotate-180'); 
+                menu.classList.remove('invisible', 'opacity-0', '-translate-y-2');
+                menu.classList.add('visible', 'opacity-100', 'translate-y-0');
+                icon.classList.add('rotate-180');
             } else {
-                menu.classList.remove('visible', 'opacity-100', 'scale-100');
-                menu.classList.add('invisible', 'opacity-0', 'scale-95');
+                menu.classList.remove('visible', 'opacity-100', 'translate-y-0');
+                menu.classList.add('invisible', 'opacity-0', '-translate-y-2');
                 icon.classList.remove('rotate-180');
             }
         }

@@ -29,8 +29,14 @@ class FortifyServiceProvider extends ServiceProvider
             return new class($app) implements LoginResponse {
                 public function __construct(private $app) {}
                 public function toResponse($request) {
-                    $this->app->make(GuestCartService::class)->mergeIntoUserOrder(auth()->user());
-                    return redirect()->route('home');
+                    $user = auth()->user();
+                    $this->app->make(GuestCartService::class)->mergeIntoUserOrder($user);
+
+                    if ($user->hasRol('admin') && !$user->hasRol('user')) {
+                        return redirect()->route('controlPanel.dashboard');
+                    }
+
+                    return redirect()->intended(route('home'));
                 }
             };
         });
