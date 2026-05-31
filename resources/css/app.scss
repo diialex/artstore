@@ -15,6 +15,19 @@ $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa
 
 // --- CLASES PERSONALIZADAS ---
 
+a.no-decoration,
+a.no-underline,
+a.btn,
+a[class*="rounded"],
+a[class*="inline-flex"] {
+    text-decoration: none !important;
+
+    &:hover,
+    &:focus {
+        text-decoration: none !important;
+    }
+}
+
 .banner-img {
     object-fit: cover;
     object-position: center;
@@ -109,5 +122,4 @@ $body-bg: #fcf9fa; // Blanco muy suave con un toque de rosa
 .transition-all { transition: all 0.3s ease; }
 .hover-shadow:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important; }
 @media (min-width: 768px) { .border-end-md { border-right: 1px solid #eee; } }
-
 

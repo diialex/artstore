@@ -80,7 +80,7 @@
                         @endphp
 
                         <a href="{{ $categoryUrl }}"
-                           class="inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-black uppercase tracking-widest transition-colors {{ $isSelected ? 'bg-dark text-white border-dark' : 'bg-white text-dark border-gray-300 hover:border-dark' }}">
+                           class="no-decoration inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-black uppercase tracking-widest transition-colors {{ $isSelected ? 'bg-dark text-white border-dark' : 'bg-white text-dark border-gray-300 hover:border-dark' }}">
                             {{ $category->name }}
                             @if($isSelected)
                                 <i class="bi bi-x-lg text-xs"></i>
