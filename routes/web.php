@@ -333,7 +333,7 @@ Route::get('/controlPanel', [ControlPanelController::class, 'index'])
     ->middleware(['auth'])->can('admin-access');
 
 Route::get('/lang/{locale}', function ($locale) {
-    if (!in_array($locale, ['en', 'es'])) abort(400);
+    if (!in_array($locale, ['en', 'es', 'fr', 'it'])) abort(400);
     
     if (auth()->check()) {
         $user = auth()->user();

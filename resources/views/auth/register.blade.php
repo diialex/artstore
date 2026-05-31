@@ -9,8 +9,8 @@
             <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary bg-opacity-10 mb-4 text-primary shadow-inner">
                 <i class="bi bi-person-plus text-3xl"></i>
             </div>
-            <h2 class="text-2xl font-black text-dark tracking-tight">Crear Cuenta</h2>
-            <p class="text-sm text-gray-500 mt-2">Únete a Hanger y gestiona tus pedidos</p>
+            <h2 class="text-2xl font-black text-dark tracking-tight">@lang('messasges.create_account')</h2>
+            <p class="text-sm text-gray-500 mt-2">@lang('messages.general')</p>
         </div>
 
         <div class="px-8 py-8">
@@ -31,37 +31,37 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     
                     <div>
-                        <label for="name" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Nombre Completo</label>
+                        <label for="name" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.name_complete')</label>
                         <input type="text" id="name" name="name" value="{{ old('name') }}" required autofocus
                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400">
                     </div>
 
                     <div>
-                        <label for="username" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Nombre de Usuario</label>
+                        <label for="username" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.username')</label>
                         <input type="text" id="username" name="username" value="{{ old('username') }}" required
                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400">
                     </div>
 
                     <div>
-                        <label for="email" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Email</label>
+                        <label for="email" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.email')</label>
                         <input type="email" id="email" name="email" value="{{ old('email') }}" required
                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400">
                     </div>
 
                     <div>
-                        <label for="phone" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Teléfono</label>
+                        <label for="phone" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.phone')</label>
                         <input type="text" id="phone" name="phone" value="{{ old('phone') }}" required
                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400">
                     </div>
 
                     <div>
-                        <label for="password" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Contraseña</label>
+                        <label for="password" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.password')</label>
                         <input type="password" id="password" name="password" required
                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400">
                     </div>
 
                     <div>
-                        <label for="password_confirmation" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Confirmar Contraseña</label>
+                        <label for="password_confirmation" class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.confirm_password')</label>
                         <input type="password" id="password_confirmation" name="password_confirmation" required
                                class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400">
                     </div>
@@ -69,13 +69,13 @@
                 </div>
 
                 <button type="submit" class="w-full mt-2 bg-dark text-white font-bold uppercase tracking-widest py-4 rounded-xl hover:bg-opacity-90 hover:shadow-lg transition-all active:scale-95 flex justify-center items-center gap-2">
-                    <i class="bi bi-person-check text-lg"></i> Registrarse
+                    <i class="bi bi-person-check text-lg"></i> @lang('messages.register')
                 </button>
 
                 <div class="mt-4 text-center">
-                    <span class="text-xs font-medium text-gray-500">¿Ya tienes cuenta?</span>
+                    <span class="text-xs font-medium text-gray-500">@lang('messages.already_account')</span>
                     <a href="{{ route('login') }}" class="text-xs font-bold text-primary hover:text-dark transition-colors uppercase tracking-widest ml-1">
-                        Inicia sesión aquí
+                        @lang('messages.login_here')
                     </a>
                 </div>
             </form>

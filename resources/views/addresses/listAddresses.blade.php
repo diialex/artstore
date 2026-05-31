@@ -9,11 +9,11 @@
             <a href="{{ route('users.show', auth()->user()->username) }}" class="text-gray-400 hover:text-dark transition-colors mr-2">
                 <i class="bi bi-arrow-left text-xl"></i>
             </a>
-            <h2 class="text-3xl font-black text-dark tracking-tight uppercase">Mis Direcciones</h2>
+            <h2 class="text-3xl font-black text-dark tracking-tight uppercase">@lang('messages.my_addresses')</h2>
         </div>
         <a href="{{ route('addresses.create', isset($userId) ? ['user_id' => $userId] : []) }}" 
            class="inline-flex items-center gap-2 px-6 py-3 bg-dark text-white font-bold rounded-full hover:bg-opacity-90 transition-all shadow-sm active:scale-95">
-            <i class="bi bi-plus-lg"></i> Nueva dirección
+            <i class="bi bi-plus-lg"></i> @lang('messages.newaddress')
         </a>
     </div>
 
@@ -39,7 +39,7 @@
                 <div>
                     <div class="flex items-center justify-between mb-6">
                         <span class="bg-gray-100 text-dark text-[0.65rem] font-bold px-3 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-1.5">
-                            <i class="bi bi-house-door-fill"></i> Envío
+                            <i class="bi bi-house-door-fill"></i> @lang('messages.ship')
                         </span>
                     </div>
                     
@@ -56,14 +56,14 @@
 
                 <div class="flex items-center gap-3 mt-8 pt-6 border-t border-gray-100">
                     <a href="{{ route('addresses.edit', $address->id) }}" class="flex-1 bg-gray-50 text-dark text-center py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-dark hover:text-white transition-colors">
-                        Editar
+                        @lang('messages.edit')
                     </a>
                     
                     <form action="{{ route('addresses.delete', $address->id) }}" method="POST" class="flex-1 m-0" onsubmit="return confirm('¿Seguro que deseas eliminar esta dirección?');">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="w-full bg-red-50 text-red-600 text-center py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-red-600 hover:text-white transition-colors">
-                            Borrar
+                            @lang('messages.delete')
                         </button>
                     </form>
                 </div>
@@ -72,10 +72,10 @@
         @empty
             <div class="col-span-1 md:col-span-2 lg:col-span-3 flex flex-col items-center justify-center py-20 bg-white rounded-3xl border border-gray-100 shadow-sm">
                 <i class="bi bi-geo text-7xl text-gray-200 mb-6"></i>
-                <h3 class="text-2xl font-bold text-dark mb-2">Sin direcciones</h3>
-                <p class="text-gray-500 mb-8 max-w-md mx-auto text-center">Añade una dirección de envío para que tus futuros pedidos lleguen volando a la puerta de tu casa.</p>
+                <h3 class="text-2xl font-bold text-dark mb-2">@lang('messages.no_address')</h3>
+                <p class="text-gray-500 mb-8 max-w-md mx-auto text-center">@lang('messages.ship_msg')</p>
                 <a href="{{ route('addresses.create', isset($userId) ? ['user_id' => $userId] : []) }}" class="px-8 py-4 bg-white text-dark border-2 border-dark font-bold rounded-full uppercase tracking-widest text-sm hover:bg-dark hover:text-white transition-all active:scale-95">
-                    Añadir mi primera dirección
+                    @lang('messages.first_address')
                 </a>
             </div>
         @endforelse

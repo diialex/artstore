@@ -15,7 +15,7 @@
                 @else
                     <div class="w-full h-[600px] bg-gray-50 flex items-center justify-center rounded-2xl shadow-sm border border-gray-100">
                         <span class="text-gray-400 text-2xl flex items-center gap-3">
-                            <i class="bi bi-camera"></i> Sin imagen disponible
+                            <i class="bi bi-camera"></i> @lang('messages.no_image_available')
                         </span>
                     </div>
                 @endif
@@ -33,7 +33,7 @@
             <hr class="border-gray-200 mb-8">
 
             <div class="mb-10">
-                <p class="text-sm font-bold uppercase tracking-widest text-gray-900 mb-3">Descripción</p>
+                <p class="text-sm font-bold uppercase tracking-widest text-gray-900 mb-3">@lang('message.description')</p>
                 <p class="text-gray-600 leading-relaxed">{{ $product->description }}</p>
             </div>
 
@@ -43,7 +43,7 @@
                     
                     <div class="mb-8">
                         <div class="flex justify-between items-center mb-4">
-                            <label class="text-sm font-bold uppercase tracking-widest text-gray-900">Selecciona tu talla</label>
+                            <label class="text-sm font-bold uppercase tracking-widest text-gray-900">@lang('message.select_size')</label>
                             <a href="#" class="text-sm text-gray-500 underline hover:text-dark">Guía de tallas</a>
                         </div>
                         
@@ -64,13 +64,13 @@
                                     <div>
                                         <div class="flex flex-col items-center justify-center w-full py-3.5 bg-gray-50 border-2 border-transparent rounded-xl opacity-50 cursor-not-allowed font-sans text-gray-400 text-center">
                                             <span class="text-base font-bold line-through leading-none">{{ $size->size }}</span>
-                                            <span class="text-[0.65rem] mt-1.5 leading-none">Agotado</span>
+                                            <span class="text-[0.65rem] mt-1.5 leading-none">@lang('message.out_of_stock')</span>
                                         </div>
                                     </div>
                                 @endif
                             @empty
                                 <div class="col-span-4">
-                                    <p class="text-gray-500 italic text-sm py-2">Talla única / Stock general</p>
+                                    <p class="text-gray-500 italic text-sm py-2">@lang('message.only_size')</p>
                                 </div>
                             @endforelse
                         </div>
@@ -85,18 +85,18 @@
                     </div>
 
                     <div class="js-size-warning hidden text-red-500 text-sm font-bold uppercase tracking-wider text-center mb-4">
-                        <i class="bi bi-exclamation-triangle mr-1"></i> Por favor, selecciona una talla
+                        <i class="bi bi-exclamation-triangle mr-1"></i> @lang('message.please_select_size')
                     </div>
 
                     <button type="submit" class="w-full bg-[#212529] text-white text-lg font-bold uppercase tracking-widest py-4 rounded-full hover:bg-opacity-90 hover:shadow-lg transition-all transform active:scale-95 flex justify-center items-center gap-3">
-                        <i class="bi bi-bag-plus"></i> Añadir a la bolsa
+                        <i class="bi bi-bag-plus"></i> @lang('message.add_bag')
                     </button>
                 </form>
                 @else
                 <div class="mb-8">
-                    <p class="text-red-500 font-bold mb-4">Producto Agotado</p>
+                    <p class="text-red-500 font-bold mb-4">@lang('message.product_out_of_stock')</p>
                     <button disabled class="w-full bg-gray-200 text-gray-400 text-lg font-bold uppercase tracking-widest py-4 rounded-full cursor-not-allowed">
-                        Agotado
+                        @lang('message.out_of_stock')
                     </button>
                 </div>
             @endif
@@ -104,23 +104,23 @@
             <div class="mt-12 pt-8 border-t border-gray-200 space-y-4">
                 <div class="flex items-center text-gray-600">
                     <i class="bi bi-truck text-2xl w-10"></i>
-                    <span class="text-xs font-bold uppercase tracking-wide">Envío gratuito en pedidos superiores a 50€</span>
+                    <span class="text-xs font-bold uppercase tracking-wide">@lang('messages.send_free_waste')</span>
                 </div>
                 <div class="flex items-center text-gray-600">
                     <i class="bi bi-arrow-left-right text-2xl w-10"></i>
-                    <span class="text-xs font-bold uppercase tracking-wide">Devoluciones gratuitas en 30 días</span>
+                    <span class="text-xs font-bold uppercase tracking-wide">@lang('messages.free_giveback')</span>
                 </div>
             </div>
 
             @if(auth()->check() && auth()->user()->roles->contains('id', 1))
                 <div class="mt-12 p-4 bg-amber-50 rounded-2xl border border-amber-100 flex gap-3">
                     <a href="{{ route('products.edit', $product) }}" class="flex-1 flex justify-center items-center bg-white text-amber-700 border border-amber-200 py-2 rounded-full font-bold text-sm hover:bg-amber-100 transition-colors">
-                        Editar
+                        @lang('messages.edit')
                     </a>
                     <form action="{{ route('products.delete', $product) }}" method="POST" class="flex-1">
                         @csrf @method('DELETE')
                         <button class="w-full flex justify-center items-center bg-red-50 text-red-600 border border-red-200 py-2 rounded-full font-bold text-sm hover:bg-red-600 hover:text-white transition-colors">
-                            Eliminar
+                            @lang('messages.eliminate')
                         </button>
                     </form>
                 </div>

@@ -29,7 +29,7 @@
 
                             <div id="userDropdownMenu" class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl opacity-0 invisible transition-all duration-200 border border-gray-100 overflow-hidden z-[100] top-full origin-top-right transform scale-95">
                                 <div class="px-4 py-3 bg-gray-50 border-b border-gray-100">
-                                    <h6 class="text-xs font-bold text-gray-500 uppercase tracking-widest">Opciones de cuenta</h6>
+                                    <h6 class="text-xs font-bold text-gray-500 uppercase tracking-widest">@lang('messages.account_options')</h6>
                                 </div>
                                 
                                 <ul class="py-2 flex flex-col">
@@ -89,57 +89,124 @@
     <main class="w-full flex-grow">
         @yield('content')
     </main>
-
-    <footer class="bg-dark text-white pt-12 pb-6 mt-16 w-full shadow-[0_-10px_20px_rgba(0,0,0,0.1)]">
+    <footer class="bg-primary !text-light pt-10 pb-6 mt-16 w-full shadow-[0_-10px_20px_rgba(0,0,0,0.1)]">
         <div class="max-w-[1400px] mx-auto px-6">
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="flex flex-wrap justify-center md:justify-start gap-4 text-sm">
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">@lang('messages.terms_conditions_purchase')</a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">@lang('messages.terms_conditions_hanger')</a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">@lang('messages.privacy_policy')</a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">@lang('messages.cookie_policy')</a>
-                    <a href="#" class="text-gray-400 hover:text-white transition-colors">@lang('messages.privacy_management')</a>
-                </div>
-                <div class="flex items-center gap-4">
-                    <div class="text-xs font-bold tracking-widest flex items-center gap-2">
-                        <a href="{{ route('lang.switch', 'es') }}" class="{{ app()->getLocale() == 'es' ? 'text-white' : 'text-gray-500 hover:text-white' }} transition-colors">ES</a>
-                        <span class="text-gray-600">|</span>
-                        <a href="{{ route('lang.switch', 'en') }}" class="{{ app()->getLocale() == 'en' ? 'text-white' : 'text-gray-500 hover:text-white' }} transition-colors">EN</a>
+            
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
+                
+                <div class="flex flex-col md:flex-row items-center gap-6">
+                    <h2 class="text-2xl font-black tracking-widest text-white m-0">HANGER</h2>
+                    <div class="hidden md:block w-px h-6 bg-white/20"></div>
+                    <div class="flex gap-5">
+                        <a href="#" class="!text-light hover:!text-white hover:scale-110 transition-transform"><i class="bi bi-instagram text-lg"></i></a>
+                        <a href="#" class="!text-light hover:!text-white hover:scale-110 transition-transform"><i class="bi bi-twitter-x text-lg"></i></a>
+                        <a href="#" class="!text-light hover:!text-white hover:scale-110 transition-transform"><i class="bi bi-envelope text-lg"></i></a>
                     </div>
-                    <span class="text-sm font-bold text-gray-400">&copy; 2026 HANGER</span>
                 </div>
+
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('lang.switch', 'es') }}" class="px-3 py-1.5 rounded-md border {{ app()->getLocale() == 'es' ? '!border-light !bg-light !text-primary font-black shadow-sm' : '!border-white/30 !text-light hover:!border-white hover:!text-white font-medium' }} transition-colors text-xs tracking-widest uppercase no-decoration">ES</a>
+                    <a href="{{ route('lang.switch', 'en') }}" class="px-3 py-1.5 rounded-md border {{ app()->getLocale() == 'en' ? '!border-light !bg-light !text-primary font-black shadow-sm' : '!border-white/30 !text-light hover:!border-white hover:!text-white font-medium' }} transition-colors text-xs tracking-widest uppercase no-decoration">EN</a>
+                    <a href="{{ route('lang.switch', 'fr') }}" class="px-3 py-1.5 rounded-md border {{ app()->getLocale() == 'fr' ? '!border-light !bg-light !text-primary font-black shadow-sm' : '!border-white/30 !text-light hover:!border-white hover:!text-white font-medium' }} transition-colors text-xs tracking-widest uppercase no-decoration">FR</a>
+                    <a href="{{ route('lang.switch', 'it') }}" class="px-3 py-1.5 rounded-md border {{ app()->getLocale() == 'it' ? '!border-light !bg-light !text-primary font-black shadow-sm' : '!border-white/30 !text-light hover:!border-white hover:!text-white font-medium' }} transition-colors text-xs tracking-widest uppercase no-decoration">IT</a>
+                </div>
+                
+            </div>
+
+            <div class="w-full h-px bg-white/10 mb-6"></div>
+
+            <div class="flex flex-col lg:flex-row justify-between items-center gap-6 text-xs !text-light">
+                
+                <div class="flex flex-wrap justify-center lg:justify-start gap-x-4 gap-y-2 font-medium">
+                    <a href="#" class="!text-light hover:!text-white transition-colors">@lang('messages.terms_conditions_purchase')</a>
+                    <span class="text-white/20 hidden md:inline">|</span>
+                    <a href="#" class="!text-light hover:!text-white transition-colors">@lang('messages.terms_conditions_hanger')</a>
+                    <span class="text-white/20 hidden md:inline">|</span>
+                    <a href="#" class="!text-light hover:!text-white transition-colors">@lang('messages.privacy_policy')</a>
+                    <span class="text-white/20 hidden md:inline">|</span>
+                    <a href="#" class="!text-light hover:text-white transition-colors">@lang('messages.cookie_policy')</a>
+                    <span class="text-white/20 hidden md:inline">|</span>
+                    <a href="#" class="!text-light hover:!text-white transition-colors">@lang('messages.privacy_management')</a>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
+                    <div class="flex items-center gap-3 text-lg !text-light opacity-80">
+                        <i class="bi bi-credit-card" title="Tarjeta de Crédito"></i>
+                        <i class="bi bi-paypal" title="PayPal"></i>
+                        <i class="bi bi-apple" title="Apple Pay"></i>
+                    </div>
+                    <span class="font-bold tracking-wider !text-light">&copy; {{ date('Y') }} HANGER.</span>
+                </div>
+                
             </div>
         </div>
     </footer>
 
     <div id="overlay" class="fixed inset-0 bg-black/50 z-[60] hidden opacity-0 transition-opacity duration-300" onclick="closeAllMenus()"></div>
 
-    <div id="menuLateral" class="fixed inset-y-0 left-0 w-80 bg-light text-dark z-[70] transform -translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
-        <div class="flex justify-between items-center p-6 border-b border-gray-200">
-            <h5 class="text-sm font-black uppercase tracking-widest text-primary">@lang('messages.categories')</h5>
-            <button onclick="toggleMenu('menuLateral')" class="text-gray-400 hover:text-dark transition-colors"><i class="bi bi-x-lg text-xl"></i></button>
+    <div id="menuLateral" class="fixed inset-y-0 left-0 w-80 bg-white text-dark z-[70] transform -translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
+    
+        <!-- Cabecera del panel -->
+        <div class="flex justify-between items-center p-6 bg-gray-50 border-b border-gray-100">
+            <div class="flex items-center gap-3">
+                <i class="bi bi-list-nested text-primary text-xl"></i>
+                <h5 class="text-sm font-black uppercase tracking-widest text-primary">Menu</h5>
+            </div>
+            <button onclick="toggleMenu('menuLateral')" class="text-gray-400 hover:text-red-500 transition-colors bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-200">
+                <i class="bi bi-x-lg text-sm"></i>
+            </button>
         </div>
-        <div class="p-6 overflow-y-auto flex-grow">
-            <ul class="flex flex-col gap-2">
-                <li class="pb-4 mb-4 border-b border-gray-200">
-                    <a href="{{ route('home') }}" class="text-lg {{ !request('category') ? 'font-black text-primary' : 'font-medium text-dark hover:text-primary' }} transition-colors">
-                        @lang('messages.start')
-                    </a>
-                </li>
-                
-                <li class="mt-2 mb-2">
-                    <span class="text-[0.65rem] font-bold text-gray-400 uppercase tracking-widest">@lang('messages.collections')</span>
-                </li>
-                
-                @foreach(App\Models\Category::all() as $cat)
-                    <li>
-                        <a href="{{ route('home', ['category' => $cat->id]) }}" 
-                           class="block py-2 pl-3 border-l-2 {{ request('category') == $cat->id ? 'border-primary text-primary font-bold' : 'border-transparent text-gray-600 hover:border-gray-300 hover:text-dark' }} transition-all text-sm">
-                            {{ $cat->name }}
-                        </a>
-                    </li>
-                @endforeach
-            </ul>
+        
+        <!-- Contenido principal con scroll -->
+        <div class="p-6 overflow-y-auto flex-grow flex flex-col gap-6 hide-scrollbar">
+            
+            <!-- Enlace de Inicio destacado -->
+            <div>
+                <a href="{{ route('home') }}" class="group flex items-center gap-4 px-4 py-3 rounded-xl {{ !request('category') ? 'bg-primary text-white shadow-md' : 'bg-gray-50 text-gray-700 hover:bg-light hover:text-primary' }} transition-all">
+                    <i class="bi bi-house-door{{ !request('category') ? '-fill' : '' }} text-lg"></i>
+                    <span class="font-bold text-sm tracking-wide">@lang('messages.start')</span>
+                </a>
+            </div>
+
+            <div class="w-full h-px bg-gray-100"></div>
+
+            <!-- Sección de Categorías -->
+            <div>
+                <h6 class="text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-4 px-2 flex items-center gap-2">
+                    <i class="bi bi-collection"></i> @lang('messages.collections')
+                </h6>
+                <ul class="flex flex-col gap-1">
+                    @foreach(App\Models\Category::all() as $cat)
+                        <li>
+                            <a href="{{ route('home', ['category' => $cat->id]) }}" 
+                            class="flex items-center justify-between px-4 py-2.5 rounded-lg {{ request('category') == $cat->id ? 'bg-light text-primary font-bold' : 'text-gray-600 hover:bg-gray-50 hover:text-dark font-medium' }} transition-colors text-sm group">
+                                <div class="flex items-center gap-3">
+                                    <!-- Indicador visual de categoría activa -->
+                                    <div class="w-1.5 h-1.5 rounded-full {{ request('category') == $cat->id ? 'bg-primary shadow-[0_0_8px_rgba(103,22,70,0.6)]' : 'bg-transparent group-hover:bg-gray-300' }} transition-all"></div>
+                                    {{ $cat->name }}
+                                </div>
+                                @if(request('category') == $cat->id)
+                                    <i class="bi bi-chevron-right text-xs"></i>
+                                @endif
+                            </a>
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
+
+            <div class="mt-auto pt-6">
+                <div class="bg-light rounded-xl p-5 text-center border border-primary/10 transition-colors hover:border-primary/30 cursor-default">
+                    <i class="bi bi-box-seam text-primary text-2xl mb-2 block"></i>
+                    <h6 class="text-sm font-bold text-dark mb-1">@lang('messages.send_free_waste')</h6>
+                    <p class="text-xs text-gray-500">@lang('messages.free_giveback')</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="p-6 border-t border-gray-100 bg-gray-50 flex justify-center gap-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-primary shadow-sm transition-all"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-primary shadow-sm transition-all"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-primary shadow-sm transition-all"><i class="bi bi-envelope"></i></a>
         </div>
     </div>
 

@@ -15,8 +15,8 @@
     <div class="max-w-xl w-full bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-gray-100 overflow-hidden transition-all">
         <div class="px-8 pt-10 pb-6 border-b border-gray-50 flex items-center justify-between">
             <div>
-                <h2 class="text-2xl font-black text-dark tracking-tight uppercase">Nuevo Rol</h2>
-                <p class="text-sm text-gray-500 mt-1 font-medium">Define niveles de acceso al sistema</p>
+                <h2 class="text-2xl font-black text-dark tracking-tight uppercase">@lang('messages.new_rol')</h2>
+                <p class="text-sm text-gray-500 mt-1 font-medium">@lang('messages.levl_access')</p>
             </div>
             <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center text-gray-400">
                 <i class="bi bi-shield-plus text-xl"></i>
@@ -27,25 +27,25 @@
             @csrf
 
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Nombre del Rol</label>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.rol_name')</label>
                 <input type="text" name="name" value="{{ old('name') }}" autofocus placeholder="Ej. moderador"
                        class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400">
-                @error('name') <span class="text-red-500 text-xs font-bold mt-2 flex items-center gap-1"><i class="bi bi-exclamation-circle"></i> Debes rellenar el nombre</span> @enderror
+                @error('name') <span class="text-red-500 text-xs font-bold mt-2 flex items-center gap-1"><i class="bi bi-exclamation-circle"></i> @lang('messages.include_name')</span> @enderror
             </div>
 
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">Descripción</label>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.description')</label>
                 <textarea name="description" rows="3" placeholder="Permisos y capacidades de este rol..."
                           class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-y placeholder-gray-400">{{ old('description') }}</textarea>
-                @error('description') <span class="text-red-500 text-xs font-bold mt-2 flex items-center gap-1"><i class="bi bi-exclamation-circle"></i> Debes incluir una descripción</span> @enderror
+                @error('description') <span class="text-red-500 text-xs font-bold mt-2 flex items-center gap-1"><i class="bi bi-exclamation-circle"></i> @lang('messages.include_description')</span> @enderror
             </div>
 
             <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 mt-8 pt-6 border-t border-gray-100">
                 <a href="{{ route('roles.index') }}" class="w-full sm:w-auto px-6 py-4 text-center text-gray-500 font-bold uppercase tracking-widest text-xs hover:text-dark hover:bg-gray-50 rounded-xl transition-colors">
-                    Cancelar
+                    @lang('messages.cancel')
                 </a>
                 <button type="submit" class="w-full sm:w-auto px-8 py-4 bg-dark text-white font-bold uppercase tracking-widest text-xs rounded-xl hover:bg-opacity-90 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2">
-                    <i class="bi bi-save"></i> Crear Rol
+                    <i class="bi bi-save"></i> @lang('messages.create_rol')
                 </button>
             </div>
         </form>
