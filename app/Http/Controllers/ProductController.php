@@ -28,17 +28,37 @@ class ProductController extends Controller
     
     public function index(Request $request)
     {
-        $categoryId=$request->input('category');
+        $selectedCategoryIds = collect((array) $request->input('categories', []))
+            ->when($request->input('category'), fn ($ids) => $ids->push($request->input('category')))
+            ->filter()
+            ->map(fn ($categoryId) => (int) $categoryId)
+            ->unique()
+            ->values()
+            ->all();
+
+        $categoryId = $selectedCategoryIds[0] ?? null;
+        $sort = in_array($request->input('sort'), ['price_asc', 'price_desc', 'newest', 'oldest'], true)
+            ? $request->input('sort')
+            : null;
         
         $categories = RedisService::getCategories();
 
-        if ($categoryId != nullOrEmptyString()){
-            $products = RedisService::getProducts();
-        }else{
-            $products = RedisService::getProductsByCategory($categoryId);
-        }
+        $products = !empty($selectedCategoryIds)
+            ? RedisService::getProductsByCategory($selectedCategoryIds, $sort)
+            : RedisService::getProducts($sort);
         
-        return view('products.index', compact('products', 'categories', 'categoryId')); 
+        return view('products.index', compact('products', 'categories', 'categoryId', 'selectedCategoryIds', 'sort')); 
+    }
+
+    public function indexByCategory(Category $category)
+    {
+        $categoryId = $category->id;
+        $selectedCategoryIds = [$categoryId];
+        $sort = null;
+        $categories = RedisService::getCategories();
+        $products = RedisService::getProductsByCategory($selectedCategoryIds, $sort);
+
+        return view('products.index', compact('products', 'categories', 'categoryId', 'selectedCategoryIds', 'sort'));
     }
 
     /**
