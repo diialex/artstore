@@ -59,12 +59,19 @@ class FortifyServiceProvider extends ServiceProvider
     {
 
         Fortify::authenticateUsing(function ($request) {
-            $userService = new UsersService;
-            $user = $userService->login($request);
-            
-            if ($user && $user->decryptPassword($request->password)) {
-                return $user;
+            try {
+                $userService = new UsersService;
+                $user = $userService->login($request);
+                
+                if ($user && $user->decryptPassword($request->password)) {
+                    return $user;
+                }
+            } catch (\Throwable $e) {
+                // Si ocurre cualquier error, retornar null para mostrar mensaje de error estándar
+                return null;
             }
+            
+            return null; // Usuario no encontrado o contraseña incorrecta
         });
         Fortify::createUsersUsing(CreateNewUser::class);
         Fortify::updateUserProfileInformationUsing(UpdateUserProfileInformation::class);

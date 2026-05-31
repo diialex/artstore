@@ -33,7 +33,7 @@
             <hr class="border-gray-200 mb-8">
 
             <div class="mb-10">
-                <p class="text-sm font-bold uppercase tracking-widest text-gray-900 mb-3">@lang('message.description')</p>
+                <p class="text-sm font-bold uppercase tracking-widest text-gray-900 mb-3">@lang('messages.description')</p>
                 <p class="text-gray-600 leading-relaxed">{{ $product->description }}</p>
             </div>
 
@@ -43,7 +43,7 @@
                     
                     <div class="mb-8">
                         <div class="flex justify-between items-center mb-4">
-                            <label class="text-sm font-bold uppercase tracking-widest text-gray-900">@lang('message.select_size')</label>
+                            <label class="text-sm font-bold uppercase tracking-widest text-gray-900">@lang('messages.select_size')</label>
                             <a href="#" class="text-sm text-gray-500 underline hover:text-dark">Guía de tallas</a>
                         </div>
                         
@@ -64,13 +64,13 @@
                                     <div>
                                         <div class="flex flex-col items-center justify-center w-full py-3.5 bg-gray-50 border-2 border-transparent rounded-xl opacity-50 cursor-not-allowed font-sans text-gray-400 text-center">
                                             <span class="text-base font-bold line-through leading-none">{{ $size->size }}</span>
-                                            <span class="text-[0.65rem] mt-1.5 leading-none">@lang('message.out_of_stock')</span>
+                                            <span class="text-[0.65rem] mt-1.5 leading-none">@lang('messages.out_of_stock')</span>
                                         </div>
                                     </div>
                                 @endif
                             @empty
                                 <div class="col-span-4">
-                                    <p class="text-gray-500 italic text-sm py-2">@lang('message.only_size')</p>
+                                    <p class="text-gray-500 italic text-sm py-2">@lang('messages.only_size')</p>
                                 </div>
                             @endforelse
                         </div>
@@ -85,19 +85,20 @@
                     </div>
 
                     <div class="js-size-warning hidden text-red-500 text-sm font-bold uppercase tracking-wider text-center mb-4">
-                        <i class="bi bi-exclamation-triangle mr-1"></i> @lang('message.please_select_size')
+                        <i class="bi bi-exclamation-triangle mr-1"></i> @lang('messages.please_select_size')
                     </div>
 
                     <button type="submit" class="w-full bg-[#212529] text-white text-lg font-bold uppercase tracking-widest py-4 rounded-full hover:bg-opacity-90 hover:shadow-lg transition-all transform active:scale-95 flex justify-center items-center gap-3">
-                        <i class="bi bi-bag-plus"></i> @lang('message.add_bag')
+                        <i class="bi bi-bag-plus"></i> @lang('messages.add_bag')
                     </button>
                 </form>
                 @else
                 <div class="mb-8">
-                    <p class="text-red-500 font-bold mb-4">@lang('message.product_out_of_stock')</p>
-                    <button disabled class="w-full bg-gray-200 text-gray-400 text-lg font-bold uppercase tracking-widest py-4 rounded-full cursor-not-allowed">
-                        @lang('message.out_of_stock')
+                    <p class="text-amber-600 font-bold mb-4 flex items-center gap-2"><i class="bi bi-exclamation-circle"></i> @lang('messages.product_out_of_stock')</p>
+                    <button onclick="toggleMenu('iniciarSesion')" class="w-full bg-amber-100 text-amber-700 text-lg font-bold uppercase tracking-widest py-4 rounded-full hover:bg-amber-200 hover:shadow-lg transition-all transform active:scale-95 flex justify-center items-center gap-3 border-2 border-amber-300">
+                        <i class="bi bi-bookmark"></i> @lang('messages.reserve')
                     </button>
+                    <p class="text-sm text-gray-500 mt-3 text-center">@lang('messages.out_of_stock_info') 📧</p>
                 </div>
             @endif
 
