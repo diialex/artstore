@@ -12,6 +12,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\OrderItemController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\StripeController;
+use App\Http\Controllers\PaymentController;
 use App\Models\User;
 use App\Models\Address;
 use App\Models\Product;
