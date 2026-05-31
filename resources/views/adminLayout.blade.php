@@ -238,12 +238,12 @@
             const icon = document.getElementById('adminDropdownIcon');
             
             if (menu.classList.contains('invisible')) {
-                menu.classList.remove('invisible', 'opacity-0', 'scale-95');
-                menu.classList.add('visible', 'opacity-100', 'scale-100');
-                icon.classList.add('rotate-180'); 
+                menu.classList.remove('invisible', 'opacity-0', '-translate-y-2');
+                menu.classList.add('visible', 'opacity-100', 'translate-y-0');
+                icon.classList.add('rotate-180');
             } else {
-                menu.classList.remove('visible', 'opacity-100', 'scale-100');
-                menu.classList.add('invisible', 'opacity-0', 'scale-95');
+                menu.classList.remove('visible', 'opacity-100', 'translate-y-0');
+                menu.classList.add('invisible', 'opacity-0', '-translate-y-2');
                 icon.classList.remove('rotate-180');
             }
         }
