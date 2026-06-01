@@ -24,7 +24,7 @@ use App\Services\UsersService;
 | RUTAS PÚBLICAS (Sin autenticación)
 |--------------------------------------------------------------------------
 */
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home')->can('store-access');
 
 Route::get('/login', function () {
     return redirect()->intended('/')->with('openLogin', 'true');
