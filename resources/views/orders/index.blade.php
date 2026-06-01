@@ -5,11 +5,6 @@
     
     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <h2 class="text-3xl font-black text-dark tracking-tight">@lang('messages.orders')</h2>
-        @if(auth()->user()->roles->contains('id', 1))
-            <a href="{{ route('orders.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-dark text-white font-bold rounded-full hover:bg-opacity-90 transition-all shadow-sm">
-                <i class="bi bi-plus-lg"></i> @lang('messages.neworder')
-            </a>
-        @endif
     </div>
 
     @if(session('success'))
