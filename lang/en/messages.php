@@ -300,4 +300,15 @@ return [
     'cookie_policy'             => 'Cookie policy',
     'privacy_management'        => 'Privacy management',
 
+    # ==========================================
+    # PURCHASE COMPLETED
+    # ==========================================
+    'purchase_success_title'    => 'Purchase completed successfully!',
+    'purchase_success_subtitle' => 'Thank you for trusting HANGER. Your order is now confirmed.',
+    'order_label'               => 'Order',
+    'total_paid'                => 'Total paid',
+    'purchase_email_sent'       => 'We have sent the confirmation and the invoice to your email address. Please also check your spam folder if you cannot find it.',
+    'view_my_order'             => 'View my order',
+    'continue_shopping'         => 'Continue shopping',
+
 ];

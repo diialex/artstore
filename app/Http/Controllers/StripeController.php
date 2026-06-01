@@ -136,8 +136,8 @@ class StripeController extends Controller {
                     \Illuminate\Support\Facades\Log::error('Mail sending failed: ' . $mailException->getMessage());
                 }
 
-                return redirect()->route('home', [
-                    'customer_email' => $customerEmail,
+                return view('orders.success', [
+                    'order' => $order,
                     'total' => $session->amount_total / 100,
                 ]);
             }
