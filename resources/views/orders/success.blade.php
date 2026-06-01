@@ -31,6 +31,21 @@
                 </div>
             </div>
 
+            @if(!empty($stockIssues))
+                <div class="flex items-start gap-3 bg-amber-50 rounded-xl p-5 border border-amber-200 mb-8">
+                    <i class="bi bi-exclamation-triangle-fill text-amber-500 text-2xl shrink-0"></i>
+                    <div class="text-sm text-amber-800">
+                        <p class="font-bold mb-1">Incidencia con el stock</p>
+                        <p>Mientras completabas el pago, alguno de los artículos se agotó. Tu pago se ha registrado y nuestro equipo se pondrá en contacto contigo para resolverlo (reposición o reembolso):</p>
+                        <ul class="list-disc list-inside mt-2">
+                            @foreach($stockIssues as $issue)
+                                <li>{{ $issue['product'] }}@if($issue['size']) ({{ $issue['size'] }})@endif — pedidas {{ $issue['requested'] }}, disponibles {{ $issue['available'] }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                </div>
+            @endif
+
             <div class="flex items-start gap-3 bg-light rounded-xl p-5 border border-primary/10 mb-8">
                 <i class="bi bi-envelope-check text-primary text-2xl shrink-0"></i>
                 <p class="text-sm text-gray-600">

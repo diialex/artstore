@@ -8,14 +8,14 @@
                     <i class="bi bi-list text-3xl"></i>
                 </button>
                 <a href="{{ route('home') }}" class="text-white hover:text-light transition-colors flex items-center">
-                    <i class="bi bi-shop text-2xl"></i>
+                    <i class="bi bi-house-door{{ request()->routeIs('home') ? '-fill' : '' }} text-2xl"></i>
                 </a>
             </div>
 
             <!-- Logo Central -->
             <div class="absolute left-1/2 transform -translate-x-1/2">
                 <a href="{{ route('home') }}">
-                    <img src="{{ asset('storage/media/images/HANGER.png') }}" alt="Logo Hanger" class="h-[70px] w-auto object-contain cursor-pointer transition-transform hover:scale-105">
+                    <img src="{{ asset('storage/media/images/HANGER.png') }}" alt="Logo Hanger" class="h-[60px] w-auto object-contain cursor-pointer transition-transform">
                 </a>
             </div>
 
@@ -68,12 +68,15 @@
                 @endauth
                 
                 @guest
-                <a href="{{ route('login') }}" class="text-white hover:text-light font-bold text-sm tracking-wider uppercase transition-colors">Login</a>
+                <button type="button" onclick="toggleMenu('iniciarSesion')" class="text-white hover:text-light font-bold text-sm tracking-wider uppercase transition-colors">Login</button>
                 @endguest
 
                 <!-- BOTÓN DEL CARRITO (A la derecha del todo) -->
                 <a href="{{ route('orders.carrito') }}" class="text-white hover:text-light transition-colors relative flex items-center mt-1">
-                    <i class="bi bi-cart3 text-xl"></i>
+                    <i class="bi {{ request()->routeIs('orders.carrito') ? 'bi-cart-fill' : 'bi-cart3' }} text-xl"></i>
+                    @if(($cartItemCount ?? 0) > 0)
+                        <span class="absolute -top-2 -right-2.5 bg-white text-primary text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 shadow-md">{{ $cartItemCount > 99 ? '99+' : $cartItemCount }}</span>
+                    @endif
                 </a>
             </div>
         </div>
