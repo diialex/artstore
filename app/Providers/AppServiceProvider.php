@@ -4,7 +4,10 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Pagination\Paginator;
+use App\Services\GuestCartService;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Order;
@@ -36,6 +39,23 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useTailwind();
+
+        // Comparte el nº de artículos del carrito con el navbar (badge global)
+        View::composer('navBar', function ($view) {
+            $cartItemCount = 0;
+
+            if (Auth::guest()) {
+                $cart = app(GuestCartService::class)->getCart();
+                $cartItemCount = (int) collect($cart['items'] ?? [])->sum('quantity');
+            } else {
+                $order = Order::where('user_id', Auth::id())
+                    ->whereIn('status', ['pending', 'failed'])
+                    ->first();
+                $cartItemCount = $order ? (int) $order->items()->sum('quantity') : 0;
+            }
+
+            $view->with('cartItemCount', $cartItemCount);
+        });
 
         // Gate de conveniencia para comprobar rol admin
         Gate::define('admin-access', function (User $user) {
