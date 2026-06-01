@@ -78,10 +78,7 @@ class ProductController extends Controller
     public function store(CreateProductRequest $request)
     {
     
-        $data= $request->validated();
-        if(isset($data['image'])){
-            $data['image'] = $request->file('image')->store('public/media/imgProd');
-        }
+        $data = $request->validated();
         $this->productService->create($data);
 
         RedisService::flushProducts();

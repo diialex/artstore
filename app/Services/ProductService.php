@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\UploadedFile;
 
 class ProductService
 {
@@ -40,9 +41,8 @@ class ProductService
 
     public function create(array $data): Product
     {
-        if (isset($data['image_url'])) {
-            $path = $data['image_url']->store('media/imgProd', 'public');
-            $data['image_url'] = $path;
+        if (isset($data['image_url']) && $data['image_url'] instanceof UploadedFile) {
+            $data['image_url'] = $this->storeImage($data['image_url']);
         }
 
         $product = Product::create($data);
@@ -69,6 +69,13 @@ class ProductService
 
     public function update(Product $product, array $data): Product
     {
+        if (isset($data['image_url']) && $data['image_url'] instanceof UploadedFile) {
+            $data['image_url'] = $this->storeImage($data['image_url']);
+        } else {
+            // Sin imagen nueva: conservamos la actual.
+            unset($data['image_url']);
+        }
+
         $product->update($data);
         
         if (isset($data['categories'])) {
@@ -100,5 +107,22 @@ class ProductService
     public function delete(Product $product)
     {
         $product->delete();
+    }
+
+    /**
+     * Guarda la imagen subida en public/storage/media/imgProd y devuelve
+     * la ruta relativa ('storage/media/imgProd/...') que usan las vistas con asset().
+     */
+    private function storeImage(UploadedFile $file): string
+    {
+        $dir = public_path('storage/media/imgProd');
+        if (!is_dir($dir)) {
+            mkdir($dir, 0775, true);
+        }
+
+        $filename = uniqid('prod_', true) . '.' . $file->getClientOriginalExtension();
+        $file->move($dir, $filename);
+
+        return 'storage/media/imgProd/' . $filename;
     }
 }
