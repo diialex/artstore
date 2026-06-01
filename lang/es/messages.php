@@ -191,6 +191,7 @@ return [
     'no_orders'            => 'No tienes pedidos todavía',
     'neworder_admin'       => 'Nueva orden (Admin)',
     'new_user_order'       => 'Nuevo pedido',
+    'new_user'             => 'Crear usuario',
     'order_id'             => 'ID del pedido',
     'customer'             => 'Cliente',
     'reference'            => 'Referencia',

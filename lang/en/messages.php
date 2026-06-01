@@ -191,6 +191,7 @@ return [
     'no_orders'            => 'You don\'t have any orders yet',
     'neworder_admin'       => 'New order (Admin)',
     'new_user_order'       => 'New order',
+    'new_user'             => 'Create user',
     'order_id'             => 'Order ID',
     'customer'             => 'Customer',
     'reference'            => 'Reference',

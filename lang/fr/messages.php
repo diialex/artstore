@@ -189,6 +189,7 @@ return [
     'no_orders'            => 'Vous n\'avez pas encore de commandes',
     'neworder_admin'       => 'Nouvelle commande (Admin)',
     'new_user_order'       => 'Nouvelle commande',
+    'new_user'             => 'Créer un utilisateur',
     'order_id'             => 'ID de commande',
     'customer'             => 'Client',
     'reference'            => 'Référence',
