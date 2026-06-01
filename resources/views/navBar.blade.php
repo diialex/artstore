@@ -68,7 +68,9 @@
                 @endauth
                 
                 @guest
-                <button type="button" onclick="toggleMenu('iniciarSesion')" class="text-white hover:text-light font-bold text-sm tracking-wider uppercase transition-colors">Login</button>
+                <button type="button" onclick="toggleMenu('iniciarSesion')" aria-label="Login" class="text-white hover:text-light transition-colors flex items-center">
+                    <i class="bi bi-person text-2xl"></i>
+                </button>
                 @endguest
 
                 <!-- BOTÓN DEL CARRITO (A la derecha del todo) -->
