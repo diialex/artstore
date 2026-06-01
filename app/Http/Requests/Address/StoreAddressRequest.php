@@ -23,6 +23,7 @@ class StoreAddressRequest extends FormRequest
             'street' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'zip_code' => 'required|string|max:20',
+            'user_id' => 'nullable|exists:users,id',
         ];
     }
 }

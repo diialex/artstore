@@ -24,7 +24,7 @@
             @php
                 $selectedMenuCategoryIds = collect((array) request('categories', []))
                     ->when(request('category'), fn ($ids) => $ids->push(request('category')))
-                    ->map(fn ($categoryId) => (int) $categoryId)
+                    ->map(fn ($categoryId) => is_object($categoryId) && method_exists($categoryId, 'getKey') ? (int) $categoryId->getKey() : (int) $categoryId)
                     ->all();
             @endphp
             

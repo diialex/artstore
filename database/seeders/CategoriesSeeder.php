@@ -30,7 +30,7 @@ class CategoriesSeeder extends Seeder
 
         Category::create([
             'name' => 'Pantalones',
-            'image' => 'storage/media/images/man.png'
+            'image' => 'storage/media/images/pantalon_estrellas.jpeg'
         ]);
 
         Category::create([

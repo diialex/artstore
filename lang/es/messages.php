@@ -273,6 +273,7 @@ return [
     # ==========================================
     'store_go'          => 'IR A LA TIENDA',
     'init_go'           => 'Ir al inicio',
+    'delete'            => 'Eliminar',
     'eliminate'         => 'Eliminar',
 
     # ==========================================
