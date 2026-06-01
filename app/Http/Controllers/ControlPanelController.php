@@ -2,20 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Charts\OrdersPerUsers;
 use App\Charts\RegisterUsersChart;
-use App\Models\Address;
-use App\Http\Requests\Address\StoreAddressRequest;
-use App\Http\Requests\Address\UpdateAddressRequest;
-use App\Services\AddressService;
-use App\Services\UsersService;
-use Illuminate\Http\Request;
+use App\Charts\RevenueByCategoryChart;
+use App\Charts\RevenuePerMonthChart;
+use App\Charts\TopProductsChart;
 
 class ControlPanelController extends Controller
 {
-    public function __construct(){}
-    public function index(RegisterUsersChart $registerUsersChart, OrdersPerUsers $ordersPerUsers){
-        return view('controlPanel.dashboard', ['usersRegisterThisYear' => $registerUsersChart->build(),
-                                                'ordersPerUser' => $ordersPerUsers->build()]);
+    public function __construct() {}
+
+    public function index(
+        RegisterUsersChart $registerUsersChart,
+        RevenuePerMonthChart $revenuePerMonthChart,
+        TopProductsChart $topProductsChart,
+        RevenueByCategoryChart $revenueByCategoryChart
+    ) {
+        return view('controlPanel.dashboard', [
+            'usersRegisterThisYear' => $registerUsersChart->build(),
+            'revenuePerMonth'       => $revenuePerMonthChart->build(),
+            'topProducts'           => $topProductsChart->build(),
+            'revenueByCategory'     => $revenueByCategoryChart->build(),
+        ]);
     }
 }
