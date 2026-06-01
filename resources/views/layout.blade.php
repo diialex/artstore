@@ -5,6 +5,7 @@
     
     @include('navBar')
 
+    {{-- Toast global de notificaciones (éxito / error). Ej: "Producto añadido al carrito". --}}
     @php $toastError = session('error'); $toastMessage = $toastError ?: session('success'); @endphp
     @if($toastMessage)
         <div id="appToast" role="status" aria-live="polite"
@@ -41,14 +42,14 @@
             <div>
                 <a href="{{ route('controlPanel.dashboard') }}" class="group flex items-center gap-4 px-4 py-3 rounded-xl bg-primary text-white shadow-md transition-all">
                     <i class="bi bi-speedometer2 text-lg"></i>
-                    <span class="font-bold text-sm tracking-wide">@lang('messages.mypanel')</span>
+                    <span class="font-bold text-sm tracking-wide">Dashboard</span>
                 </a>
             </div>
             <div class="w-full h-px bg-gray-100"></div>
 
             <div>
                 <h6 class="text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-4 px-2 flex items-center gap-2">
-                    <i class="bi bi-database"></i> @lang('messages.shop_management')
+                    <i class="bi bi-database"></i> Gestión de Tienda
                 </h6>
                 <ul class="flex flex-col gap-1">
                     <li><a href="{{ route('products.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm"><i class="bi bi-box-seam"></i> Productos</a></li>
@@ -60,7 +61,7 @@
 
             <div>
                 <h6 class="text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-4 px-2 flex items-center gap-2">
-                    <i class="bi bi-shield-check"></i> @lang('messages.security')
+                    <i class="bi bi-shield-check"></i> Seguridad
                 </h6>
                 <ul class="flex flex-col gap-1">
                     <li><a href="{{ route('users.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm"><i class="bi bi-people"></i> Usuarios</a></li>
@@ -80,8 +81,7 @@
                 <i class="bi bi-x-lg text-sm"></i>
             </button>
         </div>
-        
-            <div class="p-6 overflow-y-auto flex-grow flex flex-col gap-6 hide-scrollbar">
+        <div class="p-6 overflow-y-auto flex-grow flex flex-col gap-6 hide-scrollbar">
             @php
                 $selectedMenuCategoryIds = collect((array) request('categories', []))
                     ->when(request('category'), fn ($ids) => $ids->push(request('category')))
@@ -130,6 +130,11 @@
             </div>
         </div>
 
+        <div class="p-6 border-t border-gray-100 bg-gray-50 flex justify-center gap-4">
+            <a href="#" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-primary shadow-sm transition-all"><i class="bi bi-instagram"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-primary shadow-sm transition-all"><i class="bi bi-twitter-x"></i></a>
+            <a href="#" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-primary shadow-sm transition-all"><i class="bi bi-envelope"></i></a>
+        </div>
     @endif
 </div>
 

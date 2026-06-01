@@ -185,7 +185,6 @@ return [
     # PEDIDOS
     # ==========================================
     'orders'               => 'Mis pedidos',
-    'order'               => 'Pedidos',
     'all_orders'           => 'Todos los pedidos',
     'recent_orders'        => 'Pedidos recientes',
     'print_receipt'        => 'Imprimir recibo',
@@ -243,7 +242,6 @@ return [
     'total_products'           => 'Productos totales',
     'total_users'              => 'Usuarios totales',
     'clients_mngment_personal' => 'Gestión de clientes y personal',
-    'shop_management'          => 'Gestión de tienda',
     'users'                    => 'Usuarios',
     'contact'                  => 'Contacto',
     'admin'                    => 'Administrador',
