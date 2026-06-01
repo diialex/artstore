@@ -21,6 +21,8 @@ return [
     'mypanel'           => 'My Dashboard',
     'keep_buying'       => 'Keep shopping',
     'watch_buy_history' => 'Check your purchase history',
+    'order'               => 'Orders',
+    'shop_management'     => 'Store Management',
     
     # ==========================================
     # AUTHENTICATION & REGISTRATION

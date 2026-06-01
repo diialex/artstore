@@ -21,6 +21,8 @@ return [
     'mypanel'           => 'La mia Dashboard',
     'keep_buying'       => 'Continua lo shopping',
     'watch_buy_history' => 'Controlla la tua cronologia acquisti',
+    'order'               => 'Ordini',
+    'shop_management'     => 'Gestione del negozio',
     
     # ==========================================
     # AUTENTICACIÓN Y REGISTRO
