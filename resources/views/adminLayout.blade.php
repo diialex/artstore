@@ -32,22 +32,22 @@
 
             <div>
                 <h6 class="text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-4 px-2 flex items-center gap-2">
-                    <i class="bi bi-database"></i> Gestión de Tienda
+                    <i class="bi bi-database"></i> @lang('messages.shop_management')
                 </h6>
                 <ul class="flex flex-col gap-1">
                     <li>
                         <a href="{{ route('admin.products.index') }}" class="flex items-center justify-between px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm group">
-                            <div class="flex items-center gap-3"><i class="bi bi-box-seam"></i> Productos</div>
+                            <div class="flex items-center gap-3"><i class="bi bi-box-seam"></i> @lang('messages.products')</div>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('categories.index') }}" class="flex items-center justify-between px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm group">
-                            <div class="flex items-center gap-3"><i class="bi bi-tags"></i> Categorías</div>
+                            <div class="flex items-center gap-3"><i class="bi bi-tags"></i> @lang('messages.categories')</div>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('orders.index') }}" class="flex items-center justify-between px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm group">
-                            <div class="flex items-center gap-3"><i class="bi bi-cart-check"></i> Pedidos</div>
+                            <div class="flex items-center gap-3"><i class="bi bi-cart-check"></i> @lang('messages.order')</div>
                         </a>
                     </li>
                 </ul>
@@ -57,17 +57,17 @@
 
             <div>
                 <h6 class="text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-4 px-2 flex items-center gap-2">
-                    <i class="bi bi-shield-check"></i> Seguridad
+                    <i class="bi bi-shield-check"></i> @lang('messages.security')
                 </h6>
                 <ul class="flex flex-col gap-1">
                     <li>
                         <a href="{{ route('users.index') }}" class="flex items-center justify-between px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm group">
-                            <div class="flex items-center gap-3"><i class="bi bi-people"></i> Usuarios</div>
+                            <div class="flex items-center gap-3"><i class="bi bi-people"></i> @lang('messages.users')</div>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('roles.index') }}" class="flex items-center justify-between px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm group">
-                            <div class="flex items-center gap-3"><i class="bi bi-person-badge"></i> Roles y Permisos</div>
+                            <div class="flex items-center gap-3"><i class="bi bi-person-badge"></i> @lang('messages.roles_permissions')</div>
                         </a>
                     </li>
                 </ul>

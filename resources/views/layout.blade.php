@@ -5,7 +5,6 @@
     
     @include('navBar')
 
-    {{-- Toast global de notificaciones (éxito / error). Ej: "Producto añadido al carrito". --}}
     @php $toastError = session('error'); $toastMessage = $toastError ?: session('success'); @endphp
     @if($toastMessage)
         <div id="appToast" role="status" aria-live="polite"
@@ -42,14 +41,14 @@
             <div>
                 <a href="{{ route('controlPanel.dashboard') }}" class="group flex items-center gap-4 px-4 py-3 rounded-xl bg-primary text-white shadow-md transition-all">
                     <i class="bi bi-speedometer2 text-lg"></i>
-                    <span class="font-bold text-sm tracking-wide">Dashboard</span>
+                    <span class="font-bold text-sm tracking-wide">@lang('messages.mypanel')</span>
                 </a>
             </div>
             <div class="w-full h-px bg-gray-100"></div>
 
             <div>
                 <h6 class="text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-4 px-2 flex items-center gap-2">
-                    <i class="bi bi-database"></i> Gestión de Tienda
+                    <i class="bi bi-database"></i> @lang('messages.shop_management')
                 </h6>
                 <ul class="flex flex-col gap-1">
                     <li><a href="{{ route('products.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm"><i class="bi bi-box-seam"></i> Productos</a></li>
@@ -61,7 +60,7 @@
 
             <div>
                 <h6 class="text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-4 px-2 flex items-center gap-2">
-                    <i class="bi bi-shield-check"></i> Seguridad
+                    <i class="bi bi-shield-check"></i> @lang('messages.security')
                 </h6>
                 <ul class="flex flex-col gap-1">
                     <li><a href="{{ route('users.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm"><i class="bi bi-people"></i> Usuarios</a></li>
