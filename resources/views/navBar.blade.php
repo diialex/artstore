@@ -2,7 +2,6 @@
     <nav class="px-4 py-3 w-full">
         <div class="flex justify-between items-center max-w-[1400px] mx-auto">
             
-            <!-- Menú Lateral y Home -->
             <div class="flex items-center gap-4">
                 <button type="button" class="text-white hover:text-light transition-colors" onclick="toggleMenu('menuLateral')">
                     <i class="bi bi-list text-3xl"></i>
@@ -12,18 +11,15 @@
                 </a>
             </div>
 
-            <!-- Logo Central -->
             <div class="absolute left-1/2 transform -translate-x-1/2">
                 <a href="{{ route('home') }}">
                     <img src="{{ asset('storage/media/images/HANGER.png') }}" alt="Logo Hanger" class="h-[70px] w-auto object-contain cursor-pointer transition-transform hover:scale-105">
                 </a>
             </div>
 
-            <!-- Zona Derecha: Usuario y LUEGO el Carrito -->
             <div class="flex items-center justify-end gap-5">
                 
                 @auth
-                <!-- Dropdown de Usuario -->
                 <div class="relative inline-block">
                     <button type="button" onclick="toggleNavbarDropdown(event)" class="text-white font-medium hover:text-light transition-colors flex items-center gap-2 focus:outline-none py-1">
                         {{ auth()->user()->username }}
@@ -37,7 +33,7 @@
                         
                         <ul class="py-2 flex flex-col">
                             <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="{{ route('users.show', auth()->user()->username) }}"><i class="bi bi-person text-lg"></i>@lang('messages.profile')</a></li>
-                            <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="{{ route('orders.index') }}"><i class="bi bi-bag text-lg"></i>@lang('messages.my_orders')</a></li>
+                            <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="{{ route('orders.index') }}"><i class="bi bi-bag text-lg"></i>@lang('messages.orders')</a></li>
                             <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="/favoritos"><i class="bi bi-heart text-lg"></i>@lang('messages.favorites')</a></li>
                             
                             @if(auth()->user()->hasRol('seller'))
@@ -66,7 +62,6 @@
                 <a href="{{ route('login') }}" class="text-white hover:text-light font-bold text-sm tracking-wider uppercase transition-colors">Login</a>
                 @endguest
 
-                <!-- BOTÓN DEL CARRITO (A la derecha del todo) -->
                 <a href="{{ route('orders.carrito') }}" class="text-white hover:text-light transition-colors relative flex items-center mt-1">
                     <i class="bi bi-cart3 text-xl"></i>
                 </a>
