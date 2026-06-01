@@ -1,5 +1,5 @@
 @extends('adminLayout') 
-@section('title', $product->exists ? __('message.edit_product') : __('message.create_product'))
+@section('title', $product->exists ? __('messages.edit_product') : __('messages.create_product'))
 
 @section('content')
 <div class="w-full max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 py-8 mb-20">
@@ -9,7 +9,7 @@
             <i class="bi bi-arrow-left text-xl"></i>
         </a>
         <h2 class="text-3xl font-black text-dark tracking-tight uppercase">
-            {{ $product->exists ? __('message.edit_product') : __('message.create_product') }}
+            {{ $product->exists ? __('messages.edit_product') : __('messages.create_product') }}
         </h2>
     </div>
 
@@ -118,7 +118,7 @@
 
             <div class="pt-6">
                 <button type="submit" class="w-full bg-dark text-white font-bold uppercase tracking-widest py-4 rounded-xl hover:bg-opacity-90 hover:shadow-lg transition-all active:scale-95 flex justify-center items-center gap-2">
-                    <i class="bi bi-save"></i> {{ $product->exists ? __('message.update_product') : __('message.save_product') }}
+                    <i class="bi bi-save"></i> {{ $product->exists ? __('messages.update_product') : __('messages.save_product') }}
                 </button>
             </div>
         </form>
