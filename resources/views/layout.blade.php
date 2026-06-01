@@ -5,7 +5,6 @@
     
     @include('navBar')
 
-    {{-- Toast global de notificaciones (éxito / error). Ej: "Producto añadido al carrito". --}}
     @php $toastError = session('error'); $toastMessage = $toastError ?: session('success'); @endphp
     @if($toastMessage)
         <div id="appToast" role="status" aria-live="polite"
@@ -130,11 +129,6 @@
             </div>
         </div>
 
-        <div class="p-6 border-t border-gray-100 bg-gray-50 flex justify-center gap-4">
-            <a href="#" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-primary shadow-sm transition-all"><i class="bi bi-instagram"></i></a>
-            <a href="#" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-primary shadow-sm transition-all"><i class="bi bi-twitter-x"></i></a>
-            <a href="#" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-primary shadow-sm transition-all"><i class="bi bi-envelope"></i></a>
-        </div>
     @endif
 </div>
 

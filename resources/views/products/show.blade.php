@@ -44,7 +44,6 @@
                     <div class="mb-8">
                         <div class="flex justify-between items-center mb-4">
                             <label class="text-sm font-bold uppercase tracking-widest text-gray-900">@lang('messages.select_size')</label>
-                            <a href="#" class="text-sm text-gray-500 underline hover:text-dark">Guía de tallas</a>
                         </div>
                         
                         <div class="grid grid-cols-4 gap-3">
