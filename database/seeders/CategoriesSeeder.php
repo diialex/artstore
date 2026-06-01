@@ -14,33 +14,33 @@ class CategoriesSeeder extends Seeder
     public function run(): void
     {
         Category::create([
+            'name' => 'Crochet',
+            'image' => 'storage/media/images/croche_gorro_estrella.jpeg'
+        ]);
+
+        Category::create([
             'name' => 'Mujer',
-            'description' => 'Zapatillas de baloncesto icónicas con diseño retro y tecnología de puntera.',
             'image' => 'storage/media/images/woman.png'
         ]);
 
         Category::create([
             'name' => 'Hombre',
-            'description' => 'Zapatillas clásicas y versátiles, ideales para cualquier estilo de vida.',
             'image' => 'storage/media/images/man.png'
         ]);
 
         Category::create([
-            'name' => 'Jordans',
-            'description' => 'Zapatillas clásicas y versátiles, ideales para cualquier estilo de vida.',
-            'image' => '/storage/media/images/jordans.png'
+            'name' => 'Pantalones',
+            'image' => 'storage/media/images/man.png'
         ]);
 
         Category::create([
-            'name' => 'Nuevo',
-            'description' => 'Últimas novedades en tienda.',
-            'image' => '/storage/media/images/new.png'
+            'name' => 'Camisetas',
+            'image' => 'storage/media/images/camisa_hombre.jpeg'
         ]);
 
         Category::create([
-            'name' => 'Rebajas',
-            'description' => 'Productos con descuento.',
-            'image' => '/storage/media/images/sales.png'
+            'name' => 'Accesorios',
+            'image' => 'storage/media/images/maki_bolso.jpeg'
         ]);
     }
 }

@@ -34,7 +34,7 @@
                     @error('status') <div>{{ $message }}</div> @enderror
                 </div>
 
-                <button class="btn btn-primary mt-2">{{ $payment->exists ? __('message.update') : __('message.crear') }}</button>
+                <button class="btn btn-primary mt-2">{{ $payment->exists ? __('messages.update') : __('messages.crear') }}</button>
             </form>
         </div>
     </div>

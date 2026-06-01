@@ -2,175 +2,64 @@
 @section('pagina')
 <body class="bg-body-bg flex flex-col min-h-screen font-sans text-dark">
     
-    <header class="sticky top-0 z-50 bg-primary border-b border-primary shadow-sm">
-        <nav class="px-4 py-3 w-full">
-            <div class="flex justify-between items-center max-w-[1400px] mx-auto">
-                
-                <div class="flex items-center gap-4">
-                    <button type="button" class="text-white hover:text-light transition-colors" onclick="toggleMenu('menuLateral')">
-                        <i class="bi bi-list text-3xl"></i>
-                    </button>
-                    <a href="{{ route('home') }}" class="text-white hover:text-light transition-colors flex items-center">
-                        <i class="bi {{ request()->routeIs('home') ? 'bi-house-door-fill' : 'bi-house-door' }} text-2xl"></i>
-                    </a>
-                </div>
-
-                <div class="absolute left-1/2 transform -translate-x-1/2">
-                    <img src="{{ asset('storage/media/images/HANGER.png') }}" alt="Logo Hanger" class="h-[70px] w-auto object-contain cursor-pointer transition-transform hover:scale-105">
-                </div>
-
-                <div class="flex items-center justify-end gap-5">
-                    @auth
-                        <div class="relative inline-block">
-                            <button type="button" onclick="toggleDropdown(event)" class="text-white font-medium hover:text-light transition-colors flex items-center gap-2 focus:outline-none py-1">
-                                {{ auth()->user()->username }}
-                                <i class="bi bi-chevron-down text-xs transition-transform duration-200" id="dropdownIcon"></i>
-                            </button>
-
-                            <div id="userDropdownMenu" class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-xl opacity-0 invisible -translate-y-2 transition-all duration-200 ease-out border border-gray-100 overflow-hidden z-[100] top-full origin-top-right">
-                                <div class="px-4 py-3 bg-gray-50 border-b border-gray-100">
-                                    <h6 class="text-xs font-bold text-gray-500 uppercase tracking-widest">@lang('messages.account_options')</h6>
-                                </div>
-                                
-                                <ul class="py-2 flex flex-col">
-                                    @if (auth()->user()->hasRol('admin'))
-                                        <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="{{ route('controlPanel.dashboard') }}"><i class="bi bi-person-gear text-lg"></i>@lang('messages.admin_panel')</a></li>
-                                    @endif
-                                    
-                                    @if(auth()->user()->hasRol('seller'))
-                                        <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="/perfil"><i class="bi bi-shop-window text-lg"></i>@lang('messages.profile')</a></li>
-                                    @endif
-                                    
-                                    @if (auth()->user()->hasRol('user'))
-                                        <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="{{ route('users.show', auth()->user()->username) }}"><i class="bi bi-person text-lg"></i>@lang('messages.profile')</a></li>
-                                        <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="{{ route('orders.index') }}"><i class="bi bi-bag text-lg"></i>@lang('messages.orders')</a></li>
-                                        <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="/favoritos"><i class="bi bi-heart text-lg"></i>@lang('messages.myfavs')</a></li>
-                                    @endif
-                                </ul>
-                                
-                                <div class="border-t border-gray-100">
-                                    <form method="POST" action="{{ route('logout') }}" class="m-0">
-                                        @csrf
-                                        <button type="submit" class="w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 transition-colors flex items-center gap-3 text-sm font-bold">
-                                            <i class="bi bi-box-arrow-right text-lg"></i>@lang('messages.logout')
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    @else
-                        <button type="button" class="text-white hover:text-light transition-colors" onclick="toggleMenu('iniciarSesion')">
-                            <i id="loginNavIcon" class="bi bi-person text-3xl"></i>
-                        </button>
-                    @endauth
-                    
-                    <a href="{{ route('orders.carrito') }}" class="text-white relative flex items-center">
-                        <i class="bi {{ request()->routeIs('orders.carrito') ? 'bi-cart-fill' : 'bi-cart' }} text-2xl"></i>
-                        @php
-                            $cartCount = 0;
-                            if(auth()->check()) {
-                                $activeOrder = \App\Models\Order::where('user_id', auth()->id())
-                                                    ->whereIn('status', ['pending', 'failed'])
-                                                    ->first();
-                                $cartCount = $activeOrder ? $activeOrder->items->sum('quantity') : 0;
-                            }
-                        @endphp
-                        @if($cartCount > 0)
-                            <span class="absolute -top-1 -right-2 bg-success text-dark text-[0.65rem] font-bold rounded-full h-5 w-5 flex items-center justify-center border-2 border-primary shadow-sm">
-                                {{ $cartCount }}
-                            </span>
-                        @endif
-                    </a>
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    @if(session('success') || session('error'))
-        @php $isError = (bool) session('error'); @endphp
-        <div id="cartToast" class="fixed top-24 right-4 z-[80] flex items-center gap-3 bg-white border border-gray-100 shadow-xl rounded-2xl px-5 py-4 max-w-sm transition-all duration-300 translate-x-6 opacity-0">
-            <span class="flex items-center justify-center h-9 w-9 rounded-full shrink-0 {{ $isError ? 'bg-red-100 text-red-600' : 'bg-success bg-opacity-20 text-green-700' }}">
-                <i class="bi {{ $isError ? 'bi-exclamation-lg' : 'bi-check-lg' }} text-lg"></i>
-            </span>
-            <p class="text-sm font-bold text-dark">{{ session('error') ?? session('success') }}</p>
-            <button type="button" onclick="document.getElementById('cartToast').remove()" class="ml-2 text-gray-400 shrink-0">
-                <i class="bi bi-x-lg"></i>
-            </button>
-        </div>
-        <script>
-            (function () {
-                const toast = document.getElementById('cartToast');
-                if (!toast) return;
-                requestAnimationFrame(() => toast.classList.remove('translate-x-6', 'opacity-0'));
-                setTimeout(() => {
-                    toast.classList.add('translate-x-6', 'opacity-0');
-                    setTimeout(() => toast.remove(), 300);
-                }, 3500);
-            })();
-        </script>
-    @endif
-
+    @include('navBar')
+    
     <main class="w-full flex-grow">
         @yield('content')
     </main>
-    <footer class="bg-primary !text-light pt-10 pb-6 mt-16 w-full shadow-[0_-10px_20px_rgba(0,0,0,0.1)]">
-        <div class="max-w-[1400px] mx-auto px-6">
-            
-            <div class="flex flex-col md:flex-row justify-between items-center gap-6 mb-8">
-                
-                <div class="flex flex-col md:flex-row items-center gap-6">
-                    <h2 class="text-2xl font-black tracking-widest text-white m-0">HANGER</h2>
-                    <div class="hidden md:block w-px h-6 bg-white/20"></div>
-                    <div class="flex gap-5">
-                        <a href="#" class="!text-light hover:!text-white hover:scale-110 transition-transform"><i class="bi bi-instagram text-lg"></i></a>
-                        <a href="#" class="!text-light hover:!text-white hover:scale-110 transition-transform"><i class="bi bi-twitter-x text-lg"></i></a>
-                        <a href="#" class="!text-light hover:!text-white hover:scale-110 transition-transform"><i class="bi bi-envelope text-lg"></i></a>
-                    </div>
-                </div>
-
-                <div class="flex items-center gap-2">
-                    <a href="{{ route('lang.switch', 'es') }}" class="px-3 py-1.5 rounded-md border {{ app()->getLocale() == 'es' ? '!border-light !bg-light !text-primary font-black shadow-sm' : '!border-white/30 !text-light hover:!border-white hover:!text-white font-medium' }} transition-colors text-xs tracking-widest uppercase no-decoration">ES</a>
-                    <a href="{{ route('lang.switch', 'en') }}" class="px-3 py-1.5 rounded-md border {{ app()->getLocale() == 'en' ? '!border-light !bg-light !text-primary font-black shadow-sm' : '!border-white/30 !text-light hover:!border-white hover:!text-white font-medium' }} transition-colors text-xs tracking-widest uppercase no-decoration">EN</a>
-                    <a href="{{ route('lang.switch', 'fr') }}" class="px-3 py-1.5 rounded-md border {{ app()->getLocale() == 'fr' ? '!border-light !bg-light !text-primary font-black shadow-sm' : '!border-white/30 !text-light hover:!border-white hover:!text-white font-medium' }} transition-colors text-xs tracking-widest uppercase no-decoration">FR</a>
-                    <a href="{{ route('lang.switch', 'it') }}" class="px-3 py-1.5 rounded-md border {{ app()->getLocale() == 'it' ? '!border-light !bg-light !text-primary font-black shadow-sm' : '!border-white/30 !text-light hover:!border-white hover:!text-white font-medium' }} transition-colors text-xs tracking-widest uppercase no-decoration">IT</a>
-                </div>
-                
-            </div>
-
-            <div class="w-full h-px bg-white/10 mb-6"></div>
-
-            <div class="flex flex-col lg:flex-row justify-between items-center gap-6 text-xs !text-light">
-                
-                <div class="flex flex-wrap justify-center lg:justify-start gap-x-4 gap-y-2 font-medium">
-                    <a href="#" class="!text-light hover:!text-white transition-colors">@lang('messages.terms_conditions_purchase')</a>
-                    <span class="text-white/20 hidden md:inline">|</span>
-                    <a href="#" class="!text-light hover:!text-white transition-colors">@lang('messages.terms_conditions_hanger')</a>
-                    <span class="text-white/20 hidden md:inline">|</span>
-                    <a href="#" class="!text-light hover:!text-white transition-colors">@lang('messages.privacy_policy')</a>
-                    <span class="text-white/20 hidden md:inline">|</span>
-                    <a href="#" class="!text-light hover:text-white transition-colors">@lang('messages.cookie_policy')</a>
-                    <span class="text-white/20 hidden md:inline">|</span>
-                    <a href="#" class="!text-light hover:!text-white transition-colors">@lang('messages.privacy_management')</a>
-                </div>
-
-                <div class="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
-                    <div class="flex items-center gap-3 text-lg !text-light opacity-80">
-                        <i class="bi bi-credit-card" title="Tarjeta de Crédito"></i>
-                        <i class="bi bi-paypal" title="PayPal"></i>
-                        <i class="bi bi-apple" title="Apple Pay"></i>
-                    </div>
-                    <span class="font-bold tracking-wider !text-light">&copy; {{ date('Y') }} HANGER.</span>
-                </div>
-                
-            </div>
-        </div>
-    </footer>
+    
+    @include('footer')
 
     <div id="overlay" class="fixed inset-0 bg-black/50 z-[60] hidden opacity-0 transition-opacity duration-300" onclick="closeAllMenus()"></div>
 
     <div id="menuLateral" class="fixed inset-y-0 left-0 w-80 bg-white text-dark z-[70] transform -translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
     
-        <!-- Cabecera del panel -->
+    @if(auth()->check() && auth()->user()->roles->contains('id', 1) && request()->is('admin*'))
+        
+        <div class="flex justify-between items-center p-6 bg-gray-50 border-b border-gray-100">
+            <div class="flex items-center gap-3">
+                <i class="bi bi-shield-lock-fill text-primary text-xl"></i>
+                <h5 class="text-sm font-black uppercase tracking-widest text-primary">@lang('messages.administration')</h5>
+            </div>
+            <button onclick="toggleMenu('menuLateral')" class="text-gray-400 hover:text-red-500 transition-colors bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-200">
+                <i class="bi bi-x-lg text-sm"></i>
+            </button>
+        </div>
+        
+        <div class="p-6 overflow-y-auto flex-grow flex flex-col gap-6 hide-scrollbar">
+            <div>
+                <a href="{{ route('controlPanel.dashboard') }}" class="group flex items-center gap-4 px-4 py-3 rounded-xl bg-primary text-white shadow-md transition-all">
+                    <i class="bi bi-speedometer2 text-lg"></i>
+                    <span class="font-bold text-sm tracking-wide">Dashboard</span>
+                </a>
+            </div>
+            <div class="w-full h-px bg-gray-100"></div>
+
+            <div>
+                <h6 class="text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-4 px-2 flex items-center gap-2">
+                    <i class="bi bi-database"></i> Gestión de Tienda
+                </h6>
+                <ul class="flex flex-col gap-1">
+                    <li><a href="{{ route('products.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm"><i class="bi bi-box-seam"></i> Productos</a></li>
+                    <li><a href="{{ route('categories.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm"><i class="bi bi-tags"></i> Categorías</a></li>
+                    <li><a href="{{ route('orders.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm"><i class="bi bi-cart-check"></i> Pedidos</a></li>
+                </ul>
+            </div>
+            <div class="w-full h-px bg-gray-100"></div>
+
+            <div>
+                <h6 class="text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-4 px-2 flex items-center gap-2">
+                    <i class="bi bi-shield-check"></i> Seguridad
+                </h6>
+                <ul class="flex flex-col gap-1">
+                    <li><a href="{{ route('users.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm"><i class="bi bi-people"></i> Usuarios</a></li>
+                    <li><a href="{{ route('roles.index') }}" class="flex items-center gap-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm"><i class="bi bi-person-badge"></i> Roles y Permisos</a></li>
+                </ul>
+            </div>
+        </div>
+
+    @else
+        
         <div class="flex justify-between items-center p-6 bg-gray-50 border-b border-gray-100">
             <div class="flex items-center gap-3">
                 <i class="bi bi-list-nested text-primary text-xl"></i>
@@ -180,42 +69,44 @@
                 <i class="bi bi-x-lg text-sm"></i>
             </button>
         </div>
-        
-        <!-- Contenido principal con scroll -->
         <div class="p-6 overflow-y-auto flex-grow flex flex-col gap-6 hide-scrollbar">
+            @php
+                $selectedMenuCategoryIds = collect((array) request('categories', []))
+                    ->when(request('category'), fn ($ids) => $ids->push(request('category')))
+                    ->map(fn ($categoryId) => (int) $categoryId)
+                    ->all();
+            @endphp
             
-            <!-- Enlace de Inicio destacado -->
             <div>
-                <a href="{{ route('home') }}" class="group flex items-center gap-4 px-4 py-3 rounded-xl {{ !request('category') ? 'bg-primary text-white shadow-md' : 'bg-gray-50 text-gray-700 hover:bg-light hover:text-primary' }} transition-all">
-                    <i class="bi bi-house-door{{ !request('category') ? '-fill' : '' }} text-lg"></i>
+                <a href="{{ route('home') }}" class="group flex items-center gap-4 px-4 py-3 rounded-xl {{ empty($selectedMenuCategoryIds) ? 'bg-primary text-white shadow-md' : 'bg-gray-50 text-gray-700 hover:bg-light hover:text-primary' }} transition-all">
+                    <i class="bi bi-house-door{{ empty($selectedMenuCategoryIds) ? '-fill' : '' }} text-lg"></i>
                     <span class="font-bold text-sm tracking-wide">@lang('messages.start')</span>
                 </a>
             </div>
-
             <div class="w-full h-px bg-gray-100"></div>
 
-            <!-- Sección de Categorías -->
             <div>
                 <h6 class="text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-4 px-2 flex items-center gap-2">
                     <i class="bi bi-collection"></i> @lang('messages.collections')
                 </h6>
                 <ul class="flex flex-col gap-1">
                     @foreach(App\Models\Category::all() as $cat)
+                        @php $isMenuCategorySelected = in_array($cat->id, $selectedMenuCategoryIds); @endphp
                         <li>
-                            <a href="{{ route('home', ['category' => $cat->id]) }}" 
-                            class="flex items-center justify-between px-4 py-2.5 rounded-lg {{ request('category') == $cat->id ? 'bg-light text-primary font-bold' : 'text-gray-600 hover:bg-gray-50 hover:text-dark font-medium' }} transition-colors text-sm group">
+                            <a href="{{ route('home', ['categories' => [$cat->id]]) }}" 
+                            class="flex items-center justify-between px-4 py-2.5 rounded-lg {{ $isMenuCategorySelected ? 'bg-light text-primary font-bold' : 'text-gray-600 hover:bg-gray-50 hover:text-dark font-medium' }} transition-colors text-sm group">
                                 <div class="flex items-center gap-3">
-                                    <!-- Indicador visual de categoría activa -->
-                                    <div class="w-1.5 h-1.5 rounded-full {{ request('category') == $cat->id ? 'bg-primary shadow-[0_0_8px_rgba(103,22,70,0.6)]' : 'bg-transparent group-hover:bg-gray-300' }} transition-all"></div>
+                                    <div class="w-1.5 h-1.5 rounded-full {{ $isMenuCategorySelected ? 'bg-primary shadow-[0_0_8px_rgba(103,22,70,0.6)]' : 'bg-transparent group-hover:bg-gray-300' }} transition-all"></div>
                                     {{ $cat->name }}
                                 </div>
-                                @if(request('category') == $cat->id)
+                                @if($isMenuCategorySelected)
                                     <i class="bi bi-chevron-right text-xs"></i>
                                 @endif
                             </a>
                         </li>
                     @endforeach
                 </ul>
+            </div>
             </div>
 
             <div class="mt-auto pt-6">
@@ -232,20 +123,26 @@
             <a href="#" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-primary shadow-sm transition-all"><i class="bi bi-twitter-x"></i></a>
             <a href="#" class="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-primary shadow-sm transition-all"><i class="bi bi-envelope"></i></a>
         </div>
-    </div>
+    @endif
+</div>
 
     <div id="iniciarSesion" class="fixed inset-y-0 right-0 w-96 bg-white text-dark z-[70] transform translate-x-full transition-transform duration-300 shadow-2xl flex flex-col">
         <div class="flex justify-start p-6">
-            <button onclick="toggleMenu('iniciarSesion')" class="text-gray-400 transition-colors"><i class="bi bi-x-lg text-xl"></i></button>
+            <button onclick="toggleMenu('iniciarSesion')" class="text-gray-400 hover:text-dark transition-colors"><i class="bi bi-x-lg text-xl"></i></button>
         </div>
         
         <div class="px-8 pb-8 overflow-y-auto">
             @guest
                 <h4 class="text-2xl font-black text-center mb-6 text-primary">@lang('messages.welcome')</h4>
                 
-                <form id="loginForm" method="POST" action="{{ route('login') }}" class="flex flex-col gap-4">
+                @if ($errors->any())
+                    <div class="bg-red-50 text-red-600 text-sm font-bold p-3 rounded-lg border border-red-200 mb-6 text-center">
+                        @lang('messages.wrong_credentials')
+                    </div>
+                @endif
+                
+                <form method="POST" action="{{ route('login') }}" class="flex flex-col gap-4">
                     @csrf
-                    <div id="loginErrorMessage"></div>
                     <div>
                         <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2" for="userCredential">@lang('messages.email_user')</label>
                         <input id="userCredential" type="text" name="userCredential" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" required autofocus />
@@ -256,17 +153,17 @@
                         <input id="password" type="password" name="password" class="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all" placeholder="••••••••" required />
                     </div>
                     
-                    <button type="submit" class="w-full bg-primary text-white font-bold uppercase tracking-widest py-4 rounded-lg transition-all mt-4 shadow-md active:scale-95">
+                    <button type="submit" class="w-full bg-primary text-white font-bold uppercase tracking-widest py-4 rounded-lg hover:bg-opacity-90 transition-all mt-4 shadow-md active:scale-95">
                         Login
                     </button>
                     
                     <div class="text-center mt-2">
-                        <a href="{{ route('password.request') }}" class="text-xs text-gray-500 transition-colors">@lang('messages.forgot_password')</a>
+                        <a href="{{ route('password.request') }}" class="text-xs text-gray-500 hover:text-primary transition-colors">@lang('messages.forgot_password')</a>
                     </div>
 
                     <div class="mt-8 pt-6 border-t border-gray-100 text-center">
                         <p class="text-sm text-gray-500 mb-4">@lang('messages.no_account')</p>
-                        <a href="{{ route('register') }}" class="block w-full bg-white text-primary border-2 border-primary font-bold uppercase tracking-widest py-3 rounded-lg transition-all">
+                        <a href="{{ route('register') }}" class="block w-full bg-white text-primary border-2 border-primary font-bold uppercase tracking-widest py-3 rounded-lg hover:bg-light transition-all">
                             @lang('messages.register')
                         </a>
                     </div>
@@ -283,13 +180,13 @@
                     
                     <div class="w-full h-px bg-gray-100 mb-8"></div>
                     
-                    <a href="{{ route('home') }}" class="w-full bg-dark text-white font-bold text-center py-4 rounded-xl transition-all mb-4">
+                    <a href="{{ route('home') }}" class="w-full bg-dark text-white font-bold text-center py-4 rounded-xl hover:bg-opacity-90 transition-all mb-4">
                         @lang('messages.mypanel')
                     </a>
                     
                     <form method="POST" action="{{ route('logout') }}" class="w-full">
                         @csrf
-                        <button type="submit" class="w-full bg-red-50 text-red-600 font-bold py-4 rounded-xl border border-red-100 transition-all">
+                        <button type="submit" class="w-full bg-red-50 text-red-600 font-bold py-4 rounded-xl hover:bg-red-600 hover:text-white border border-red-100 transition-all">
                             @lang('messages.logout')
                         </button>
                     </form>
@@ -299,7 +196,7 @@
     </div>
 
     <script>
-       // SCRIPT GESTOR DE MENÚS LATERALES
+       // --- 1. SCRIPT GESTOR DE MENÚS LATERALES (OFFCANVAS) ---
         function toggleMenu(menuId) {
             const menu = document.getElementById(menuId);
             const overlay = document.getElementById('overlay');
@@ -308,54 +205,27 @@
             const isLeft = menuId === 'menuLateral';
             const hideClass = isLeft ? '-translate-x-full' : 'translate-x-full';
             
-            const loginIcon = menuId === 'iniciarSesion' ? document.getElementById('loginNavIcon') : null;
-
             if (menu.classList.contains(hideClass)) {
                 // ABRIR
                 menu.classList.remove(hideClass);
-                menu.classList.add('translate-x-0'); // <- Esto soluciona que se quede pillado fuera
-
+                menu.classList.add('translate-x-0');
+                
                 overlay.classList.remove('hidden');
                 setTimeout(() => overlay.classList.remove('opacity-0'), 10);
-                document.body.style.overflow = 'hidden';
-
-                if (loginIcon) loginIcon.classList.replace('bi-person', 'bi-person-fill');
+                document.body.style.overflow = 'hidden'; 
             } else {
                 // CERRAR
                 menu.classList.remove('translate-x-0');
                 menu.classList.add(hideClass);
-
+                
                 overlay.classList.add('opacity-0');
-                setTimeout(() => overlay.classList.add('hidden'), 300);
-                document.body.style.overflow = '';
-
-                if (loginIcon) loginIcon.classList.replace('bi-person-fill', 'bi-person');
+                setTimeout(() => overlay.classList.add('hidden'), 300); 
+                document.body.style.overflow = ''; 
             }
         }
 
-        // SCRIPT DEL MENÚ DESPLEGABLE DEL USUARIO
-        function toggleDropdown(event) {
-            if(event) event.stopPropagation(); // Evita que el clic cierre el menú inmediatamente
-            
-            const menu = document.getElementById('userDropdownMenu');
-            const icon = document.getElementById('dropdownIcon');
-            
-            if (menu.classList.contains('invisible')) {
-                // Abrir
-                menu.classList.remove('invisible', 'opacity-0', '-translate-y-2');
-                menu.classList.add('visible', 'opacity-100', 'translate-y-0');
-                icon.classList.add('rotate-180'); // Giramos la flechita
-            } else {
-                // Cerrar
-                menu.classList.remove('visible', 'opacity-100', 'translate-y-0');
-                menu.classList.add('invisible', 'opacity-0', '-translate-y-2');
-                icon.classList.remove('rotate-180');
-            }
-        }
-
-        // CERRAR TODO HACIENDO CLIC FUERA
+        // --- 2. CERRAR TODO HACIENDO CLIC FUERA ---
         function closeAllMenus() {
-            // Cerrar Offcanvas si están abiertos
             ['menuLateral', 'iniciarSesion'].forEach(id => {
                 const menu = document.getElementById(id);
                 if (menu) {
@@ -368,58 +238,8 @@
             });
         }
 
-        // Escuchador global para cerrar el dropdown si haces clic en cualquier otro sitio de la pantalla
-        document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('userDropdownMenu');
-            if (dropdown && !dropdown.classList.contains('invisible')) {
-                if (!dropdown.contains(event.target)) {
-                    toggleDropdown(); // Cerramos si el clic no ha sido dentro del menú
-                }
-            }
-        });
-
-        // SCRIPTS QUE SÍ NECESITAN ESPERAR AL DOM (Favoritos, Tallas, Carrito y Login)
+        // --- 3. SCRIPTS DE FAVORITOS Y CARRITO ---
         document.addEventListener('DOMContentLoaded', function() {
-            // Login (usuario no loggeado en bbdd error)
-            const loginForm = document.getElementById('loginForm');
-            if (loginForm) {
-                loginForm.addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    
-                    const formData = new FormData(this);
-                    const errorMessage = document.getElementById('loginErrorMessage');
-                    const userCredentialInput = document.getElementById('userCredential');
-                    const passwordInput = document.getElementById('password');
-                    
-                    try {
-                        const response = await fetch(this.action, {
-                            method: 'POST',
-                            body: formData,
-                            headers: {
-                                'X-Requested-With': 'XMLHttpRequest'
-                            }
-                        });
-                        
-                        if (response.ok) {
-                            // Login exitoso, redirigir a home
-                            window.location.href = '{{ route("home") }}';
-                        } else if (response.status === 422) {
-                            // Error de validación (credenciales incorrectas)
-                            errorMessage.innerHTML = '<div class="bg-red-50 text-red-600 text-sm font-bold p-3 rounded-lg border border-red-200 mb-6 text-center">@lang("messages.wrong_credentials")</div>';
-                            // Limpiar campos
-                            userCredentialInput.value = '';
-                            passwordInput.value = '';
-                            userCredentialInput.focus();
-                        } else {
-                            // Otro tipo de error
-                            errorMessage.innerHTML = '<div class="bg-red-50 text-red-600 text-sm font-bold p-3 rounded-lg border border-red-200 mb-6 text-center">Error al iniciar sesión. Intenta de nuevo.</div>';
-                        }
-                    } catch (error) {
-                        console.error('Error de red al iniciar sesión:', error);
-                        errorMessage.innerHTML = '<div class="bg-red-50 text-red-600 text-sm font-bold p-3 rounded-lg border border-red-200 mb-6 text-center">Error de conexión. Intenta de nuevo.</div>';
-                    }
-                });
-            }
             // Favoritos
             const favoriteForms = document.querySelectorAll('.js-favorite-form');
             favoriteForms.forEach(form => {
@@ -442,14 +262,14 @@
                             if (isNowFavorited) {
                                 icon.classList.remove('bi-heart', 'text-gray-400');
                                 icon.classList.add('bi-heart-fill', 'text-primary', 'animate-pulse');
-                                this.action = this.action.replace(/\/add$/, '/' + formData.get('product_id'));
+                                this.action = this.action.replace('add', 'remove/' + formData.get('product_id'));
                                 if (!methodInput) {
                                     this.insertAdjacentHTML('beforeend', '<input type="hidden" name="_method" value="DELETE">');
                                 }
                             } else {
                                 icon.classList.remove('bi-heart-fill', 'text-primary', 'animate-pulse');
                                 icon.classList.add('bi-heart', 'text-gray-400');
-                                this.action = this.action.replace(/\/\d+$/, '/add');
+                                this.action = this.action.replace(/remove\/\d+/, 'add');
                                 if (methodInput) methodInput.remove();
                             }
                         }

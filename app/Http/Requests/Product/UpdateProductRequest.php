@@ -28,7 +28,7 @@ class UpdateProductRequest extends FormRequest
             'description' => 'nullable|string',
             'price' => 'required|numeric',
             'categories' => 'nullable|array',
-            'category.*' => 'EXISTS:categories,id',
+            'categories.*' => 'exists:categories,id',
             'sizes' => 'nullable|array',
             'sizes.*.name' => 'nullable|string|max:50', // Cambiamos required_with por nullable
             'sizes.*.stock' => 'nullable|integer|min:0', // Cambiamos required_with por nullable

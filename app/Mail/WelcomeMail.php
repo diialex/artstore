@@ -9,19 +9,16 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\DB;
+use App\Models\User;
 
-class OrderConfirmed extends Mailable implements ShouldQueue
+class WelcomeMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(public $order)
-    {
-        //
-    }
+    public function __construct(public User $user){}
 
     /**
      * Get the message envelope.
@@ -29,7 +26,7 @@ class OrderConfirmed extends Mailable implements ShouldQueue
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Factura de tu pedido',
+            subject: 'Welcome to Hanger ' . $this->user->username,
         );
     }
 
@@ -38,20 +35,9 @@ class OrderConfirmed extends Mailable implements ShouldQueue
      */
     public function content(): Content
     {
-        $invoiceLines = DB::table('order_invoice_lines')
-            ->where('order_id', $this->order->id)
-            ->orderBy('line_id')
-            ->get();
-
-        $invoice = $invoiceLines->first();
-
         return new Content(
-            view: 'emails.order_confirmed',
-            with: [
-                'invoice' => $invoice,
-                'invoiceLines' => $invoiceLines,
-                'order' => $this->order,
-            ],
+            htmlString: '<p>Hola ' . e($this->user->username) . ',</p>'
+                . '<p>Gracias por registrarte en Hanger. Tu cuenta ya está activa.</p>',
         );
     }
 

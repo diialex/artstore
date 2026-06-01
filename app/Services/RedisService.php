@@ -18,16 +18,39 @@ class RedisService
         Cache::forget(RedisConstants::CATEGORIES_ALL);
     }
 
-    public static function getProducts(){
-        return Cache::rememberForever(RedisConstants::PRODUCTS_ALL, fn() => app(ProductService::class)->getAll());
+    public static function getProducts($sort = null){
+        $sort = self::normalizeProductSort($sort);
+
+        return Cache::rememberForever(
+            RedisConstants::PRODUCTS_ALL . ':' . ($sort ?? 'default'),
+            fn() => app(ProductService::class)->getAll(null, $sort)
+        );
     }
 
     public static function flushProducts(){
         Cache::forget(RedisConstants::PRODUCTS_ALL);
     }
 
-    public static function getProductsByCategory($category){
-        return Cache::remember(RedisConstants::PRODUCTS_BY_CATEGORY . $category, 3600, fn() => app(ProductService::class)->getAll($category));
+    public static function getProductsByCategory($categories, $sort = null){
+        $categories = collect((array) $categories)
+            ->filter()
+            ->map(fn ($categoryId) => (int) $categoryId)
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
+        $sort = self::normalizeProductSort($sort);
+
+        return Cache::remember(
+            RedisConstants::PRODUCTS_BY_CATEGORY . implode('-', $categories) . ':' . ($sort ?? 'default'),
+            3600,
+            fn() => app(ProductService::class)->getAll($categories, $sort)
+        );
+    }
+
+    private static function normalizeProductSort($sort): ?string
+    {
+        return in_array($sort, ['price_asc', 'price_desc', 'newest', 'oldest'], true) ? $sort : null;
     }
 
     public static function flushProductsByCategory(){

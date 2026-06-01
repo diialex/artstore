@@ -298,4 +298,15 @@ return [
     'cookie_policy'             => 'Informativa sui cookie',
     'privacy_management'        => 'Gestione della privacy',
 
+    # ==========================================
+    # ACQUISTO COMPLETATO
+    # ==========================================
+    'purchase_success_title'    => 'Acquisto effettuato con successo!',
+    'purchase_success_subtitle' => 'Grazie per aver scelto HANGER. Il tuo ordine è ora confermato.',
+    'order_label'               => 'Ordine',
+    'total_paid'                => 'Totale pagato',
+    'purchase_email_sent'       => 'Abbiamo inviato la conferma e la fattura al tuo indirizzo e-mail. Controlla anche la cartella spam se non la trovi.',
+    'view_my_order'             => 'Vedi il mio ordine',
+    'continue_shopping'         => 'Continua lo shopping',
+
 ];
