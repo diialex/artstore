@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Address;
+use App\Models\Product;
+use App\Models\Size;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Services\AddressService;
 use App\Services\OrderItemService;
 use App\Services\OrderService;
@@ -49,7 +53,18 @@ class StripeController extends Controller {
         $orderService = new OrderService();
         $order = $orderService->find($orderId);
         
-        $items = $order->items; 
+        $items = $order->items;
+
+        // Pre-validación de stock antes de cobrar. Evita iniciar el pago de algo
+        // que ya está agotado. La comprobación definitiva y atómica (que decide
+        // quién se lleva la última unidad) se hace al confirmar el pago.
+        foreach ($items as $item) {
+            $available = $item->size ? (int) $item->size->stock : (int) $item->product->stock;
+            if ($available < $item->quantity) {
+                return redirect()->route('orders.carrito')
+                    ->with('error', 'Algún artículo de tu bolsa ya no tiene stock suficiente. Revisa el carrito antes de pagar.');
+            }
+        }
 
         $lineItems = [];
         foreach ($items as $item) {
@@ -104,27 +119,65 @@ class StripeController extends Controller {
 
             if ($session->payment_status === 'paid') {
 
-                foreach($order->items as $item) {
-                    if ($item->size) {
-                        $item->size->stock -= $item->quantity;
-                        $item->size->save();
-                    } else {
-                        $item->product->stock -= $item->quantity;
-                        $item->product->save();
+                // Descuento de stock atómico: bloqueamos cada fila de stock
+                // (talla o producto) con lockForUpdate dentro de una transacción
+                // para que dos compras simultáneas no vendan la misma unidad.
+                // Nunca dejamos el stock por debajo de 0; si falta, lo anotamos
+                // como incidencia para resolución manual (el cobro ya se hizo).
+                $stockIssues = DB::transaction(function () use ($order) {
+                    $issues = [];
+
+                    foreach ($order->items as $item) {
+                        if ($item->size_id) {
+                            $stockRow = Size::whereKey($item->size_id)->lockForUpdate()->first();
+                        } else {
+                            $stockRow = Product::whereKey($item->product_id)->lockForUpdate()->first();
+                        }
+
+                        if (!$stockRow) {
+                            continue;
+                        }
+
+                        $available = (int) $stockRow->stock;
+
+                        if ($available < $item->quantity) {
+                            $issues[] = [
+                                'product'   => $item->product->title ?? ('#' . $item->product_id),
+                                'size'      => $item->size->size ?? null,
+                                'requested' => $item->quantity,
+                                'available' => $available,
+                            ];
+                        }
+
+                        // Descontamos como mucho lo disponible; nunca negativo.
+                        // El save() de Size dispara el recálculo de products.stock.
+                        $stockRow->stock = max(0, $available - $item->quantity);
+                        $stockRow->save();
                     }
-                }
+
+                    return $issues;
+                });
 
                 RedisService::flushProducts();
                 RedisService::flushProductsByCategory();
 
-                $order->update(['status' => 'completed']);
-                
+                $hasStockIssues = count($stockIssues) > 0;
+
+                // El pago se completó en cualquier caso; si hubo conflicto de
+                // stock marcamos el pedido como incidencia para resolverlo a mano.
+                $order->update(['status' => $hasStockIssues ? 'incident' : 'completed']);
+
                 $payment = $order->payments()->first();
                 if($payment) {
                     $payment->update(['status' => 'completed']);
                 }
 
-                
+                if ($hasStockIssues) {
+                    Log::warning('Incidencia de stock en pedido ya pagado (resolución manual)', [
+                        'order_id' => $order->id,
+                        'issues'   => $stockIssues,
+                    ]);
+                }
 
                 $customerEmail = $session->customer_details?->email ?? $order->user?->email;
                 
@@ -133,12 +186,13 @@ class StripeController extends Controller {
                         Mail::to($customerEmail)->send(new OrderConfirmed($order));
                     }
                 } catch (\Exception $mailException) {
-                    \Illuminate\Support\Facades\Log::error('Mail sending failed: ' . $mailException->getMessage());
+                    Log::error('Mail sending failed: ' . $mailException->getMessage());
                 }
 
-                return redirect()->route('home', [
-                    'customer_email' => $customerEmail,
+                return view('orders.success', [
+                    'order' => $order,
                     'total' => $session->amount_total / 100,
+                    'stockIssues' => $stockIssues,
                 ]);
             }
 

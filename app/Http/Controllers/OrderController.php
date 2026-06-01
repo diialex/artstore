@@ -62,54 +62,78 @@ class OrderController extends Controller
 
         $request->validate([
             // Si tiene tallas es obligatorio. Si no, permitimos null.
-            'size_id' => $hasSizes ? 'required|exists:sizes,id' : 'nullable', 
+            'size_id' => $hasSizes ? 'required|exists:sizes,id' : 'nullable',
         ]);
 
+        $sizeId = $request->size_id ? (int) $request->size_id : null;
+
+        // Stock disponible: por talla si la tiene, si no a nivel de producto.
+        // Es solo un control de UX; la comprobación definitiva y atómica se hace
+        // al confirmar el pago (otra persona podría llevarse la unidad antes).
+        $availableStock = $sizeId
+            ? (int) (Size::find($sizeId)?->stock ?? 0)
+            : (int) $product->stock;
+
         if (Auth::guest()) {
-            $this->guestCartService->addItem($product, 1, $request->size_id);
-        } else {
-            $size_id = $request->size_id;
-        $user = Auth::user();
-
-        $order = Order::where('user_id', $user->id)
-                    ->whereIn('status', ['pending', 'failed'])
-                    ->first();
-
-        if (!$order) {
-            $order = new Order;
-            $order->total_amount = 0;
-            $order->status = 'pending';
-            $order->user()->associate($user);
-            $order->save();
-        }
-
-        // Buscamos si ya existe este producto con esta talla (o sin talla) en el carrito
-        $item = $order->items()
-                    ->where('product_id', $product->id)
-                    ->where('size_id', $size_id)
-                    ->first();
-        
-        if ($item) {
-            $item->quantity += 1;
-            $item->save();
-        } else {
-            $item = new OrderItem;
-            $item->quantity = 1;
-            $item->price = $product->price;
-            $item->order()->associate($order);
-            $item->product()->associate($product);
-            
-            // Solo asociamos la talla si realmente nos enviaron una
-            if ($size_id) {
-                $item->size()->associate($size_id);
+            $currentQuantity = 0;
+            foreach ($this->guestCartService->getCart()['items'] as $cartItem) {
+                if ($cartItem['product_id'] === $product->id && ($cartItem['size_id'] ?? null) === $sizeId) {
+                    $currentQuantity = $cartItem['quantity'];
+                    break;
+                }
             }
-            
-            $item->save();
+
+            if ($currentQuantity + 1 > $availableStock) {
+                return redirect()->back()->with('error', 'No queda stock disponible de este artículo.');
+            }
+
+            $this->guestCartService->addItem($product, 1, $sizeId);
+        } else {
+            $user = Auth::user();
+
+            $order = Order::where('user_id', $user->id)
+                        ->whereIn('status', ['pending', 'failed'])
+                        ->first();
+
+            // Buscamos si ya existe este producto con esta talla (o sin talla) en el carrito
+            $item = $order?->items()
+                        ->where('product_id', $product->id)
+                        ->where('size_id', $sizeId)
+                        ->first();
+
+            if (($item?->quantity ?? 0) + 1 > $availableStock) {
+                return redirect()->back()->with('error', 'No queda stock disponible de este artículo.');
+            }
+
+            if (!$order) {
+                $order = new Order;
+                $order->total_amount = 0;
+                $order->status = 'pending';
+                $order->user()->associate($user);
+                $order->save();
+            }
+
+            if ($item) {
+                $item->quantity += 1;
+                $item->save();
+            } else {
+                $item = new OrderItem;
+                $item->quantity = 1;
+                $item->price = $product->price;
+                $item->order()->associate($order);
+                $item->product()->associate($product);
+
+                // Solo asociamos la talla si realmente nos enviaron una
+                if ($sizeId) {
+                    $item->size()->associate($sizeId);
+                }
+
+                $item->save();
+            }
+
+            $this->updateOrder($order);
         }
 
-        $this->updateOrder($order);
-        }
-        
         return redirect()->back()->with('success', 'Producto añadido al carrito.');
     }
 
