@@ -45,7 +45,7 @@ class HomeController extends Controller
 
         $categories = RedisService::getCategories();
 
-        $carouselPath = storage_path('app/public/media/carrusel');
+        $carouselPath = public_path('storage/media/carrusel');
         $carouselImages = [];
         
         if (File::exists($carouselPath)) {
