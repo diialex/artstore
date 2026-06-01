@@ -10,10 +10,10 @@ class ProductsSeeder extends Seeder
 {
     public function run(): void
     {
-        // Lógica del compañero: Extraer los IDs de las categorías dinámicamente
-        $categoryIds = Category::pluck('id', 'name');
+        $categoryIds = Category::all()->mapWithKeys(function ($cat) {
+            return [$cat->getTranslation('name', 'es') => $cat->id];
+        })->toArray();
 
-        // Array unificado: Mantiene las categorías de tu compañero y tus traducciones JSON
         $products = [
             [
                 'title' => [
