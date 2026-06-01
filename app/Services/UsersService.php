@@ -5,7 +5,11 @@ namespace App\Services;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\FavoriteList;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Payment;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Exception;
 use DateTime;
 
@@ -43,7 +47,22 @@ class UsersService
     }
 
     public function delete($user){
-        $user->delete();
+        DB::transaction(function () use ($user) {
+            // Las líneas de pedido no tienen borrado en cascada, así que hay
+            // que eliminarlas (junto a sus pagos y pedidos) antes que al usuario.
+            $orderIds = Order::where('user_id', $user->id)->pluck('id');
+            if ($orderIds->isNotEmpty()) {
+                OrderItem::whereIn('order_id', $orderIds)->delete();
+                Payment::whereIn('order_id', $orderIds)->delete();
+                Order::whereIn('id', $orderIds)->delete();
+            }
+
+            // La tabla pivote role_user no define FK con cascada.
+            $user->roles()->detach();
+
+            // Direcciones, lista de favoritos y passkeys sí se borran en cascada.
+            $user->delete();
+        });
     }
 
     public function login($request){

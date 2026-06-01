@@ -57,7 +57,7 @@ Route::put('/users/{id}', [UsersController::class, 'update'])
     ->name('users.update')
     ->middleware(['auth']);
 
-Route::delete('/users/{id}', [UsersController::class, 'delete'])
+Route::delete('/users/{id}', [UsersController::class, 'destroy'])
     ->name('users.delete')
     ->middleware(['auth'])->can('admin-access');
 
@@ -426,7 +426,7 @@ Route::middleware(['auth', 'can:admin-access'])->prefix('admin')->group(function
         Route::get('/usuarios', 'index')->can('viewAny', User::class)->name('index');
         Route::get('/usuarios/crear', 'create')->can('create', User::class)->name('create');
         Route::post('/usuarios', 'store')->can('create', User::class)->name('store');
-        Route::delete('/usuarios/{id}', 'delete')->name('delete');
+        Route::delete('/usuarios/{id}', 'destroy')->name('delete');
     });
 
     // GESTIÓN DE ROLES

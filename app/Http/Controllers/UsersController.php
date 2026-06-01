@@ -159,10 +159,10 @@ class UsersController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $username)
     {
         try {
-            $user = $this->userService->get($id);
+            $user = $this->userService->getUserByUsername($username);
             $this->userService->delete($user);
         } catch (\Throwable $e) {
             dd([
@@ -172,7 +172,7 @@ class UsersController extends Controller
             ]);
         }
 
-        return redirect('/users')->with('msg', 'Usuario eliminado con éxito');
+        return redirect()->route('users.index')->with('msg', 'Usuario eliminado con éxito');
     }
 
     public function showAddresses(string $username){

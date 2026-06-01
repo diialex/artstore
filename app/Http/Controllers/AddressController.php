@@ -105,10 +105,9 @@ public function edit(string $id)
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateAddressRequest $request, string $id)
+    public function update(UpdateAddressRequest $request, Address $address)
     {
         try {
-            $address = $this->service->get($id);
             $user = $this->usersService->get($address->user_id);
 
             $this->service->update($user, $address, $request->validated());
@@ -121,7 +120,9 @@ public function edit(string $id)
             ]);
         }
 
-        return redirect("/addresses/user/{$user->username}")->with('msg', 'Dirección actualizada con éxito');
+        $redirectTo = $request->input('redirect_to') ?: route('addresses.show', ['username' => $user->username]);
+
+        return redirect($redirectTo)->with('msg', 'Dirección actualizada con éxito');
     }
 
     /**
