@@ -23,7 +23,7 @@ use App\Services\UsersService;
 | RUTAS PÚBLICAS (Sin autenticación)
 |--------------------------------------------------------------------------
 */
-Route::get('/', [HomeController::class, 'index'])->name('home')->can('store-access');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/login', function () {
     return redirect()->intended('/')->with('openLogin', 'true');
@@ -451,7 +451,9 @@ Route::middleware(['auth', 'can:admin-access'])->prefix('admin')->group(function
     });
 
     // GESTIÓN DE PRODUCTOS (solo operaciones de modificación)
-    Route::controller(ProductController::class)->prefix('productos')->name('products.')->group(function () {
+    Route::controller(ProductController::class)->prefix('productos')->name('admin.products.')->group(function () {
+        // Llamamos a una función exclusiva para el admin
+        Route::get('/', 'adminIndex')->name('index'); 
         Route::get('/crear', 'create')->name('create');
         Route::post('/', 'store')->name('store');
         Route::get('/{product}/editar', 'edit')->name('edit');
