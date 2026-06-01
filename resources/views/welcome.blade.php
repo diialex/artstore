@@ -11,10 +11,6 @@
 
         @if(!$isCatalogView)
             <div class="relative w-full h-[85vh] min-h-[550px] overflow-hidden js-hero-slider bg-dark">
-                <div class="absolute top-10 left-1/2 transform -translate-x-1/2 z-20 pointer-events-none">
-                    <img src="{{ asset('storage/media/images/HG.png') }}" alt="Logo" class="max-h-[200px] w-auto object-contain drop-shadow-2xl filter contrast-125">
-                </div>
-
                 <div class="relative w-full h-full">
                     @foreach($carouselImages as $index => $image)
                         <div class="absolute inset-0 transition-opacity duration-1000 ease-in-out js-slide {{ $index === 0 ? 'opacity-100 z-10' : 'opacity-0 z-0' }}">
