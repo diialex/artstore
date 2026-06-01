@@ -1,9 +1,21 @@
 @extends('headLayout')
+
 @section('pagina')
 <body class="bg-body-bg flex flex-col min-h-screen font-sans text-dark">
     
     @include('navBar')
-    
+
+    {{-- Toast global de notificaciones (éxito / error). Ej: "Producto añadido al carrito". --}}
+    @php $toastError = session('error'); $toastMessage = $toastError ?: session('success'); @endphp
+    @if($toastMessage)
+        <div id="appToast" role="status" aria-live="polite"
+             class="fixed top-20 right-4 z-[200] flex items-center gap-3 px-5 py-4 rounded-xl shadow-2xl text-sm font-bold text-white max-w-[90vw] transform translate-x-full opacity-0 transition-all duration-300 {{ $toastError ? 'bg-red-600' : 'bg-primary' }}">
+            <i class="bi {{ $toastError ? 'bi-exclamation-circle-fill' : 'bi-bag-check-fill' }} text-lg shrink-0"></i>
+            <span>{{ $toastMessage }}</span>
+            <button type="button" onclick="hideToast()" class="ml-2 text-white/70 hover:text-white shrink-0"><i class="bi bi-x-lg"></i></button>
+        </div>
+    @endif
+
     <main class="w-full flex-grow">
         @yield('content')
     </main>
@@ -238,7 +250,36 @@
             });
         }
 
-        // --- 3. SCRIPTS DE FAVORITOS Y CARRITO ---
+        // --- 3. ABRIR PANEL DE LOGIN TRAS REDIRECCIÓN DEL SERVIDOR ---
+        // Cuando un invitado entra a una ruta protegida (redirige a 'login' con la
+        // flag openLogin) o falla el login (hasErrors), reabrimos el panel lateral.
+        document.addEventListener('DOMContentLoaded', function() {
+            const config = window.LaravelConfig || {};
+            // hasErrors solo abre el panel para invitados: el formulario de login
+            // únicamente existe para invitados, así evitamos abrirlo por errores
+            // de otros formularios de usuarios autenticados (direcciones, pagos...).
+            const loginError = config.hasErrors && {{ auth()->guest() ? 'true' : 'false' }};
+            if (config.openLogin || loginError) {
+                toggleMenu('iniciarSesion');
+            }
+        });
+
+        // --- 4. TOAST DE NOTIFICACIONES ---
+        let toastTimer = null;
+        function hideToast() {
+            const toast = document.getElementById('appToast');
+            if (!toast) return;
+            toast.classList.add('translate-x-full', 'opacity-0');
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            const toast = document.getElementById('appToast');
+            if (!toast) return;
+            // Entrada animada en el siguiente frame y auto-cierre a los 3.5s.
+            requestAnimationFrame(() => toast.classList.remove('translate-x-full', 'opacity-0'));
+            toastTimer = setTimeout(hideToast, 3500);
+        });
+
+        // --- 5. SCRIPTS DE FAVORITOS Y CARRITO ---
         document.addEventListener('DOMContentLoaded', function() {
             // Favoritos
             const favoriteForms = document.querySelectorAll('.js-favorite-form');
@@ -327,4 +368,5 @@
     </script>
     
 </body>
+
 @endsection
