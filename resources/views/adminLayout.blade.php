@@ -14,20 +14,13 @@
                 <i class="bi bi-shield-lock-fill text-primary text-xl"></i>
                 <h5 class="text-sm font-black uppercase tracking-widest text-primary">@lang('messages.administration')</h5>
             </div>
-
             <button onclick="toggleMenu('menuLateral')" class="text-gray-400 hover:text-red-500 transition-colors bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-200">
                 <i class="bi bi-x-lg text-sm"></i>
             </button>
         </div>
         
         <div class="p-6 overflow-y-auto flex-grow flex flex-col gap-6 hide-scrollbar">
-            @php
-                $selectedMenuCategoryIds = collect((array) request('categories', []))
-                    ->when(request('category'), fn ($ids) => $ids->push(request('category')))
-                    ->map(fn ($categoryId) => is_object($categoryId) && method_exists($categoryId, 'getKey') ? (int) $categoryId->getKey() : (int) $categoryId)
-                    ->all();
-            @endphp
-            
+
             <div>
                 <a href="{{ route('controlPanel.dashboard') }}" class="group flex items-center gap-4 px-4 py-3 rounded-xl bg-primary text-white shadow-md transition-all">
                     <i class="bi bi-speedometer2 text-lg"></i>
@@ -39,22 +32,22 @@
 
             <div>
                 <h6 class="text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-4 px-2 flex items-center gap-2">
-                    <i class="bi bi-database"></i> Gestión de Tienda
+                    <i class="bi bi-database"></i> @lang('messages.shop_management')
                 </h6>
                 <ul class="flex flex-col gap-1">
                     <li>
                         <a href="{{ route('admin.products.index') }}" class="flex items-center justify-between px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm group">
-                            <div class="flex items-center gap-3"><i class="bi bi-box-seam"></i> Productos</div>
+                            <div class="flex items-center gap-3"><i class="bi bi-box-seam"></i> @lang('messages.products')</div>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('categories.index') }}" class="flex items-center justify-between px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm group">
-                            <div class="flex items-center gap-3"><i class="bi bi-tags"></i> Categorías</div>
+                            <div class="flex items-center gap-3"><i class="bi bi-tags"></i> @lang('messages.categories')</div>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('orders.index') }}" class="flex items-center justify-between px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm group">
-                            <div class="flex items-center gap-3"><i class="bi bi-cart-check"></i> Pedidos</div>
+                            <div class="flex items-center gap-3"><i class="bi bi-cart-check"></i> @lang('messages.order')</div>
                         </a>
                     </li>
                 </ul>
@@ -64,17 +57,17 @@
 
             <div>
                 <h6 class="text-[0.65rem] font-black text-gray-400 uppercase tracking-widest mb-4 px-2 flex items-center gap-2">
-                    <i class="bi bi-shield-check"></i> Seguridad
+                    <i class="bi bi-shield-check"></i> @lang('messages.security')
                 </h6>
                 <ul class="flex flex-col gap-1">
                     <li>
                         <a href="{{ route('users.index') }}" class="flex items-center justify-between px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm group">
-                            <div class="flex items-center gap-3"><i class="bi bi-people"></i> Usuarios</div>
+                            <div class="flex items-center gap-3"><i class="bi bi-people"></i> @lang('messages.users')</div>
                         </a>
                     </li>
                     <li>
                         <a href="{{ route('roles.index') }}" class="flex items-center justify-between px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm group">
-                            <div class="flex items-center gap-3"><i class="bi bi-person-badge"></i> Roles y Permisos</div>
+                            <div class="flex items-center gap-3"><i class="bi bi-person-badge"></i> @lang('messages.roles_permissions')</div>
                         </a>
                     </li>
                 </ul>

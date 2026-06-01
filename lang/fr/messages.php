@@ -321,5 +321,7 @@ return [
     'purchase_email_sent'       => 'Nous avons envoyé la confirmation et la facture à votre adresse e-mail. Pensez à vérifier votre dossier de spam si vous ne la trouvez pas.',
     'view_my_order'             => 'Voir ma commande',
     'continue_shopping'         => 'Continuer les achats',
+    'order'                     => 'Commandes',
+    'shop_management'           => 'Gestion de la boutique',
 
 ];

@@ -2,30 +2,24 @@
     <nav class="px-4 py-3 w-full">
         <div class="flex justify-between items-center max-w-[1400px] mx-auto">
             
-            <!-- Menú Lateral y Home -->
             <div class="flex items-center gap-4">
                 <button type="button" class="text-white hover:text-light transition-colors" onclick="toggleMenu('menuLateral')">
                     <i class="bi bi-list text-3xl"></i>
                 </button>
-                @can('store-access')
                 <a href="{{ route('home') }}" class="text-white hover:text-light transition-colors flex items-center">
-                    <i class="bi bi-house-door{{ request()->routeIs('home') ? '-fill' : '' }} text-2xl"></i>
+                    <i class="bi bi-shop text-2xl"></i>
                 </a>
-                @endcan
             </div>
 
-            <!-- Logo Central -->
             <div class="absolute left-1/2 transform -translate-x-1/2">
                 <a href="{{ route('home') }}">
-                    <img src="{{ asset('storage/media/images/HANGER.png') }}" alt="Logo Hanger" class="h-[60px] w-auto object-contain cursor-pointer transition-transform">
+                    <img src="{{ asset('storage/media/images/HANGER.png') }}" alt="Logo Hanger" class="h-[70px] w-auto object-contain cursor-pointer transition-transform hover:scale-105">
                 </a>
             </div>
 
-            <!-- Zona Derecha: Usuario y LUEGO el Carrito -->
             <div class="flex items-center justify-end gap-5">
                 
                 @auth
-                <!-- Dropdown de Usuario -->
                 <div class="relative inline-block">
                     <button type="button" onclick="toggleNavbarDropdown(event)" class="text-white font-medium hover:text-light transition-colors flex items-center gap-2 focus:outline-none py-1">
                         {{ auth()->user()->username }}
@@ -38,21 +32,16 @@
                         </div>
                         
                         <ul class="py-2 flex flex-col">
+                            <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="{{ route('users.show', auth()->user()->username) }}"><i class="bi bi-person text-lg"></i>@lang('messages.profile')</a></li>
+                            <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="{{ route('orders.index') }}"><i class="bi bi-bag text-lg"></i>@lang('messages.orders')</a></li>
+                            <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="/favoritos"><i class="bi bi-heart text-lg"></i>@lang('messages.favorites')</a></li>
                             
-                            <!-- Opciones SOLO para USUARIOS NORMALES (Rol 2) -->
-                            @if(auth()->user()->roles->contains('id', 2))
-                                <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="{{ route('users.show', auth()->user()->username) }}"><i class="bi bi-person text-lg"></i>@lang('messages.profile')</a></li>
-                                <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="{{ route('orders.index') }}"><i class="bi bi-bag text-lg"></i>@lang('messages.my_orders')</a></li>
-                                <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="/favoritos"><i class="bi bi-heart text-lg"></i>@lang('messages.favorites')</a></li>
-                            @endif
-                            
-                            <!-- Opciones SOLO para VENDEDORES -->
                             @if(auth()->user()->hasRol('seller'))
                                 <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-medium" href="/perfil"><i class="bi bi-shop-window text-lg"></i>Panel Vendedor</a></li>
                             @endif
 
-                            <!-- Opciones SOLO para ADMINS (Rol 1) -->
                             @if (auth()->user()->roles->contains('id', 1))
+                                <div class="w-full h-px bg-gray-100 my-1"></div>
                                 <li><a class="px-4 py-2 hover:bg-light hover:text-primary transition-colors flex items-center gap-3 text-sm text-gray-700 font-bold" href="{{ route('controlPanel.dashboard') }}"><i class="bi bi-shield-lock text-lg"></i>@lang('messages.admin_panel')</a></li>
                             @endif
                         </ul>
@@ -70,20 +59,12 @@
                 @endauth
                 
                 @guest
-                <button type="button" onclick="toggleMenu('iniciarSesion')" aria-label="Login" class="text-white hover:text-light transition-colors flex items-center">
-                    <i class="bi bi-person text-2xl"></i>
-                </button>
+                <a href="{{ route('login') }}" class="text-white hover:text-light font-bold text-sm tracking-wider uppercase transition-colors">Login</a>
                 @endguest
 
-                <!-- BOTÓN DEL CARRITO (A la derecha del todo) -->
-                @can('store-access')
                 <a href="{{ route('orders.carrito') }}" class="text-white hover:text-light transition-colors relative flex items-center mt-1">
-                    <i class="bi {{ request()->routeIs('orders.carrito') ? 'bi-cart-fill' : 'bi-cart3' }} text-xl"></i>
-                    @if(($cartItemCount ?? 0) > 0)
-                        <span class="absolute -top-2 -right-2.5 bg-white text-primary text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 shadow-md">{{ $cartItemCount > 99 ? '99+' : $cartItemCount }}</span>
-                    @endif
+                    <i class="bi bi-cart3 text-xl"></i>
                 </a>
-                @endcan
             </div>
         </div>
     </nav>
