@@ -9,7 +9,7 @@
             <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary bg-opacity-10 mb-4 text-primary shadow-inner">
                 <i class="bi bi-person-plus text-3xl"></i>
             </div>
-            <h2 class="text-2xl font-black text-dark tracking-tight">@lang('messasges.create_account')</h2>
+            <h2 class="text-2xl font-black text-dark tracking-tight">@lang('messages.create_account')</h2>
             <p class="text-sm text-gray-500 mt-2">@lang('messages.general')</p>
         </div>
 

@@ -21,6 +21,12 @@
         </div>
         
         <div class="p-6 overflow-y-auto flex-grow flex flex-col gap-6 hide-scrollbar">
+            @php
+                $selectedMenuCategoryIds = collect((array) request('categories', []))
+                    ->when(request('category'), fn ($ids) => $ids->push(request('category')))
+                    ->map(fn ($categoryId) => (int) $categoryId)
+                    ->all();
+            @endphp
             
             <div>
                 <a href="{{ route('controlPanel.dashboard') }}" class="group flex items-center gap-4 px-4 py-3 rounded-xl bg-primary text-white shadow-md transition-all">

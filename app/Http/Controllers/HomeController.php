@@ -24,10 +24,24 @@ class HomeController extends Controller
 
     public function index(Request $request): View
     {
-        
-        $categoryId = $request->input('category');
+        $selectedCategoryIds = collect((array) $request->input('categories', []))
+            ->when($request->input('category'), fn ($ids) => $ids->push($request->input('category')))
+            ->filter()
+            ->map(fn ($categoryId) => (int) $categoryId)
+            ->unique()
+            ->values()
+            ->all();
 
-        $products = RedisService::getProducts();
+        $categoryId = $selectedCategoryIds[0] ?? null;
+        $isCatalogView = !empty($selectedCategoryIds) || $request->boolean('catalog');
+        $sort = in_array($request->input('sort'), ['price_asc', 'price_desc', 'newest', 'oldest'], true)
+            ? $request->input('sort')
+            : null;
+
+        // Filtrar productos por categoría si existe, sino obtener todos
+        $products = !empty($selectedCategoryIds)
+            ? RedisService::getProductsByCategory($selectedCategoryIds, $sort)
+            : RedisService::getProducts($sort);
 
         $categories = RedisService::getCategories();
 
@@ -54,6 +68,6 @@ class HomeController extends Controller
             ];
         }
 
-        return view('welcome', compact('categories', 'products', 'categoryId', 'carouselImages'));
+        return view('welcome', compact('categories', 'products', 'categoryId', 'selectedCategoryIds', 'isCatalogView', 'sort', 'carouselImages'));
     }
 }
