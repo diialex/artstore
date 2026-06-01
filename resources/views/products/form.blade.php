@@ -5,7 +5,7 @@
 <div class="w-full max-w-[1000px] mx-auto px-4 sm:px-6 lg:px-8 py-8 mb-20">
     
     <div class="mb-8 border-b border-gray-200 pb-4 flex items-center gap-4">
-        <a href="{{ route('products.index') }}" class="text-gray-400 hover:text-dark transition-colors">
+        <a href="{{ route('admin.products.index') }}" class="text-gray-400 hover:text-dark transition-colors">
             <i class="bi bi-arrow-left text-xl"></i>
         </a>
         <h2 class="text-3xl font-black text-dark tracking-tight uppercase">

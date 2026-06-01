@@ -1,5 +1,5 @@
 @extends('layout')
-@section('title', 'Editar Dirección')
+@section('title', 'Nueva Dirección')
 
 @section('content')
 <div class="flex justify-center items-center w-full py-12 px-4 sm:px-6 lg:px-8 mb-20">
@@ -8,23 +8,25 @@
         
         <div class="px-8 pt-10 pb-6 text-center border-b border-gray-50">
             <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-dark bg-opacity-5 mb-4 text-dark shadow-inner">
-                <i class="bi bi-pencil-square text-3xl"></i>
+                <i class="bi bi-plus-lg text-3xl"></i>
             </div>
-            <h2 class="text-2xl font-black text-dark tracking-tight uppercase">@lang('messages.edit_address')</h2>
-            <p class="text-sm text-gray-500 mt-2 font-medium">@lang('messages.update_ubi_data')</p>
+            <h2 class="text-2xl font-black text-dark tracking-tight uppercase">@lang('messages.newaddress')</h2>
+            <p class="text-sm text-gray-500 mt-2 font-medium">@lang('messages.whereto_msg')</p>
         </div>
 
-        <form action="{{ route('addresses.update', $address->id) }}" method="POST" class="p-8 space-y-6">
+        <form action="{{ route('addresses.store') }}" method="POST" class="p-8 space-y-6">
             @csrf
-            @method('PUT')
+            @if(!empty($userId))
+                <input type="hidden" name="user_id" value="{{ $userId }}">
+            @endif
             
             <div>
-                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.addess_info')</label>
+                <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.address_info')</label>
                 <div class="relative">
                     <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                         <i class="bi bi-signpost-split text-gray-400"></i>
                     </div>
-                    <input type="text" name="street" value="{{ old('street', $address->street) }}" autofocus
+                    <input type="text" name="street" value="{{ old('street') }}" autofocus
                            class="w-full pl-12 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400">
                 </div>
                 @error('street') 
@@ -39,7 +41,7 @@
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <i class="bi bi-building text-gray-400"></i>
                         </div>
-                        <input type="text" name="city" value="{{ old('city', $address->city) }}"
+                        <input type="text" name="city" value="{{ old('city') }}"
                                class="w-full pl-12 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400">
                     </div>
                     @error('city') 
@@ -53,7 +55,7 @@
                         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <i class="bi bi-mailbox text-gray-400"></i>
                         </div>
-                        <input type="text" name="zip_code" value="{{ old('zip_code', $address->zip_code) }}"
+                        <input type="text" name="zip_code" value="{{ old('zip_code') }}"
                                class="w-full pl-12 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all placeholder-gray-400">
                     </div>
                     @error('zip_code') 
@@ -67,7 +69,7 @@
                     @lang('messages.cancel')
                 </button>
                 <button type="submit" class="w-full sm:w-auto px-8 py-4 bg-primary text-white font-bold uppercase tracking-widest text-xs rounded-xl hover:bg-opacity-90 active:scale-95 transition-all shadow-sm flex items-center justify-center gap-2">
-                    <i class="bi bi-arrow-repeat"></i> @lang('update_address')
+                    <i class="bi bi-save"></i> @lang('messages.save')
                 </button>
             </div>
         </form>

@@ -20,7 +20,7 @@
         </div>
         
         <div class="p-6 overflow-y-auto flex-grow flex flex-col gap-6 hide-scrollbar">
-            
+
             <div>
                 <a href="{{ route('controlPanel.dashboard') }}" class="group flex items-center gap-4 px-4 py-3 rounded-xl bg-primary text-white shadow-md transition-all">
                     <i class="bi bi-speedometer2 text-lg"></i>

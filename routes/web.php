@@ -57,7 +57,7 @@ Route::put('/users/{id}', [UsersController::class, 'update'])
     ->name('users.update')
     ->middleware(['auth']);
 
-Route::delete('/users/{id}', [UsersController::class, 'delete'])
+Route::delete('/users/{id}', [UsersController::class, 'destroy'])
     ->name('users.delete')
     ->middleware(['auth'])->can('admin-access');
 
@@ -121,7 +121,7 @@ Route::put('/updateAddress/{address}', [AddressController::class, 'update'])
     ->name('addresses.update')
     ->middleware(['auth'])->can('update', 'address');
 
-Route::delete('/deleteAddress/{address}', [AddressController::class, 'delete'])
+Route::delete('/deleteAddress/{address}', [AddressController::class, 'destroy'])
     ->name('addresses.delete')
     ->middleware(['auth']);
 
@@ -371,16 +371,16 @@ Route::middleware(['auth', 'can:store-access'])->group(function () {
         Route::get('/favoritos', 'showFavorites')->name('users.favorites');
         Route::post('/favoritos/add', 'addFavorites')->name('users.favorites.add');
         Route::delete('/favoritos/{product}', 'removeFavorites')->name('users.favorites.remove');
-        Route::get('/direcciones/usuario/{username}', 'showAddresses')->name('addresses.show');
+        Route::get('/direcciones/usuario/{username}', 'showAddresses')->name('store.addresses.show');
     });
 
     // DIRECCIONES
-    Route::controller(AddressController::class)->prefix('direcciones')->name('addresses.')->group(function () {
+    Route::controller(AddressController::class)->prefix('direcciones')->name('store.addresses.')->group(function () {
         Route::get('/crear', 'create')->can('create', Address::class)->name('create');
         Route::post('/', 'store')->can('create', Address::class)->name('store');
         Route::get('/{address}/editar', 'edit')->name('edit');
         Route::put('/{address}', 'update')->can('update', 'address')->name('update');
-        Route::delete('/{address}', 'delete')->name('delete');
+        Route::delete('/{address}', 'destroy')->name('delete');
     });
 
     // CARRITO Y PEDIDOS (Flujo de compra)
@@ -426,7 +426,7 @@ Route::middleware(['auth', 'can:admin-access'])->prefix('admin')->group(function
         Route::get('/usuarios', 'index')->can('viewAny', User::class)->name('index');
         Route::get('/usuarios/crear', 'create')->can('create', User::class)->name('create');
         Route::post('/usuarios', 'store')->can('create', User::class)->name('store');
-        Route::delete('/usuarios/{id}', 'delete')->name('delete');
+        Route::delete('/usuarios/{id}', 'destroy')->name('delete');
     });
 
     // GESTIÓN DE ROLES
