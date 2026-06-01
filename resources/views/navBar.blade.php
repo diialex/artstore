@@ -7,9 +7,11 @@
                 <button type="button" class="text-white hover:text-light transition-colors" onclick="toggleMenu('menuLateral')">
                     <i class="bi bi-list text-3xl"></i>
                 </button>
+                @can('store-access')
                 <a href="{{ route('home') }}" class="text-white hover:text-light transition-colors flex items-center">
                     <i class="bi bi-house-door{{ request()->routeIs('home') ? '-fill' : '' }} text-2xl"></i>
                 </a>
+                @endcan
             </div>
 
             <!-- Logo Central -->
@@ -74,12 +76,14 @@
                 @endguest
 
                 <!-- BOTÓN DEL CARRITO (A la derecha del todo) -->
+                @can('store-access')
                 <a href="{{ route('orders.carrito') }}" class="text-white hover:text-light transition-colors relative flex items-center mt-1">
                     <i class="bi {{ request()->routeIs('orders.carrito') ? 'bi-cart-fill' : 'bi-cart3' }} text-xl"></i>
                     @if(($cartItemCount ?? 0) > 0)
                         <span class="absolute -top-2 -right-2.5 bg-white text-primary text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 shadow-md">{{ $cartItemCount > 99 ? '99+' : $cartItemCount }}</span>
                     @endif
                 </a>
+                @endcan
             </div>
         </div>
     </nav>
