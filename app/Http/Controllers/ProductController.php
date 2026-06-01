@@ -122,7 +122,11 @@ class ProductController extends Controller
 
         return redirect()->route('products.index')->with('success', 'Producto actualizado correctamente');
     }
-
+    public function adminIndex()
+    {
+        $products = Product::all();
+        return view('adminProducts', compact('products')); 
+    }
     /**
      * Remove the specified resource from storage.
      */
