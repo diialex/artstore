@@ -3,6 +3,7 @@
 namespace App\Services;
 use App\Models\Order;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class OrderService
 {
@@ -45,7 +46,14 @@ class OrderService
     public function delete(int $id): bool
     {
         $order = $this->find($id);
-        $order->delete();
+
+        DB::transaction(function () use ($order) {
+            // Las líneas de pedido no se borran en cascada; hay que eliminarlas antes.
+            $order->items()->delete();
+            $order->payments()->delete();
+            $order->delete();
+        });
+
         return true;
     }
 
