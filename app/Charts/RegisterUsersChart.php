@@ -19,9 +19,9 @@ class RegisterUsersChart
         $service = new UsersService();
         $data = $service->getDataChartUserRegister();
         return $this->chart->barChart()
-            ->setTitle($data['title'])
-            ->setSubtitle($data['subtitle'])
-            ->addData($data['data'], 'Users')
+            ->setHeight(320)
+            ->setColors(['#671646'])
+            ->addData($data['data'], __('messages.user'))
             ->setXAxis($data['labelX']);
     }
 }
