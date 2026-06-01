@@ -24,6 +24,7 @@ class UpdateAddressRequest extends FormRequest
             'street' => 'required|string|max:255',
             'city' => 'required|string|max:255',
             'zip_code' => 'required|string|max:20',
+            'redirect_to' => 'nullable|string',
         ];
     }
 }

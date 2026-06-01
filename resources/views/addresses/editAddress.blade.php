@@ -15,9 +15,13 @@
                 <p class="text-light text-sm mt-1">@lang('messages.update_ubi_data')</p>
             </div>
 
-            <form action="{{ route('addresses.update', $address->id) }}" method="POST" class="p-6 sm:p-8 space-y-6">
+            <form action="{{ url('/updateAddress/' . $address->id) }}" method="POST" class="p-6 sm:p-8 space-y-6">
                 @csrf
-                @method('PUT') <div>
+                @method('PUT')
+                <input type="hidden" name="user_id" value="{{ $address->user_id }}">
+                <input type="hidden" name="redirect_to" value="{{ $redirectTo ?? url('/addresses/user/' . $address->user->username) }}">
+
+                <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">@lang('messages.address_info')</label>
                     <div class="relative">
                         <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">

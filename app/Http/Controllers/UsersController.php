@@ -177,12 +177,13 @@ class UsersController extends Controller
 
     public function showAddresses(string $username){
         $user = $this->userService->getUserByUsername($username);
-    $authUser = auth()->user();
+        $authUser = auth()->user();
         
         
         
         $addresses = $user->addresses;
-        return view('addresses.listAddresses', compact('addresses'));
+        $userId = $user->id;
+        return view('addresses.listAddresses', compact('addresses', 'userId'));
     }
 
     public function addFavorites(AddFavoritesRequest $request){

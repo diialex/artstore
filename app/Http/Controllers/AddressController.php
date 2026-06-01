@@ -41,11 +41,14 @@ class AddressController extends Controller
     public function store(StoreAddressRequest $request)
     {
         try {
-            
-            $user = $this->usersService->get(auth()->id());
+            $authUser = auth()->user();
+            $userId = $authUser->roles->contains('name', 'admin')
+                ? $request->input('user_id', $authUser->id)
+                : $authUser->id;
+            $user = $this->usersService->get($userId);
             $this->service->create($user, $request->validated());
 
-            return redirect('/users')->with('msg', 'Dirección creada con éxito');
+            return redirect("/addresses/user/{$user->username}")->with('msg', 'Dirección creada con éxito');
         } catch (\Throwable $e) {
             dd($e->getMessage());
         }
@@ -118,7 +121,7 @@ public function edit(string $id)
             ]);
         }
 
-        return redirect('/addresses')->with('msg', 'Dirección actualizada con éxito');
+        return redirect("/addresses/user/{$user->username}")->with('msg', 'Dirección actualizada con éxito');
     }
 
     /**
@@ -128,6 +131,7 @@ public function edit(string $id)
     {
         try {
             $address = $this->service->get($id);
+            $user = $this->usersService->get($address->user_id);
             $this->service->delete($address);
         } catch (\Throwable $e) {
             dd([
@@ -137,6 +141,6 @@ public function edit(string $id)
             ]);
         }
 
-        return redirect('/addresses')->with('msg', 'Dirección eliminada con éxito');
+        return redirect("/addresses/user/{$user->username}")->with('msg', 'Dirección eliminada con éxito');
     }
 }

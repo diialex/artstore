@@ -55,11 +55,11 @@
                 </div>
 
                 <div class="flex items-center gap-3 mt-8 pt-6 border-t border-gray-100">
-                    <a href="{{ route('addresses.edit', $address->id) }}" class="flex-1 bg-gray-50 text-dark text-center py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-dark hover:text-white transition-colors">
+                    <a href="{{ url('/editAddress/' . $address->id) }}" class="flex-1 bg-gray-50 text-dark text-center py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-dark hover:text-white transition-colors">
                         @lang('messages.edit')
                     </a>
                     
-                    <form action="{{ route('addresses.delete', $address->id) }}" method="POST" class="flex-1 m-0" onsubmit="return confirm('¿Seguro que deseas eliminar esta dirección?');">
+                    <form action="{{ url('/deleteAddress/' . $address->id) }}" method="POST" class="flex-1 m-0" onsubmit="return confirm('¿Seguro que deseas eliminar esta dirección?');">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="w-full bg-red-50 text-red-600 text-center py-3 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-red-600 hover:text-white transition-colors">

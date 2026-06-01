@@ -261,6 +261,7 @@ return [
     # ==========================================
     'store_go'          => 'GO TO STORE',
     'init_go'           => 'Go to home',
+    'delete'            => 'Delete',
     'eliminate'         => 'Delete',
 
     # ==========================================

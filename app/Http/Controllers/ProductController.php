@@ -87,7 +87,7 @@ class ProductController extends Controller
         RedisService::flushProducts();
         RedisService::flushProductsByCategory();
 
-        return redirect()->route('products.index')->with('success', 'Product created successfully.');
+        return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
 
     /**
@@ -120,7 +120,7 @@ class ProductController extends Controller
         RedisService::flushProducts();
         RedisService::flushProductsByCategory();
 
-        return redirect()->route('products.index')->with('success', 'Producto actualizado correctamente');
+        return redirect()->route('admin.products.index')->with('success', 'Producto actualizado correctamente');
     }
     public function adminIndex()
     {
@@ -137,6 +137,6 @@ class ProductController extends Controller
         RedisService::flushProducts();
         RedisService::flushProductsByCategory();
 
-        return redirect()->route('products.index')->with('success', 'Producto eliminado para siempre');
+        return redirect()->route('admin.products.index')->with('success', 'Producto eliminado para siempre');
     }
 }
