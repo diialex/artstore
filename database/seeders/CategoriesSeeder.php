@@ -2,70 +2,44 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Category;
 
 class CategoriesSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
         Category::create([
-            'name' => [
-                'es' => 'Crochet',
-                'en' => 'Crochet',
-                'fr' => 'Crochet',
-                'it' => 'Uncinetto'
-            ],
+            'name' => 'Crochet',
             'image' => 'storage/media/images/croche_gorro_estrella.jpeg'
         ]);
 
         Category::create([
-            'name' => [
-                'es' => 'Mujer',
-                'en' => 'Woman',
-                'fr' => 'Femme',
-                'it' => 'Donna'
-            ],
+            'name' => 'Mujer',
             'image' => 'storage/media/images/woman.png'
         ]);
 
         Category::create([
-            'name' => [
-                'es' => 'Hombre',
-                'en' => 'Man',
-                'fr' => 'Homme',
-                'it' => 'Uomo'
-            ],
+            'name' => 'Hombre',
             'image' => 'storage/media/images/man.png'
         ]);
 
         Category::create([
-            'name' => [
-                'es' => 'Pantalones',
-                'en' => 'Pants',
-                'fr' => 'Pantalons',
-                'it' => 'Pantaloni'
-            ],
-            'image' => 'storage/media/images/man.png' // Ojo: tienes la misma imagen que hombre
+            'name' => 'Pantalones',
+            'image' => 'storage/media/images/pantalon_estrellas.jpeg'
         ]);
 
         Category::create([
-            'name' => [
-                'es' => 'Camisetas',
-                'en' => 'T-shirts',
-                'fr' => 'T-shirts',
-                'it' => 'Magliette'
-            ],
+            'name' => 'Camisetas',
             'image' => 'storage/media/images/camisa_hombre.jpeg'
         ]);
 
         Category::create([
-            'name' => [
-                'es' => 'Accesorios',
-                'en' => 'Accessories',
-                'fr' => 'Accessoires',
-                'it' => 'Accessori'
-            ],
+            'name' => 'Accesorios',
             'image' => 'storage/media/images/maki_bolso.jpeg'
         ]);
     }
