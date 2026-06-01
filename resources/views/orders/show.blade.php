@@ -50,7 +50,7 @@
                             
                             <div class="w-20 h-24 shrink-0 bg-gray-100 rounded-xl overflow-hidden">
                                 @if($item->product->image_url)
-                                    <img src="{{ asset('storage/' . $item->product->image_url) }}" class="w-full h-full object-cover" alt="{{ $item->product->title }}">
+                                    <img src="{{ asset($item->product->image_url) }}" class="w-full h-full object-cover" alt="{{ $item->product->title }}">
                                 @else
                                     <div class="w-full h-full flex items-center justify-center text-gray-300">
                                         <i class="bi bi-camera text-2xl"></i>

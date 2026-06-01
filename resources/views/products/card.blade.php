@@ -2,7 +2,7 @@
     <div class="card h-100 shadow-sm">
 
         @if($product->image_url)
-            <img src="{{ asset('storage/' . $product->image_url) }}" class="card-img-top border-bottom"
+            <img src="{{ asset($product->image_url) }}" class="card-img-top border-bottom"
                 alt="{{ $product->title }}" style="height: 220px; object-fit: cover;">
         @else
             <div class="card-img-top bg-light d-flex align-items-center justify-content-center text-muted border-bottom"

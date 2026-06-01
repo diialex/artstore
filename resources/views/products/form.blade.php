@@ -59,7 +59,7 @@
                     
                     @if($product->exists && $product->image_url)
                         <div class="shrink-0 w-32 h-32 rounded-2xl border border-gray-200 overflow-hidden relative group">
-                            <img src="{{ asset('storage/' . $product->image_url) }}" alt="Actual" class="w-full h-full object-cover">
+                            <img src="{{ asset($product->image_url) }}" alt="Actual" class="w-full h-full object-cover">
                             <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                                 <span class="text-white text-[0.65rem] font-bold uppercase tracking-widest">@lang('messages.actual')</span>
                             </div>
