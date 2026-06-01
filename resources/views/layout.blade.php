@@ -70,10 +70,17 @@
             </button>
         </div>
         
-        <div class="p-6 overflow-y-auto flex-grow flex flex-col gap-6 hide-scrollbar">
+<div class="p-6 overflow-y-auto flex-grow flex flex-col gap-6 hide-scrollbar">
+            @php
+                $selectedMenuCategoryIds = collect((array) request('categories', []))
+                    ->when(request('category'), fn ($ids) => $ids->push(request('category')))
+                    ->map(fn ($categoryId) => (int) $categoryId)
+                    ->all();
+            @endphp
+            
             <div>
-                <a href="{{ route('home') }}" class="group flex items-center gap-4 px-4 py-3 rounded-xl {{ !request('category') ? 'bg-primary text-white shadow-md' : 'bg-gray-50 text-gray-700 hover:bg-light hover:text-primary' }} transition-all">
-                    <i class="bi bi-house-door{{ !request('category') ? '-fill' : '' }} text-lg"></i>
+                <a href="{{ route('home') }}" class="group flex items-center gap-4 px-4 py-3 rounded-xl {{ empty($selectedMenuCategoryIds) ? 'bg-primary text-white shadow-md' : 'bg-gray-50 text-gray-700 hover:bg-light hover:text-primary' }} transition-all">
+                    <i class="bi bi-house-door{{ empty($selectedMenuCategoryIds) ? '-fill' : '' }} text-lg"></i>
                     <span class="font-bold text-sm tracking-wide">@lang('messages.start')</span>
                 </a>
             </div>
@@ -85,12 +92,17 @@
                 </h6>
                 <ul class="flex flex-col gap-1">
                     @foreach(App\Models\Category::all() as $cat)
+                        @php $isMenuCategorySelected = in_array($cat->id, $selectedMenuCategoryIds); @endphp
                         <li>
-                            <a href="{{ route('home', ['category' => $cat->id]) }}" class="flex items-center justify-between px-4 py-2.5 rounded-lg {{ request('category') == $cat->id ? 'bg-light text-primary font-bold' : 'text-gray-600 hover:bg-gray-50 hover:text-dark font-medium' }} transition-colors text-sm group">
+                            <a href="{{ route('home', ['categories' => [$cat->id]]) }}" 
+                            class="flex items-center justify-between px-4 py-2.5 rounded-lg {{ $isMenuCategorySelected ? 'bg-light text-primary font-bold' : 'text-gray-600 hover:bg-gray-50 hover:text-dark font-medium' }} transition-colors text-sm group">
                                 <div class="flex items-center gap-3">
-                                    <div class="w-1.5 h-1.5 rounded-full {{ request('category') == $cat->id ? 'bg-primary shadow-[0_0_8px_rgba(103,22,70,0.6)]' : 'bg-transparent group-hover:bg-gray-300' }} transition-all"></div>
+                                    <div class="w-1.5 h-1.5 rounded-full {{ $isMenuCategorySelected ? 'bg-primary shadow-[0_0_8px_rgba(103,22,70,0.6)]' : 'bg-transparent group-hover:bg-gray-300' }} transition-all"></div>
                                     {{ $cat->name }}
                                 </div>
+                                @if($isMenuCategorySelected)
+                                    <i class="bi bi-chevron-right text-xs"></i>
+                                @endif
                             </a>
                         </li>
                     @endforeach

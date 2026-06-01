@@ -7,15 +7,28 @@ use Illuminate\Database\Eloquent\Collection;
 
 class ProductService
 {
-    public function getAll($categoryId = null): Collection
+    public function getAll($categoryIds = null, ?string $sort = null): Collection
     {
         $query = Product::query();
+        $categoryIds = collect((array) $categoryIds)
+            ->filter()
+            ->map(fn ($categoryId) => (int) $categoryId)
+            ->unique()
+            ->values();
 
-        if ($categoryId) {
+        foreach ($categoryIds as $categoryId) {
             $query->whereHas('categories', function ($q) use ($categoryId) {
-                $q->where('categories.id', $categoryId); 
+                $q->where('categories.id', $categoryId);
             });
         }
+
+        match ($sort) {
+            'price_asc' => $query->orderBy('price'),
+            'price_desc' => $query->orderByDesc('price'),
+            'newest' => $query->orderByDesc('created_at'),
+            'oldest' => $query->orderBy('created_at'),
+            default => null,
+        };
 
         return $query->get();
     }

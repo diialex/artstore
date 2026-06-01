@@ -14,18 +14,23 @@
                 <i class="bi bi-shield-lock-fill text-primary text-xl"></i>
                 <h5 class="text-sm font-black uppercase tracking-widest text-primary">@lang('messages.administration')</h5>
             </div>
-
             <button onclick="toggleMenu('menuLateral')" class="text-gray-400 hover:text-red-500 transition-colors bg-white rounded-full w-8 h-8 flex items-center justify-center shadow-sm border border-gray-200">
                 <i class="bi bi-x-lg text-sm"></i>
             </button>
         </div>
         
         <div class="p-6 overflow-y-auto flex-grow flex flex-col gap-6 hide-scrollbar">
+            @php
+                $selectedMenuCategoryIds = collect((array) request('categories', []))
+                    ->when(request('category'), fn ($ids) => $ids->push(request('category')))
+                    ->map(fn ($categoryId) => (int) $categoryId)
+                    ->all();
+            @endphp
             
             <div>
-                <a href="{{ route('controlPanel.dashboard') }}" class="group flex items-center gap-4 px-4 py-3 rounded-xl bg-primary text-white shadow-md transition-all">
-                    <i class="bi bi-speedometer2 text-lg"></i>
-                    <span class="font-bold text-sm tracking-wide">Dashboard</span>
+                <a href="{{ route('home') }}" class="group flex items-center gap-4 px-4 py-3 rounded-xl {{ !request('category') ? 'bg-primary text-white shadow-md' : 'bg-gray-50 text-gray-700 hover:bg-light hover:text-primary' }} transition-all">
+                    <i class="bi bi-house-door{{ !request('category') ? '-fill' : '' }} text-lg"></i>
+                    <span class="font-bold text-sm tracking-wide">@lang('messages.start')</span>
                 </a>
             </div>
 
@@ -36,21 +41,21 @@
                     <i class="bi bi-database"></i> Gestión de Tienda
                 </h6>
                 <ul class="flex flex-col gap-1">
-                    <li>
-                        <a href="{{ route('admin.products.index') }}" class="flex items-center justify-between px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm group">
-                            <div class="flex items-center gap-3"><i class="bi bi-box-seam"></i> Productos</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('categories.index') }}" class="flex items-center justify-between px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm group">
-                            <div class="flex items-center gap-3"><i class="bi bi-tags"></i> Categorías</div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('orders.index') }}" class="flex items-center justify-between px-4 py-2.5 rounded-lg text-gray-600 hover:bg-light hover:text-primary font-medium transition-colors text-sm group">
-                            <div class="flex items-center gap-3"><i class="bi bi-cart-check"></i> Pedidos</div>
-                        </a>
-                    </li>
+                    @foreach(App\Models\Category::all() as $cat)
+                        <li>
+                            <a href="{{ route('home', ['category' => $cat->id]) }}" 
+                            class="flex items-center justify-between px-4 py-2.5 rounded-lg {{ request('category') == $cat->id ? 'bg-light text-primary font-bold' : 'text-gray-600 hover:bg-gray-50 hover:text-dark font-medium' }} transition-colors text-sm group">
+                                <div class="flex items-center gap-3">
+                                    <!-- Indicador visual de categoría activa -->
+                                    <div class="w-1.5 h-1.5 rounded-full {{ request('category') == $cat->id ? 'bg-primary shadow-[0_0_8px_rgba(103,22,70,0.6)]' : 'bg-transparent group-hover:bg-gray-300' }} transition-all"></div>
+                                    {{ $cat->name }}
+                                </div>
+                                @if(request('category') == $cat->id)
+                                    <i class="bi bi-chevron-right text-xs"></i>
+                                @endif
+                            </a>
+                        </li>
+                    @endforeach
                 </ul>
             </div>
 
