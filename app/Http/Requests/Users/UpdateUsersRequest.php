@@ -31,7 +31,7 @@ class UpdateUsersRequest extends FormRequest
         }
 
         $rules['username'] = 'required|string|max:20';
-        $rules['name'] = 'required|string|max:20';
+        $rules['name'] = 'required|string|max:100';
         $rules['email'] = ['required', 'email', Rule::unique('users')->ignore($this->route('id'))];
         $rules['phone'] = 'nullable|string|min:9';
         $rules['role'] = 'nullable|exists:roles,id';

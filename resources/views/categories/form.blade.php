@@ -26,12 +26,14 @@
                 @error('name') <span class="text-red-500 text-xs font-bold mt-2 block">{{ $message }}</span> @enderror
             </div>
 
+            @unless($category->exists)
             <div>
                 <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.description')</label>
                 <textarea name="description" rows="4" placeholder="Breve descripción de la colección..."
                           class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all resize-y placeholder-gray-400">{{ old('description', $category->description) }}</textarea>
                 @error('description') <span class="text-red-500 text-xs font-bold mt-2 block">{{ $message }}</span> @enderror
             </div>
+            @endunless
 
             <div class="flex flex-col-reverse sm:flex-row items-center justify-end gap-3 mt-8 pt-6 border-t border-gray-100">
                 <a href="{{ route('categories.index') }}" class="w-full sm:w-auto px-6 py-4 text-center text-gray-500 font-bold uppercase tracking-widest text-xs hover:text-dark hover:bg-gray-50 rounded-xl transition-colors">

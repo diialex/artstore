@@ -28,7 +28,7 @@
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.name_completo')</label>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-2">@lang('messages.name_complete')</label>
                     <input type="text" name="name" value="{{ old('name', $user->name) }}"
                            class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm font-medium focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all">
                     @error('name') <span class="text-red-500 text-xs font-bold mt-2 block">{{ $message }}</span> @enderror
